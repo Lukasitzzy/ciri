@@ -1,9 +1,8 @@
-import { Message } from "discord.js";
+import { Message, MessageOptions } from "discord.js";
 import { CustomCommand } from "./Command";
 
 /**
  * the mixed context to have everything in one class folr easier access.
- * 
  * general idea stolen from the discord.py commands internal framework
  */
 export class CommandContext<Targs extends Record<string, unknown>> {
@@ -28,6 +27,14 @@ export class CommandContext<Targs extends Record<string, unknown>> {
         this._command = command;
         this._args = args;
         this._prefix = msg.util?.parsed?.prefix;
+    }
+
+
+    async say(content: string, options?: MessageOptions): Promise<Message> {
+        const chn = this.msg.util || this.msg.channel;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        return chn.send(content, options);
     }
 
 
@@ -59,6 +66,30 @@ export class CommandContext<Targs extends Record<string, unknown>> {
         return this._prefix || null;
     }
 
+    get member(): Message['member'] {
+        return this.msg.member;
+    }
 
+    get author(): Message['author'] {
+        return this.msg.author;
+    }
+
+    get createdTimestamp(): Message['createdTimestamp'] {
+        return this.msg.createdTimestamp;
+    }
+
+    get createdAt(): Message['editedAt'] {
+        return this.msg.createdAt;
+    }
+    get embeds(): Message['embeds'] {
+        return this.msg.embeds;
+    }
+
+    get guild(): Message['guild'] {
+        return this.msg.guild;
+    }
+    get attachments(): Message['attachments'] {
+        return this.msg.attachments;
+    }
 
 }

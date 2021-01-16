@@ -1,4 +1,4 @@
-import { AkairoClient, CommandHandler } from 'discord-akairo';
+import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Intents } from 'discord.js';
 import { join } from 'path';
 
@@ -13,6 +13,7 @@ export class DiscordBotClient extends AkairoClient {
      * the root directory string 
      */
     private readonly root: string;
+    public listenerHandler: ListenerHandler;
 
     /**
      *
@@ -26,6 +27,8 @@ export class DiscordBotClient extends AkairoClient {
             }
         });
         this.root = ROOT;
+
+
         this.commandHandler = new CommandHandler(this, {
             directory: join(ROOT, 'commands'),
             prefix: process.env.DISCORD_COMMAND_PREFIX || '$',
@@ -34,13 +37,22 @@ export class DiscordBotClient extends AkairoClient {
             commandUtilLifetime: 3e5,
             commandUtilSweepInterval: 3e5 + 1
         });
+
+        this.listenerHandler = new ListenerHandler(this, {
+            directory: join(ROOT, 'listener')
+        });
     }
 
     /**
      * 
      */
     public async start(): Promise<void> {
-        this.commandHandler.loadAll();
+        this.listenerHandler.setEmitters({
+            commandHandler: this.commandHandler,
+        });
+        this.listenerHandler.loadAll();
+        this.commandHandler.useListenerHandler(this.listenerHandler).loadAll();
+
         await this.login();
     }
 
