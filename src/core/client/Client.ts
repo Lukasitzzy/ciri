@@ -1,8 +1,15 @@
 import { AkairoClient } from 'discord-akairo';
 import { Intents } from 'discord.js';
 
-
+/**
+ * the client that connects to the discord Websocket
+ * @extends {AkairoClient}
+ */
 export class DiscordBotClient extends AkairoClient {
+
+    /**
+     * 
+     */
     readonly #root: string;
 
     /**
@@ -19,6 +26,9 @@ export class DiscordBotClient extends AkairoClient {
         this.#root = ROOT;
     }
 
+    /**
+     * 
+     */
     public async start(): Promise<void> {
         await this.login();
     }
