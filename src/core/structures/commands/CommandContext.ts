@@ -8,10 +8,10 @@ import { CustomCommand } from "./Command";
  */
 export class CommandContext<Targs extends Record<string, unknown>> {
 
-    readonly #msg: Message;
-    readonly #prefix?: string;
-    readonly #command: CustomCommand;
-    readonly #args: Targs;
+    private readonly _msg: Message;
+    private readonly _prefix?: string;
+    private readonly _command: CustomCommand;
+    private readonly _args: Targs;
     /**
      * initialise a new Command context
      * @param msg the message that was send
@@ -24,10 +24,10 @@ export class CommandContext<Targs extends Record<string, unknown>> {
         args: Targs,
 
     ) {
-        this.#msg = msg;
-        this.#command = command;
-        this.#args = args;
-        this.#prefix = msg.util?.parsed?.prefix;
+        this._msg = msg;
+        this._command = command;
+        this._args = args;
+        this._prefix = msg.util?.parsed?.prefix;
     }
 
 
@@ -36,19 +36,19 @@ export class CommandContext<Targs extends Record<string, unknown>> {
      * the command that requires the context.
      */
     get command(): CustomCommand {
-        return this.#command;
+        return this._command;
     }
     /**
      * the message that was send
      */
     get msg(): Message {
-        return this.#msg;
+        return this._msg;
     }
     /**
      * the arguments for that command
      */
     get args(): Targs {
-        return this.#args;
+        return this._args;
     }
 
     /**
@@ -56,7 +56,7 @@ export class CommandContext<Targs extends Record<string, unknown>> {
      * @nullable
      */
     get prefix(): string | null {
-        return this.#prefix || null;
+        return this._prefix || null;
     }
 
 

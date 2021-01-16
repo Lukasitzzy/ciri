@@ -10,7 +10,7 @@ export class DiscordBotClient extends AkairoClient {
     /**
      * 
      */
-    readonly #root: string;
+    private readonly root: string;
 
     /**
      *
@@ -23,7 +23,7 @@ export class DiscordBotClient extends AkairoClient {
                 intents: [Intents.ALL]
             }
         });
-        this.#root = ROOT;
+        this.root = ROOT;
     }
 
     /**
