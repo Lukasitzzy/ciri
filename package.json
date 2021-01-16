@@ -4,11 +4,13 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "start:dev": "tsc && npm start",
     "start": "node -r dotenv/config ."
   },
   "author": "Lukasitzzy",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/form-data": "^3.0.1",
     "@types/node": "^14.14.21",
     "@types/ws": "^7.4.0",
     "discord-akairo": "github:discord-akairo/discord-akairo",
