@@ -3,6 +3,9 @@
 ## instalation guide
 ## key features
 ## planned features
+
+- database interactions
+
 ## modules i use
 
 
