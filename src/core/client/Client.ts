@@ -1,4 +1,4 @@
-import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
+import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
 import { Intents } from 'discord.js';
 import { join } from 'path';
 
@@ -9,11 +9,8 @@ import { join } from 'path';
 export class DiscordBotClient extends AkairoClient {
 
     public commandHandler: CommandHandler;
-    /**
-     * the root directory string 
-     */
-    private readonly root: string;
     public listenerHandler: ListenerHandler;
+    public inhibitorHandler: InhibitorHandler;
 
     /**
      *
@@ -26,8 +23,6 @@ export class DiscordBotClient extends AkairoClient {
                 intents: [Intents.ALL]
             }
         });
-        this.root = ROOT;
-
 
         this.commandHandler = new CommandHandler(this, {
             directory: join(ROOT, 'commands'),
@@ -41,19 +36,32 @@ export class DiscordBotClient extends AkairoClient {
         this.listenerHandler = new ListenerHandler(this, {
             directory: join(ROOT, 'listener')
         });
+
+        this.inhibitorHandler = new InhibitorHandler(this, {
+            directory: join(ROOT, 'inhibitors')
+        });
+
     }
 
     /**
      * 
      */
     public async start(): Promise<void> {
-        this.listenerHandler.setEmitters({
-            commandHandler: this.commandHandler,
-        });
+
+        this.$prepare();
         this.listenerHandler.loadAll();
-        this.commandHandler.useListenerHandler(this.listenerHandler).loadAll();
 
         await this.login();
+    }
+
+    private $prepare() {
+        this.listenerHandler.setEmitters({
+            commandHandler: this.commandHandler,
+            inhibitorHandler: this.inhibitorHandler
+        });
+        this.commandHandler
+            .useListenerHandler(this.listenerHandler)
+            .useInhibitorHandler(this.inhibitorHandler);
     }
 
 }

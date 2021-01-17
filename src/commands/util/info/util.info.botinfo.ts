@@ -23,7 +23,6 @@ export default class BotInfoCommand extends CustomCommand {
         const usage = this.$getPercentage(memory.max, memory.totalUsed);
         const stats: string[] = [
             `**Memory**: (${memory.used}mb/${(memory.max / 1024).toFixed(2)}GB ( ${usage}% used))`,
-            `**CPU**: ${os.cpus()[0].model} ${os.cpus()[0].speed} hz.`,
             `stats: ${this.client.guilds.cache.size} Server${this.client.guilds.cache.size === 1 ? '' : 's'} | ${this.client.channels.cache.size} channels | ${this.client.users.cache.size} users.`,
             '',
             `Developer ${this.client.users.cache.get(process.env.DISCORD_OWNER_ID ?? '')?.tag || 'unknown'}`,

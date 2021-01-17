@@ -93,3 +93,6 @@ export class CommandContext<Targs extends Record<string, unknown>> {
     }
 
 }
+
+
+export class CommandContextNoArgs extends CommandContext<Record<string, void>>{ }
