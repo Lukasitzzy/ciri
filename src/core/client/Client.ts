@@ -2,6 +2,8 @@ import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 
 import { Intents } from 'discord.js';
 import { join } from 'path';
 
+
+
 /**
  * the client that connects to the discord Websocket
  * @extends {AkairoClient}
@@ -57,11 +59,18 @@ export class DiscordBotClient extends AkairoClient {
     private $prepare() {
         this.listenerHandler.setEmitters({
             commandHandler: this.commandHandler,
-            inhibitorHandler: this.inhibitorHandler
+            inhibitorHandler: this.inhibitorHandler,
+            websocket: this.ws
+        });
+
+        this.commandHandler.on('commandBlocked', (m, c, r) => {
+            console.log(`blocked command "${c.id}" reason: ${r}`);
+
         });
         this.commandHandler
             .useListenerHandler(this.listenerHandler)
-            .useInhibitorHandler(this.inhibitorHandler);
+            .useInhibitorHandler(this.inhibitorHandler)
+            .loadAll();
     }
 
 }
