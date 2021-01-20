@@ -24,3 +24,5 @@ export const InteractionResponseType = {
     CHANNEL_MESSAGE_WITH_SOURCE: 4,
     ACKNOWLEDGE_WITH_SOURCE: 5,
 };
+
+export const VERSION = 'v0.0.1337.69420';

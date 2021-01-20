@@ -3,14 +3,14 @@
 import { Guild } from "discord.js";
 import { EventEmitter } from "ws";
 import { DiscordBotClient } from "../../client/Client";
-import { InteractionResponseType, InteractionType } from "./InteractionConstants";
+import { InteractionResponseType, InteractionType, VERSION } from "./InteractionConstants";
 import { IWsResponse } from "./types";
 
 
 export class ClientInteractionWS extends EventEmitter {
 
     private readonly $client: DiscordBotClient;
-
+    readonly VERSION = VERSION;
     /**
      *
      */
@@ -22,7 +22,8 @@ export class ClientInteractionWS extends EventEmitter {
     }
 
 
-    private get $Clientapi() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    get $Clientapi(): any {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         return this.$client.api.applications(this.$client.user?.id);
@@ -80,7 +81,6 @@ export class ClientInteractionWS extends EventEmitter {
                 throw new Error('invalied interaction data');
         }
     }
-
 
     async handleFromGateWay(data: IWsResponse): Promise<void> {
         const res = await this.$handle(data);
