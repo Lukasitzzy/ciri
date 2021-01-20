@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/form-data": "^3.0.1",
-    "@types/node": "^14.14.21",
+    "@types/node": "^14.14.22",
     "@types/ws": "^7.4.0",
     "discord-akairo": "github:discord-akairo/discord-akairo",
     "discord.js": "github:discordjs/discord.js",
