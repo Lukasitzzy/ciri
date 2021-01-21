@@ -3,6 +3,7 @@ import { Snowflake } from "discord.js";
 export interface IWsResponse {
     channel_id: string;
     id: string;
+    guild_id?: string;
     data: IWsResponseData;
     member: IPartialInteractionMember;
     token: string;

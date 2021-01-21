@@ -1,3 +1,4 @@
+import { IWsResponse } from "../../core/structures/interactions/types";
 import { CustomListener } from "../../core/structures/listener/Listener";
 export default class ReadyEvent extends CustomListener {
     /**
@@ -8,13 +9,15 @@ export default class ReadyEvent extends CustomListener {
             id: 'client.ws.interaction_create',
             options: {
                 event: 'INTERACTION_CREATE',
-                emitter: 'websocket',
+                emitter: 'ws',
                 category: 'client_ws'
             }
         });
     }
 
-    async exec(): Promise<void> {
+    async exec(data: IWsResponse): Promise<void> {
+
+        await this.client.interactions.handleFromGateWay(data);
         //
     }
 }

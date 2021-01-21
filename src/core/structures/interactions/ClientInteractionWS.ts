@@ -1,8 +1,10 @@
 /* eslint-disable no-fallthrough */
 /* eslint-disable no-case-declarations */
 import { Guild } from "discord.js";
+import fetch from "node-fetch";
 import { EventEmitter } from "ws";
 import { DiscordBotClient } from "../../client/Client";
+import { InteractionCommand } from "./commands/InteractionCommand";
 import { InteractionResponseType, InteractionType, VERSION } from "./InteractionConstants";
 import { IWsResponse } from "./types";
 
@@ -76,6 +78,12 @@ export class ClientInteractionWS extends EventEmitter {
                         });
                     }
                 };
+                const interaction = new InteractionCommand(
+                    this.$client,
+                    data,
+                    syncHandle
+                );
+                this.emit('create', interaction);
                 return pr;
             default:
                 throw new Error('invalied interaction data');
@@ -83,9 +91,26 @@ export class ClientInteractionWS extends EventEmitter {
     }
 
     async handleFromGateWay(data: IWsResponse): Promise<void> {
-        const res = await this.$handle(data);
-        await this.$Clientapi.interactions(data.id, data.token).callback.post({
-            data: res
+        const handleRes = await this.$handle(data);
+
+
+        const URL = `https://discord.com/api/v8/interactions/${data.id}/${data.token}/callback`;
+
+        const res = await fetch(URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                type: 4,
+                data: data
+            })
+        }
+        ).catch((erro: Error) => {
+            console.log(`failed to respond to command "${data.data.name}" Reason: ${erro}`);
         });
+    }
+
+    on(event: 'create', handler: (interaction: InteractionCommand) => void): this;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    on(event: string, handler: (...data: any[]) => void): this {
+        return super.on(event, handler);
     }
 }

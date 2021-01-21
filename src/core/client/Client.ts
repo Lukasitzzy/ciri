@@ -1,6 +1,7 @@
 import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
 import { Intents } from 'discord.js';
 import { join } from 'path';
+import { ClientInteractionWS } from '../structures/interactions/ClientInteractionWS';
 
 
 
@@ -14,6 +15,7 @@ export class DiscordBotClient extends AkairoClient {
     public listenerHandler: ListenerHandler;
     public inhibitorHandler: InhibitorHandler;
 
+    public interactions: ClientInteractionWS;
     /**
      *
      */
@@ -46,6 +48,8 @@ export class DiscordBotClient extends AkairoClient {
             directory: join(ROOT, 'inhibitors')
         });
 
+        this.interactions = new ClientInteractionWS(this);
+
     }
 
     /**
@@ -63,11 +67,17 @@ export class DiscordBotClient extends AkairoClient {
         this.listenerHandler.setEmitters({
             commandHandler: this.commandHandler,
             inhibitorHandler: this.inhibitorHandler,
-            websocket: this.ws
+            ws: this.ws
         });
 
         this.commandHandler.on('commandBlocked', (m, c, r) => {
             console.log(`blocked command "${c.id}" reason: ${r}`);
+
+        });
+
+        this.interactions.on('create', async (data) => {
+            console.log(`interaction create from user "${data.member?.user.id}"  command was ${data.id} `);
+            await data.reply('test');
 
         });
         this.commandHandler

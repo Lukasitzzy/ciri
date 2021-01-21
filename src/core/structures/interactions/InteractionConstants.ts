@@ -1,5 +1,4 @@
 
-
 export const ApplicationCommandOptionType = {
     SUB_COMMAND: 1,
     SUB_COMMAND_GROUP: 2,
@@ -14,6 +13,11 @@ export const ApplicationCommandOptionType = {
 export const InteractionType = {
     PING: 1,
     APPLICATION_COMMAND: 2,
+};
+
+export const invertedInteractionType = {
+    1: 'PING',
+    2: 'APPLICATION_COMMAND'
 };
 
 
