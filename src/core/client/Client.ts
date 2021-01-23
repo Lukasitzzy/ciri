@@ -77,7 +77,7 @@ export class DiscordBotClient extends AkairoClient {
 
         this.interactions.on('create', async (data) => {
             console.log(`interaction create from user "${data.member?.user.id}"  command was ${data.id} `);
-            await data.reply('test');
+            await data.reply('test', { ephemeral: false });
 
         });
         this.commandHandler

@@ -3,7 +3,7 @@ import { Interaction } from "../Interaction";
 import { IWsResponse } from "../types";
 import { SnowflakeUtil, MessageOptions, APIMessage } from 'discord.js';
 import fetch, { Headers } from "node-fetch";
-
+import * as interactionsConstants from '../InteractionConstants';
 export class InteractionCommand extends Interaction {
     private readonly $syncHandle: Record<string, (...args: unknown[]) => void>;
     private readonly $commandID: string;
@@ -28,36 +28,37 @@ export class InteractionCommand extends Interaction {
         return new Date(this.createdTimestamp);
     }
 
-    async reply(content: string, options?: MessageOptions) {
+    async reply(content: string, options?: {
+        ephemeral: boolean;
+        options?: MessageOptions;
+    }): Promise<void> {
 
+        options = options || {
+            ephemeral: false,
+            options: {}
+        };
 
         const URL = `https://discord.com/api/v8/interactions/${this.id}/${this.token}/callback`;
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        const apiMsg = APIMessage.create(this, content, options).resolveData();
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
+        const apiMsg = APIMessage.create(this, content, options.options).resolveData() as { data: { content: string; flags: number; }; };
         if (Array.isArray(apiMsg.data?.content)) {
             throw new Error('message to long');
         }
-        // const resolved = await apiMsg.resolveFiles();
         const id = this.client.user?.id || null;
         if (!id) {
             throw new Error('something fucked up');
         }
-        console.log("test");
         const header = new Headers();
         header.append('Authorization', `Bot ${this.client.token}`);
         header.append('Content-Type', 'application/json');
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        apiMsg.data.flags = 64;
+        if (options?.ephemeral) apiMsg.data.flags = 64;
         await fetch(URL, {
             method: 'POST',
             headers: header,
             body: JSON.stringify({
-                type: 4,
+                type: !options?.ephemeral ? interactionsConstants.InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE : interactionsConstants.InteractionResponseType.ACKNOWLEDGE,
                 data: apiMsg.data,
 
             })

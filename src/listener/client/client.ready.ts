@@ -19,7 +19,7 @@ export default class ReadyEvent extends CustomListener {
         await this.client.user?.setPresence({
             status: 'dnd',
             activity: {
-                name: 'with you',
+                name: 'with /help',
                 type: 'PLAYING'
             }
         });
