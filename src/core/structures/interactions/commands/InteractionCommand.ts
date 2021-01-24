@@ -4,14 +4,23 @@ import { IWsResponse } from "../types";
 import { SnowflakeUtil, MessageOptions, APIMessage } from 'discord.js';
 import fetch, { Headers } from "node-fetch";
 import * as interactionsConstants from '../InteractionConstants';
+/**
+ * the command that was send via the websocket.
+ */
 export class InteractionCommand extends Interaction {
-    private readonly $syncHandle: Record<string, (...args: unknown[]) => void>;
+
+    private readonly $syncHandle: Record<string, (options: { hideSource: boolean; }) => void>;
+
     private readonly $commandID: string;
+
     private readonly $options: IWsResponse['data']['options'];
     /**
-     *
+     * 
+     * @param client the client that initialized the command
+     * @param data the body of the websocket
+     * @param syncHandle functions to handle
      */
-    constructor(client: DiscordBotClient, data: IWsResponse, syncHandle: Record<string, (...args: any) => void>) {
+    constructor(client: DiscordBotClient, data: IWsResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
         super(client, data);
 
         this.$syncHandle = syncHandle;
@@ -20,29 +29,54 @@ export class InteractionCommand extends Interaction {
 
     }
 
+    /**
+     * the timestamp the command was created.
+     */
     get createdTimestamp(): number {
         return SnowflakeUtil.deconstruct(this.id).timestamp;
     }
-
+    /**
+     * the Dateobject of the {@link InteractionCommand#createdTimestamp}
+     */
     get createdAt(): Date {
         return new Date(this.createdTimestamp);
     }
+    /**
+     * replies to the comnand Interaction.
+     * @param content the message content you want to send
+     * @param options options of the reply
+     * @returns nothing.
+     */
 
-    async reply(content: string, options?: {
+    async reply(content: string | string[], options?: {
+        /**
+         * whenever the message should only show client side (only the user is seeing it)
+         */
         ephemeral: boolean;
+        /**
+         * the discord.js's message options
+         */
         options?: MessageOptions;
     }): Promise<void> {
+
+
+        if (Array.isArray(content)) content = content.join('\n');
 
         options = options || {
             ephemeral: false,
             options: {}
         };
-
+        // TO-DO: remove that here
         const URL = `https://discord.com/api/v8/interactions/${this.id}/${this.token}/callback`;
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        const apiMsg = APIMessage.create(this, content, options.options).resolveData() as { data: { content: string; flags: number; }; };
+
+        const apiMsg = APIMessage.create(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            this,
+            content,
+            options.options
+        ).resolveData() as { data: { content: string; flags: number; }; };
         if (Array.isArray(apiMsg.data?.content)) {
             throw new Error('message to long');
         }
@@ -58,7 +92,9 @@ export class InteractionCommand extends Interaction {
             method: 'POST',
             headers: header,
             body: JSON.stringify({
-                type: !options?.ephemeral ? interactionsConstants.InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE : interactionsConstants.InteractionResponseType.ACKNOWLEDGE,
+                type: !options?.ephemeral ?
+                    interactionsConstants.InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE
+                    : interactionsConstants.InteractionResponseType.ACKNOWLEDGE,
                 data: apiMsg.data,
 
             })
