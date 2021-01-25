@@ -61,13 +61,22 @@ interface IApplicationCommand {
     options?: IWsResponseDataOptions[];
 }
 // TODO: fix this later
-interface InteractionApi {
-    callback: {
-        post<T>(options: {
-            data: {
-                data: any;
-                type: number;
-            };
-        }): Promise<T>;
+interface Api {
+    interactions(id: string, token: string): {
+        callback: {
+            post<T>(options: {
+                data: {
+                    data: any;
+                    type: number;
+                };
+            }): Promise<T>;
+        };
+    };
+    webhooks(id: string, token: string): {
+        messages(id: string): {
+            get(): Promise<any>;
+            post(data: any): Promise<any>;
+            delete(): Promise<any>;
+        };
     };
 }

@@ -5,7 +5,7 @@ import { EventEmitter } from "ws";
 import { DiscordBotClient } from "../../client/Client";
 import { InteractionCommand } from "./commands/InteractionCommand";
 import { InteractionResponseType, InteractionType, VERSION } from "./InteractionConstants";
-import { IApplicationCommand, IWsResponse } from "./types";
+import { Api, IApplicationCommand, IWsResponse } from "./types";
 
 
 export class ClientInteractionWS extends EventEmitter {
@@ -26,7 +26,17 @@ export class ClientInteractionWS extends EventEmitter {
      * 
      * @param guild 
      */
-    public guildApi(guild: Guild): any {
+    public guildApi(guild: Guild): {
+        commands: {
+            get(): Promise<IApplicationCommand[]>;
+            post(data: {
+                data: {
+                    flags?: number;
+                    content: string;
+                };
+            }): Promise<IApplicationCommand>;
+        };
+    } {
         return this.api.guilds(guild.id);
     }
 
@@ -103,10 +113,10 @@ export class ClientInteractionWS extends EventEmitter {
     on(event: string, handler: (...data: any[]) => void): this {
         return super.on(event, handler);
     }
-    get api(): any {
+    get api(): Api {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        return this.$client.api.applications(this.$client.user?.id);
+        return this.$client.api;
     }
 
     get client(): DiscordBotClient {
