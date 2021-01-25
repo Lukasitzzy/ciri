@@ -27,7 +27,7 @@ export class DiscordBotClient extends AkairoClient {
                 intents: [Intents.ALL]
             },
             http: {
-                version: 8
+                version: 7
             }
         });
 
