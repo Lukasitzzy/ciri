@@ -37,7 +37,7 @@ export class ClientInteractionWS extends EventEmitter {
             }): Promise<IApplicationCommand>;
         };
     } {
-        return this.api.guilds(guild.id);
+        return this.api.interactions(this.client.user?.id ?? '').guilds(guild.id);
     }
 
     /**
@@ -92,7 +92,7 @@ export class ClientInteractionWS extends EventEmitter {
                     data,
                     syncHandle
                 );
-                this.emit('create', interaction);
+                this.emit('new', interaction);
                 return pr;
             default:
                 throw new Error('invalied interaction data');

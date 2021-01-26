@@ -62,7 +62,8 @@ interface IApplicationCommand {
 }
 // TODO: fix this later
 interface Api {
-    interactions(id: string, token: string): {
+    interactions(id: string): {
+        guilds(guildID: string): any;
         callback: {
             post<T>(options: {
                 data: {
