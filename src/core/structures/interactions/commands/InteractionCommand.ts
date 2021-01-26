@@ -68,13 +68,22 @@ export class InteractionCommand extends Interaction {
         };
         // TO-DO: remove that here
         const URL = `https://discord.com/api/v8/interactions/${this.id}/${this.token}/callback`;
-
+        const { END_USER_AGREEMENT, INVITE_BOT: INVITE, TERMS_OF_SERICE, PRIVACY_POLICY, GENERAL_DATA_PROTECTON_REGULATION } = this.client.links;
 
         const apiMsg = APIMessage.create(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             this,
-            content,
+            [`${content}`,
+            [
+                process.env.NODE_ENV === 'production' ?
+                    `[invite](${INVITE})` : '💫',
+                `[TOS](${TERMS_OF_SERICE})`,
+                `[EULA](${END_USER_AGREEMENT})`,
+                `[GDPR](${GENERAL_DATA_PROTECTON_REGULATION})`,
+                `[PRIVACY POLICY](${PRIVACY_POLICY})`
+            ].join(' | '),
+            ].join('\n'),
             options.options
         ).resolveData() as { data: { content: string; flags: number; }; };
         if (Array.isArray(apiMsg.data?.content)) {
