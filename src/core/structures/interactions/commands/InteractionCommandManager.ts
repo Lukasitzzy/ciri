@@ -1,44 +1,31 @@
-import fetch, { Response, } from 'node-fetch';
 import { ClientInteractionWS } from '../ClientInteractionWS';
 import { IApplicationCommand } from '../types';
-export class PartialInteractionCommand { }
-// custom type for the return of fetch(...data).
-interface IResponse<T> extends Response {
-    json(): Promise<T>;
-}
+import { EventEmitter } from 'events';
 
-
-
-export class InteractionCommandManager {
+export class InteractionCommandHandler extends EventEmitter {
 
     private readonly $ws: ClientInteractionWS;
 
-    /**
-     *
-     */
     constructor(ws: ClientInteractionWS) {
+        super({ captureRejections: true });
         this.$ws = ws;
 
     }
 
+    async create({ name, description, guildID }: { name: string; description: string; guildID?: string; }): Promise<IApplicationCommand | null> {
 
-    async createCommand(): Promise<void> {
-        //
+        const res = await this.makeRequest<IApplicationCommand>({
+            method: 'post',
+            data: {
+                description,
+                name,
+                guildID
+            }
+        });
+        return res.json();
     }
 
-    public async deleteCommand({
-        commandID,
-        guildID
-    }: {
-        commandID: string;
-        guildID?: string;
-    }): Promise<void> {
-        //
-
-    }
-
-
-    public async updateCommand({
+    public async update({
         commandid,
         data
     }: {
@@ -51,11 +38,17 @@ export class InteractionCommandManager {
                 options: IApplicationCommand['options'][];
             };
         };
-    }): Promise<void> {
-        //
+    }): Promise<IApplicationCommand> {
+
+        return this.makeRequest<IApplicationCommand, typeof data>({
+            method: 'patch',
+            commandID: commandid,
+            data
+        }).then(res => res.json());
     }
 
-    public async getGuildCommands({ guildID }: { guildID: string; }): Promise<IApplicationCommand[]> {
+    public async getCommandsForGuild({ guildID }: { guildID: string; }): Promise<IApplicationCommand[]> {
+        if (!guildID) return [];
         return this.$fetchCommands(guildID);
     }
 
@@ -66,37 +59,39 @@ export class InteractionCommandManager {
 
     private async $fetchCommands(guildID?: string) {
         const data = { guildID };
-        return (await this.makeRequest<IApplicationCommand[]>({ method: 'GET', data })).json();
+        return this.makeRequest<IApplicationCommand[], { guildID?: string; }>({
+            method: 'get', data
+        });
     }
-
-
 
     async makeRequest<
         T extends unknown,
         Body extends Record<string, unknown> = Record<string, unknown>
-    >({ method, data }: { method: 'POST' | 'DELETE' | 'PATCH' | 'GET'; data: Body; }): Promise<IResponse<T>> {
+    >({ method, data, commandID }: { method: 'post' | 'delete' | 'patch' | 'get'; data: Body & { guildID?: string; }; commandID?: string; }): Promise<any> {
 
 
-        const URL = data.guildID ?
-            `ttps://discord.com/api/v8/applications/${this.$ws.client.user?.id}/guilds/${data.guildID}/commands` :
-            `https://discord.com/api/v8/applications/${this.$ws.client.user?.id}/commands`;
+        data = data || {} as Body;
         const options: Record<string, any> = {
             headers: {
-                Authorization: `Bot ${this.$ws.client.token}`
+                Authorization: `Bot ${this.$ws.client.token}`,
+                ['Content-Type']: 'application/json'
             }
         };
 
         switch (method) {
-            case 'POST':
-                options.method = 'POST';
-                options.body = JSON.stringify(data.data);
+            case 'post':
+                options.method = method;
+                options.body = JSON.stringify(data);
+                break;
+            case 'get':
+                options.method = method;
                 break;
 
-            default:
-                break;
+            case 'patch':
+                options.method = method;
+                options.body = JSON.stringify(data);
         }
-
-        return fetch(URL, options);
+        return this.$ws[method]();
 
     }
 

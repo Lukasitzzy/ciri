@@ -1,4 +1,4 @@
-import { IApplicationCommand, IWsResponseDataOptions } from "../types";
+import { IApplicationCommand, IWsResponseDataOptions } from '../types';
 /**
  * a helper class for 
  */

@@ -1,5 +1,5 @@
-import { IWsResponse } from "../../core/structures/interactions/types";
-import { CustomListener } from "../../core/structures/listener/Listener";
+import { IWsResponse } from '../../core/structures/interactions/types';
+import { CustomListener } from '../../core/structures/listener/Listener';
 export default class ReadyEvent extends CustomListener {
     constructor() {
         super({

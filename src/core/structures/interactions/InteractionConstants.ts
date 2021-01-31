@@ -1,4 +1,5 @@
-
+import type * as types from './types';
+import { Guild } from 'discord.js';
 export const ApplicationCommandOptionType = {
     SUB_COMMAND: 1,
     SUB_COMMAND_GROUP: 2,
@@ -30,3 +31,22 @@ export const InteractionResponseType = {
 };
 
 export const VERSION = 'v0.0.1337.69420';
+
+export enum InteractionCommandHandlerEvents {
+    CREATE = 'create',
+    DELETE = 'delete',
+    UPDATE = 'update'
+}
+
+export enum Events {
+    DEBUG = 'debug',
+    ERROR = 'error',
+}
+
+export interface InterctionCommandHandlerEventHandlers {
+    [InteractionCommandHandlerEvents.CREATE]: (command: types.IApplicationCommand, guild?: Guild) => void;
+    [InteractionCommandHandlerEvents.DELETE]: (command: types.IApplicationCommand, guild?: Guild) => void;
+    [InteractionCommandHandlerEvents.UPDATE]: (command: types.IApplicationCommand, guild?: Guild) => void;
+
+
+}

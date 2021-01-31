@@ -1,4 +1,4 @@
-import { CustomListener } from "../../core/structures/listener/Listener";
+import { CustomListener } from '../../core/structures/listener/Listener';
 
 export default class ReadyEvent extends CustomListener {
     /**

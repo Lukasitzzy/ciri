@@ -1,7 +1,7 @@
-import { Channel } from "discord.js";
-import { Base, Guild, GuildMember } from "discord.js";
-import { DiscordBotClient } from "../../client/Client";
-import { IWsResponse } from "./types";
+import { Channel } from 'discord.js';
+import { Base, Guild, GuildMember } from 'discord.js';
+import { DiscordBotClient } from '../../client/Client';
+import { IWsResponse } from './types';
 import * as InteractionConstants from './InteractionConstants';
 
 export class Interaction extends Base {

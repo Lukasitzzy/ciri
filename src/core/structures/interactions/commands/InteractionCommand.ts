@@ -1,9 +1,7 @@
-import { DiscordBotClient } from "../../../client/Client";
-import { Interaction } from "../Interaction";
-import { IWsResponse } from "../types";
+import { Interaction } from '../Interaction';
+import { IWsResponse } from '../types';
 import { SnowflakeUtil, MessageOptions, APIMessage } from 'discord.js';
-import fetch, { Headers } from "node-fetch";
-import * as interactionsConstants from '../InteractionConstants';
+import { ClientInteractionWS } from '../ClientInteractionWS';
 /**
  * the command that was send via the websocket.
  */
@@ -13,6 +11,7 @@ export class InteractionCommand extends Interaction {
 
     private readonly $commandID: string;
 
+    private readonly $ws: ClientInteractionWS;
     private readonly $options: IWsResponse['data']['options'];
     /**
      * 
@@ -20,12 +19,15 @@ export class InteractionCommand extends Interaction {
      * @param data the body of the websocket
      * @param syncHandle functions to handle
      */
-    constructor(client: DiscordBotClient, data: IWsResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
-        super(client, data);
+    constructor(ws: ClientInteractionWS,
+        data: IWsResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
+        super(ws.client, data);
 
         this.$syncHandle = syncHandle;
         this.$commandID = data.data.id;
         this.$options = data.data.options || [];
+
+        this.$ws = ws;
 
     }
 
@@ -57,7 +59,7 @@ export class InteractionCommand extends Interaction {
          * the discord.js's message options
          */
         options?: MessageOptions;
-    }): Promise<void> {
+    }): Promise<unknown> {
 
 
         if (Array.isArray(content)) content = content.join('\n');
@@ -77,7 +79,7 @@ export class InteractionCommand extends Interaction {
             [`${content}`,
             [
                 process.env.NODE_ENV === 'production' ?
-                    `[invite](${INVITE})` : '💫',
+                    `[invite](${INVITE})` : 'INVITE',
                 `[TOS](${TERMS_OF_SERICE})`,
                 `[EULA](${END_USER_AGREEMENT})`,
                 `[GDPR](${GENERAL_DATA_PROTECTON_REGULATION})`,
@@ -89,28 +91,15 @@ export class InteractionCommand extends Interaction {
         if (Array.isArray(apiMsg.data?.content)) {
             throw new Error('message to long');
         }
-        const id = this.client.user?.id || null;
+        const id = this.client.user?.id;
         if (!id) {
             throw new Error('something fucked up');
         }
-        const header = new Headers();
-        header.append('Authorization', `Bot ${this.client.token}`);
-        header.append('Content-Type', 'application/json');
+        // const header = new Headers();
+        // header.append('Authorization', `Bot ${this.client.token}`);
+        // header.append('Content-Type', 'application/json');
+
         if (options?.ephemeral) apiMsg.data.flags = 64;
-        await fetch(URL, {
-            method: 'POST',
-            headers: header,
-            body: JSON.stringify({
-                type: !options?.ephemeral ?
-                    interactionsConstants.InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE
-                    : interactionsConstants.InteractionResponseType.ACKNOWLEDGE,
-                data: apiMsg.data,
-
-            })
-        }).then(async res => {
-            // console.log(await res.json());
-
-            // await console.log((await res.json()).errors._errors[0]);
-        });
+        return this.$ws.post({ data: apiMsg.data, endpoint: 'callback' });
     }
 }

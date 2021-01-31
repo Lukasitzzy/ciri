@@ -1,4 +1,5 @@
-import { Snowflake } from "discord.js";
+import { StringResolvable } from 'discord.js';
+import { Snowflake } from 'discord.js';
 
 export interface IWsResponse {
     channel_id: string;
@@ -53,24 +54,47 @@ interface IApplicationCommandOptionChoice {
     value: string | number;
 }
 
+interface IApplicationCommandOption {
+    type: number;
+    name: string;
+    description: string;
+    required: boolean;
+    choices: IApplicationCommandOptionChoice[];
+    options: IApplicationCommandOption[];
+}
 
-interface IApplicationCommand {
+interface DiscordApiSend<T> {
+    data: T;
+    query?: {
+        wait: boolean;
+    };
+}
+
+interface IApplicationCommand extends Record<string, any> {
     id: string,
     application_id: string;
+    description: string;
     name: string;
-    options?: IWsResponseDataOptions[];
+    options?: IApplicationCommandOption[];
 }
 // TODO: fix this later
 interface Api {
-    interactions(id: string): {
+    applications(id: string): {
+        commands: {
+            get(): Promise<IApplicationCommand[]>;
+            patch(data: DiscordApiSend<any>): Promise<IApplicationCommand>;
+            delete(data: DiscordApiSend<any>): Promise<void>;
+            post(data: DiscordApiSend<{
+                name: string;
+                description: string;
+                options?: IApplicationCommandOption[];
+            }>): Promise<IApplicationCommand>;
+        };
         guilds(guildID: string): any;
         callback: {
             post<T>(options: {
-                data: {
-                    data: any;
-                    type: number;
-                };
-            }): Promise<T>;
+                data: T;
+            }): Promise<any>;
         };
     };
     webhooks(id: string, token: string): {

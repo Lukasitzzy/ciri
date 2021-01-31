@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GuildFeatures } from "discord.js";
-import { CustomCommand } from "../../../core/structures/commands/Command";
-import { CommandContextNoArgs } from "../../../core/structures/commands/CommandContext";
+import { GuildFeatures } from 'discord.js';
+import { CustomCommand } from '../../../core/structures/commands/Command';
+import { CommandContextNoArgs } from '../../../core/structures/commands/CommandContext';
 
 
 export default class ServerInfoCommand extends CustomCommand {

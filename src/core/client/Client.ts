@@ -68,7 +68,6 @@ export class DiscordBotClient extends AkairoClient {
 
         this.$prepare();
         this.listenerHandler.loadAll();
-
         await this.login();
     }
 

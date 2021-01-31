@@ -1,4 +1,4 @@
-import { DiscordBotClient } from "./core/client/Client";
+import { DiscordBotClient } from './core/client/Client';
 
 const ROOT = __dirname;
 
