@@ -1,6 +1,7 @@
-import { GuildFeatures } from "discord.js";
-import { CustomCommand } from "../../../core/structures/commands/Command";
-import { CommandContextNoArgs } from "../../../core/structures/commands/CommandContext";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { GuildFeatures } from 'discord.js';
+import { CustomCommand } from '../../../core/structures/commands/Command';
+import { CommandContextNoArgs } from '../../../core/structures/commands/CommandContext';
 
 
 export default class ServerInfoCommand extends CustomCommand {
@@ -46,7 +47,7 @@ export default class ServerInfoCommand extends CustomCommand {
             textChannels = guild.channels.cache.filter(channel => channel.type === 'text'),
             voiceChannels = guild.channels.cache.filter(channel => channel.type === 'voice');
 
-        const str = [`Name: ${name} (ID)`].join('\n'), ;
+        const str = [`Name: ${name} (ID)`].join('\n');
         return;
     }
 

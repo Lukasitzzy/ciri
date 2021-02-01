@@ -1,5 +1,5 @@
-import { CustomCommand } from "../../core/structures/commands/Command";
-import { CommandContext } from "../../core/structures/commands/CommandContext";
+import { CustomCommand } from '../../core/structures/commands/Command';
+import { CommandContext } from '../../core/structures/commands/CommandContext';
 
 
 export default class PingCommand extends CustomCommand {

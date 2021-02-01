@@ -1,5 +1,5 @@
-import { CustomCommand } from "../../../core/structures/commands/Command";
-import { CommandContext } from "../../../core/structures/commands/CommandContext";
+import { CustomCommand } from '../../../core/structures/commands/Command';
+import { CommandContext } from '../../../core/structures/commands/CommandContext';
 import * as os from 'os';
 import * as discord from 'discord.js';
 import * as akairo from 'discord-akairo';

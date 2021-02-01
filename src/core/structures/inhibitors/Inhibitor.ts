@@ -1,5 +1,5 @@
-import { Inhibitor, InhibitorOptions } from "discord-akairo";
-import { DiscordBotClient } from "../../client/Client";
+import { Inhibitor, InhibitorOptions } from 'discord-akairo';
+import { DiscordBotClient } from '../../client/Client';
 
 
 export class CustomInhibitor extends Inhibitor {

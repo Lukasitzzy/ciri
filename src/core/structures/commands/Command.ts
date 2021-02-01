@@ -1,7 +1,7 @@
-import { Command, CommandOptions } from "discord-akairo";
-import { DiscordBotClient } from "../../client/Client";
+import { Command, CommandOptions } from 'discord-akairo';
+import { DiscordBotClient } from '../../client/Client';
 import { Message } from 'discord.js';
-import { CommandContext } from "./CommandContext";
+import { CommandContext } from './CommandContext';
 
 /**
  * a custom implementation of discord-akairos command

@@ -4,7 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start:dev": "tsc && npm start",
+    "start:dev": "npm run pre-start && npm start",
+    "compile:watch": "tsc -w",
+    "compile": "tsc",
+    "pre-start": "eslint --fix ./src",
     "start": "node -r dotenv/config ."
   },
   "author": "Lukasitzzy",
@@ -12,11 +15,14 @@
   "dependencies": {
     "@discordjs/form-data": "^3.0.1",
     "@types/node": "^14.14.22",
+    "@types/mongodb": "^3.6.3",
+    "@types/node-fetch": "^2.5.8",
     "@types/ws": "^7.4.0",
     "discord-akairo": "github:discord-akairo/discord-akairo",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.2.0",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "mongodb": "^3.6.3"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^4.14.1",

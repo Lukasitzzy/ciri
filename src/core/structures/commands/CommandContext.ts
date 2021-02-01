@@ -1,5 +1,5 @@
-import { Message, MessageOptions } from "discord.js";
-import { CustomCommand } from "./Command";
+import { Message, MessageOptions } from 'discord.js';
+import { CustomCommand } from './Command';
 
 /**
  * the mixed context to have everything in one class folr easier access.

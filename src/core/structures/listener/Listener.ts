@@ -1,5 +1,5 @@
-import { Listener, ListenerOptions } from "discord-akairo";
-import { DiscordBotClient } from "../../client/Client";
+import { Listener, ListenerOptions } from 'discord-akairo';
+import { DiscordBotClient } from '../../client/Client';
 
 
 export class CustomListener extends Listener {
