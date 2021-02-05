@@ -39,7 +39,6 @@ export class DiscordBotClient extends AkairoClient {
                 version: 7
             }
         });
-
         this.commandHandler = new CommandHandler(this, {
             directory: join(ROOT, 'commands'),
             prefix: process.env.DISCORD_COMMAND_PREFIX || '$',
