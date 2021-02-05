@@ -14,8 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/form-data": "^3.0.1",
-    "@types/node": "^14.14.22",
     "@types/mongodb": "^3.6.3",
+    "@types/node": "^14.14.22",
     "@types/node-fetch": "^2.5.8",
     "@types/ws": "^7.4.0",
     "discord-akairo": "github:discord-akairo/discord-akairo",
@@ -25,8 +25,8 @@
     "mongodb": "^3.6.3"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^4.14.1",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.19.0"
   }
 }
