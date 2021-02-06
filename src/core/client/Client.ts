@@ -65,12 +65,12 @@ export class DiscordBotClient extends AkairoClient {
      */
     public async start(): Promise<void> {
 
-        this.$prepare();
+        this._prepare();
         this.listenerHandler.loadAll();
         await this.login();
     }
 
-    private $prepare() {
+    private _prepare() {
         this.listenerHandler.setEmitters({
             commandHandler: this.commandHandler,
             inhibitorHandler: this.inhibitorHandler,

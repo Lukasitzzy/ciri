@@ -7,12 +7,12 @@ import { ClientInteractionWS } from '../ClientInteractionWS';
  */
 export class InteractionCommand extends Interaction {
 
-    private readonly $syncHandle: Record<string, (options: { hideSource: boolean; }) => void>;
+    private readonly _syncHandle: Record<string, (options: { hideSource: boolean; }) => void>;
 
-    private readonly $commandID: string;
+    private readonly _commandID: string;
 
-    private readonly $ws: ClientInteractionWS;
-    private readonly $options: IWsResponse['data']['options'];
+    private readonly _ws: ClientInteractionWS;
+    private readonly _options: IWsResponse['data']['options'];
     /**
      * 
      * @param client the client that initialized the command
@@ -23,11 +23,11 @@ export class InteractionCommand extends Interaction {
         data: IWsResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
         super(ws.client, data);
 
-        this.$syncHandle = syncHandle;
-        this.$commandID = data.data.id;
-        this.$options = data.data.options || [];
+        this._syncHandle = syncHandle;
+        this._commandID = data.data.id;
+        this._options = data.data.options || [];
 
-        this.$ws = ws;
+        this._ws = ws;
 
     }
 
@@ -68,8 +68,6 @@ export class InteractionCommand extends Interaction {
             ephemeral: false,
             options: {}
         };
-        // TO-DO: remove that here
-        const URL = `https://discord.com/api/v8/interactions/${this.id}/${this.token}/callback`;
         const { END_USER_AGREEMENT, INVITE_BOT: INVITE, TERMS_OF_SERICE, PRIVACY_POLICY, GENERAL_DATA_PROTECTON_REGULATION } = this.client.links;
 
         const apiMsg = APIMessage.create(
@@ -100,6 +98,6 @@ export class InteractionCommand extends Interaction {
         // header.append('Content-Type', 'application/json');
 
         if (options?.ephemeral) apiMsg.data.flags = 64;
-        return this.$ws.post({ data: apiMsg.data, endpoint: 'callback' });
+        return this._ws.post({ data: apiMsg.data, endpoint: 'callback' });
     }
 }

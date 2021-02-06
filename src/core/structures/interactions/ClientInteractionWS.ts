@@ -12,7 +12,7 @@ import { Api, DiscordApiSend, IApplicationCommand, IWsResponse } from './types';
 
 export class ClientInteractionWS extends EventEmitter {
 
-    private readonly $client: DiscordBotClient;
+    private readonly _client: DiscordBotClient;
 
     commands: InteractionCommandHandler;
     /**
@@ -22,7 +22,7 @@ export class ClientInteractionWS extends EventEmitter {
     constructor(client: DiscordBotClient) {
         super({ captureRejections: true });
 
-        this.$client = client;
+        this._client = client;
 
         this.commands = new InteractionCommandHandler(this);
 
@@ -50,7 +50,7 @@ export class ClientInteractionWS extends EventEmitter {
      * 
      * @param data 
      */
-    private async $handle(data: IWsResponse): Promise<{ type: number; }> {
+    private async _handle(data: IWsResponse): Promise<{ type: number; }> {
         switch (data.type) {
             case InteractionType.PING:
                 return {
@@ -63,7 +63,7 @@ export class ClientInteractionWS extends EventEmitter {
                 const pr = new Promise<{ type: number; }>((r) => {
                     resolve = r;
 
-                    this.$client.setTimeout(() => {
+                    this._client.setTimeout(() => {
                         timedOut = true;
                         r({
                             type: InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE
@@ -118,8 +118,15 @@ export class ClientInteractionWS extends EventEmitter {
         guildID?: string;
     }): Promise<T | null | undefined> {
 
-        const API = this.$createAPI(endpoint, guildID);
+        const API = this._createAPI(endpoint, guildID);
         return API.post({ data });
+    }
+
+    async delete(...args: any[]): Promise<any> {
+        return args.some(arg => arg === 'teadad');
+    }
+    async patch(...args: any[]): Promise<any> {
+        return args.some(arg => arg === 'teadad');
     }
 
 
@@ -127,7 +134,7 @@ export class ClientInteractionWS extends EventEmitter {
         endpoint,
         guildiD
     }: { endpoint: 'guilds' | 'commands' | 'guild:commands' | 'callback'; guildiD?: string; }): Promise<T> {
-        const api = this.$createAPI(endpoint, guildiD);
+        const api = this._createAPI(endpoint, guildiD);
         return api.get() as unknown as T;
     }
 
@@ -136,7 +143,7 @@ export class ClientInteractionWS extends EventEmitter {
      * @param data 
      */
     async handleFromGateWay(data: IWsResponse): Promise<void> {
-        await this.$handle(data);
+        await this._handle(data);
     }
 
     on(event: 'new', handler: (interaction: InteractionCommand) => void): this;
@@ -156,11 +163,11 @@ export class ClientInteractionWS extends EventEmitter {
     }
 
     get client(): DiscordBotClient {
-        return this.$client;
+        return this._client;
     }
 
 
-    private $createAPI<T>(
+    private _createAPI<T>(
         endpoint: 'guilds' | 'commands' | 'guild:commands' | 'callback',
         guildID?: string
     ): {
