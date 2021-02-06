@@ -60,7 +60,6 @@ export class CommandContext<Targs extends Record<string, unknown>> {
 
     /**
      *  a shortcut to get the server's prefix
-     * @nullable
      */
     get prefix(): string | null {
         return this._prefix || null;
