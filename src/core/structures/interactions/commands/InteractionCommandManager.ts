@@ -4,11 +4,11 @@ import { EventEmitter } from 'events';
 
 export class InteractionCommandHandler extends EventEmitter {
 
-    private readonly $ws: ClientInteractionWS;
+    private readonly _ws: ClientInteractionWS;
 
     constructor(ws: ClientInteractionWS) {
         super({ captureRejections: true });
-        this.$ws = ws;
+        this._ws = ws;
 
     }
 
@@ -49,15 +49,15 @@ export class InteractionCommandHandler extends EventEmitter {
 
     public async getCommandsForGuild({ guildID }: { guildID: string; }): Promise<IApplicationCommand[]> {
         if (!guildID) return [];
-        return this.$fetchCommands(guildID);
+        return this._fetchCommands(guildID);
     }
 
     public async getGlobalCommands(): Promise<IApplicationCommand[]> {
-        return this.$fetchCommands();
+        return this._fetchCommands();
     }
 
 
-    private async $fetchCommands(guildID?: string) {
+    private async _fetchCommands(guildID?: string) {
         const data = { guildID };
         return this.makeRequest<IApplicationCommand[], { guildID?: string; }>({
             method: 'get', data
@@ -67,13 +67,13 @@ export class InteractionCommandHandler extends EventEmitter {
     async makeRequest<
         T extends unknown,
         Body extends Record<string, unknown> = Record<string, unknown>
-    >({ method, data, commandID }: { method: 'post' | 'delete' | 'patch' | 'get'; data: Body & { guildID?: string; }; commandID?: string; }): Promise<any> {
+    >({ method, data }: { method: 'post' | 'delete' | 'patch' | 'get'; data: Body & { guildID?: string; }; commandID?: string; }): Promise<any> {
 
 
         data = data || {} as Body;
         const options: Record<string, any> = {
             headers: {
-                Authorization: `Bot ${this.$ws.client.token}`,
+                Authorization: `Bot ${this._ws.client.token}`,
                 ['Content-Type']: 'application/json'
             }
         };
@@ -91,7 +91,9 @@ export class InteractionCommandHandler extends EventEmitter {
                 options.method = method;
                 options.body = JSON.stringify(data);
         }
-        return this.$ws[method]();
+        //eslint-disable-next-line
+        //@ts-ignore
+        return this._ws[method]() as T;
 
     }
 
