@@ -8,8 +8,6 @@ import { CommandContext } from './CommandContext';
  * @extends {Command}
  * 
  */
-//eslint-disable-next-line
-//@ts-ignore
 export abstract class CustomCommand extends Command {
     /**
      * the discord client
@@ -46,7 +44,7 @@ export abstract class CustomCommand extends Command {
      * @param msg the message that was send by the user
      * @param args the (parsed) arguments 
      */
-    private async exec(msg: Message, args: Record<string, unknown>): Promise<void> {
+    public async exec(msg: Message, args: Record<string, unknown>): Promise<void> {
         const ctx = new CommandContext<typeof args>(
             msg,
             this,

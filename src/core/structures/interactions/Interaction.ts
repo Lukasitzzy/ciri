@@ -6,12 +6,12 @@ import * as InteractionConstants from './InteractionConstants';
 
 export class Interaction extends Base {
     client!: DiscordBotClient;
-    private readonly _channel?: Channel;
-    private readonly _type: string;
-    private readonly _id: string;
-    private readonly _guild?: Guild;
-    private readonly _token: string;
-    private readonly _member?: GuildMember;
+    private readonly $channel?: Channel;
+    private readonly $type: string;
+    private readonly $id: string;
+    private readonly $guild?: Guild;
+    private readonly $token: string;
+    private readonly $member?: GuildMember;
     /**
      *
      */
@@ -19,39 +19,39 @@ export class Interaction extends Base {
         super(client);
 
 
-        this._id = data.id;
-        this._type = InteractionConstants.invertedInteractionType[data.type as 1];
+        this.$id = data.id;
+        this.$type = InteractionConstants.invertedInteractionType[data.type as 1];
 
-        this._token = data.token;
+        this.$token = data.token;
 
 
-        this._channel = client.channels.cache.get(data.channel_id) || undefined;
+        this.$channel = client.channels.cache.get(data.channel_id) || undefined;
 
-        this._guild = client.guilds.cache.get(data.guild_id ?? '') || undefined;
+        this.$guild = client.guilds.cache.get(data.guild_id ?? '') || undefined;
 
-        this._member = this._guild?.members.add(data.member, false) ?? undefined;
+        this.$member = this.$guild?.members.add(data.member, false) ?? undefined;
 
     }
     get token(): string {
-        return this._token;
+        return this.$token;
     }
 
     get type(): string {
-        return this._type;
+        return this.$type;
     }
 
     get channel(): Channel | undefined {
-        return this._channel;
+        return this.$channel;
     }
 
     get guild(): Guild | undefined {
-        return this._guild;
+        return this.$guild;
     }
 
     get member(): GuildMember | undefined {
-        return this._member;
+        return this.$member;
     }
     get id(): string {
-        return this._id;
+        return this.$id;
     }
 }
