@@ -7,7 +7,7 @@ on:
   push:
     branches: 
       - master
-      - feature/*
+      - development
   pull_request:
     branches: [ master ]
 
@@ -26,6 +26,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - run: npm ci --if-present
     - run: npm run build --if-present
-    - run: npm run pre-commit
+    - run: npm run pre-commit --if-present

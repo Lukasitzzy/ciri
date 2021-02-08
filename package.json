@@ -1,15 +1,9 @@
 {
-  "name": "discord_bot",
-  "version": "1.0.0",
+  "name": "discord-bot-rewrite-ts",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/index.js",
-  "scripts": {
-    "start:dev": "npm run pre-start && npm start",
-    "compile:watch": "tsc -w",
-    "build": "tsc",
-    "pre-commit": "eslint --fix ./src",
-    "start": "node -r dotenv/config ."
-  },
+  "scripts": {},
   "author": "Lukasitzzy",
   "license": "MIT",
   "dependencies": {
