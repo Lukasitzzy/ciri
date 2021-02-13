@@ -3,7 +3,13 @@
   "version": "0.2.0",
   "description": "",
   "main": "dist/index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ex .ts --fix",
+    "compile": "node scripts/compile.js",
+    "start": "node -r dotenv/config .",
+    "compile:watch": "tsc -w"
+  },
   "author": "Lukasitzzy",
   "license": "MIT",
   "dependencies": {
