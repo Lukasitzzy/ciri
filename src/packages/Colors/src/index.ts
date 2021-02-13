@@ -28,3 +28,5 @@ export class ColorConverter {
         return '';
     }
 }
+
+export class ConsoleColor { }
