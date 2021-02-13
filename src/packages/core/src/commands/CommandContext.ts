@@ -1,10 +1,10 @@
 import { CommandUtil } from 'discord-akairo';
 import {
-    DMChannel, StoreChannel, NewsChannel,
-    TextChannel, Message, Guild, GuildMember
+    DMChannel, NewsChannel, TextChannel,
+    Message, Guild, GuildMember
 } from 'discord.js';
 import { CustomCommand } from './CustomCommand';
-export class CommandContext<Iargs extends Record<string, unknown>, IChannel extends TextChannel | DMChannel | NewsChannel | StoreChannel> {
+export class CommandContext<Iargs extends Record<string, unknown>, IChannel extends TextChannel | DMChannel | NewsChannel> {
 
     private readonly _msg: Message;
     private readonly _command: CustomCommand;

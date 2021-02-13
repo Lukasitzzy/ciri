@@ -10,21 +10,22 @@ export class ColorConverter {
 
 
     public static hextoRgB(hex: string): colorNames.RGB {
-
+        chalk;
         const rgb: [number, number, number] = [0, 0, 0];
-
+        hex;
         return rgb;
     }
 
     public static rgbToHex(rgb: colorNames.RGB): string {
         const str = '';
 
-
+        rgb;
         return str;
     }
 
 
-    public static hslToHex(hsl: any): string {
+    public static hslToHex(hsl: number[]): string {
+        hsl;
         return '';
     }
 }

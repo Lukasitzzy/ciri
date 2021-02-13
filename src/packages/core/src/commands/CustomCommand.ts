@@ -20,13 +20,14 @@ export abstract class CustomCommand extends Command {
         description: any;
     }) {
         super(id, options);
+        this.description = description;
     }
 
 
-    abstract run(ctx: any): any;
+    abstract run(ctx: CommandContext<Record<string, unknown>, Message['channel']>): any;
 
 
-    public async exec(msg: Message, args: Record<string, unknown>) {
+    public async exec(msg: Message, args: Record<string, unknown>): Promise<void> {
 
         try {
             const ctx = new CommandContext(
