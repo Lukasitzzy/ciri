@@ -17,16 +17,14 @@ export class DiscordBot extends AkairoClient {
             intents: Intents.ALL
         });
 
-
         this.commandHandler = new CustomCommandHandler(this, {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
             prefix: '$'
         });
-
-
     }
+
     private _prepare(): void {
         this.commandHandler.loadAll();
     }

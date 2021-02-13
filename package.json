@@ -1,7 +1,7 @@
 {
-  "name": "discord-bot-rewrite-ts",
+  "name": "@discord_bot_rewrite/repo",
   "version": "0.2.0",
-  "description": "",
+  "description": "the discord bot that somehow works",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src --ext .ts",
@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/form-data": "^3.0.1",
+    "@types/color-name": "^1.1.1",
     "@types/node": "^14.14.27",
     "@types/node-fetch": "^2.5.8",
     "@types/ws": "^7.4.0",
