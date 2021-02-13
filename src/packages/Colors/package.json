@@ -1,0 +1,15 @@
+{
+  "name": "@discord_bot_rewrite/colors",
+  "version": "0.0.1",
+  "description": "a Color module helper",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LukasItzzy",
+  "license": "MIT",
+  "dependencies": {
+    "@types/color-name": "^1.1.1",
+    "chalk": "^4.1.0"
+  }
+}
