@@ -4,6 +4,7 @@ import {
     Message, Guild, GuildMember
 } from 'discord.js';
 import { CustomCommand } from './CustomCommand';
+export type TextbasedChannel = Message['channel'];
 export class CommandContext<Iargs extends Record<string, unknown>, IChannel extends TextChannel | DMChannel | NewsChannel> {
 
     private readonly _msg: Message;
