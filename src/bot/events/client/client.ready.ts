@@ -2,10 +2,6 @@ import { Listener } from 'discord-akairo';
 
 
 export default class ClientReadyEvent extends Listener {
-
-    /**
-     *
-     */
     constructor() {
         super('client.ready', {
             emitter: 'client',
