@@ -3,12 +3,13 @@ import { Intents } from 'discord.js';
 import { join } from 'path';
 import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
-
+import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 export class DiscordBot extends AkairoClient {
 
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
+    public readonly interaction: InteractionClient;
     /**
      *
      */
@@ -32,6 +33,7 @@ export class DiscordBot extends AkairoClient {
         this.listenerHandler = new ListenerHandler(this, {
             directory: join(root, 'events')
         });
+        this.interaction = new InteractionClient(this);
     }
 
     async start(): Promise<void> {
