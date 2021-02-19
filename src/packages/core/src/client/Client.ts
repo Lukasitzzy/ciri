@@ -47,19 +47,18 @@ export class DiscordBot extends AkairoClient {
     }
 
     private _prepare(): void {
+
         this.commandHandler
             .useInhibitorHandler(this.inhibitorHandler)
             .useListenerHandler(this.listenerHandler)
-            .on('load', (command) => console.log(`loaded command ${command.id}`))
             .loadAll();
         this.listenerHandler.setEmitters({
             client: this,
             commandHandler: this.commandHandler,
             ws: this.ws
         });
-        this.listenerHandler.on('load', (l) => {
-            console.log(`loaded event ${l.event} on handler ${l.id}`);
-        }).loadAll();
+
+        this.listenerHandler.loadAll();
         // this.inhibitorHandler.loadAll();
     }
 }
