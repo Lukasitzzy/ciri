@@ -20,13 +20,6 @@ export class InteractionClient extends EventEmitter {
 
     }
 
-    public enable(): void {
-        this._started = true;
-    }
-
-    public disable(): void {
-        this._started = false;
-    }
 
     public async handle(data: IWSResponse): Promise<{ type: number; }> {
         if (!data) return { type: InteractionResponseType.PONG };
@@ -44,18 +37,17 @@ export class InteractionClient extends EventEmitter {
                     resolve = r;
                     this._client.setTimeout(() => {
                         timeout = true;
+                        this.emit('debug', `running command ${data.data.name} but no response was set`);
                         r({
                             type: InteractionResponseType.ACKNOWLEDGE
                         });
                     }, 1000);
                 });
                 const handle: Record<string, (options: { hideSource: boolean; }) => void> = {
-                    ack(options) {
+                    ack(): void {
                         if (!timeout) {
                             resolve({
-                                type: options.hideSource ?
-                                    InteractionResponseType.ACKNOWLEDGE :
-                                    InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE
+                                type: InteractionResponseType.ACKNOWLEDGE
                             });
                         }
                     }
@@ -88,6 +80,6 @@ export class InteractionClient extends EventEmitter {
 
 }
 
-export function getApi(client: any): Api {
+export function getApi(client: DiscordBot): Api {
     return Reflect.get(client, 'api');
 }
