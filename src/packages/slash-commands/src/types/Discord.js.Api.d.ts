@@ -8,10 +8,18 @@ interface DiscordApiSendPost<T> {
 
 
 export interface Api {
-    guilds: GuildsApi;
     applications(id: string): ApplicationApi;
     interactions(id: string, token: string): InteractionApi;
     webhooks(id: string, token: string): {
+        post({ data }: {
+            data: {
+                content: string;
+            },
+            auth?: boolean;
+            query?: {
+                wait: boolean;
+            };
+        }): Promise<any>;
         messages(id: string): {
             get(): Promise<any>;
             post(data: any): Promise<any>;
@@ -42,13 +50,6 @@ export interface ApplicationApi {
     };
 }
 
-
-export interface GuildsApi {
-    (guildID: string): GuildApi;
-}
-export interface GuildApi {
-    commands: CommandApi;
-}
 type CommandApi = commandsApi | MethodApi<any, DiscordApiSendPost<types.IApplicationCommand>>;
 
 interface MethodApi<T, data> {
