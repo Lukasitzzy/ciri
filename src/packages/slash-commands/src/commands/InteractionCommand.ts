@@ -1,4 +1,4 @@
-import { DiscordAPIError } from 'discord.js';
+import { APIMessage, MessageOptions } from 'discord.js';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../Client/Client';
 import { InteractionBase } from '../Client/Interaction';
@@ -38,8 +38,20 @@ export class InterActionCommand extends InteractionBase {
         return this;
     }
 
+    ack(hideSource: boolean): void {
+        this._handle.ack({ hideSource });
+    }
 
-    async reply(content: string, options?: { ephemeral: boolean; }): Promise<any> {
+
+
+    async ephemeral(content: string): Promise<any> {
+        return this.reply(content, { ephemeral: true });
+    }
+
+    // async send(content: string) { };
+
+
+    private async reply(content: string, options?: { ephemeral: boolean; options?: MessageOptions; }): Promise<any> {
 
         const api = getApi(this.client) as any;
 
@@ -56,17 +68,28 @@ export class InterActionCommand extends InteractionBase {
             data.data.flags = 64;
             data.type = 3;
             data.data.type = 3;
-        }
+            const res = await api.interactions(this.id, this.token).callback.post({ data });
+            console.log(res);
+            return;
+        } else {
 
-        console.log(data);
+            console.log(data);
 
-        data.data.type = data.type;
-        const res = await api.interactions(this.id, this.token).callback.post({ data }).catch((err: DiscordAPIError) => {
-            if (err instanceof DiscordAPIError) {
-                console.log(`[ERROR] failed to respond ${err.code} [${err.httpStatus}|${err.method}] ${err.name} ${err.message} `);
+            data.data.type = data.type;
+            const obj = APIMessage.create(
+                //@ts-ignore
+                this,
+                content
+            ).resolveData();
+
+
+            const res = await api.webhooks(this.client.user!.id, this.token).post({
+                data: obj.data,
+                files: obj.files,
+
             }
-        });
-
+            );
+        }
         // return api.applications(this.client.user?.id).callback.post({ data });
     }
 
