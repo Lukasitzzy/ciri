@@ -4,12 +4,15 @@ import { join } from 'path';
 import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
+import { Logger } from '../logger/Logger';
 export class DiscordBot extends AkairoClient {
 
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
     public readonly interaction: InteractionClient;
+
+    public readonly logger: Logger;
     /**
      *
      */
@@ -33,7 +36,12 @@ export class DiscordBot extends AkairoClient {
         this.listenerHandler = new ListenerHandler(this, {
             directory: join(root, 'events')
         });
+
         this.interaction = new InteractionClient(this);
+
+
+        this.logger = new Logger('CLIENT');
+
     }
 
     async start(): Promise<void> {
@@ -57,6 +65,8 @@ export class DiscordBot extends AkairoClient {
             commandHandler: this.commandHandler,
             ws: this.ws
         });
+
+        this.logger.log('');
 
         this.listenerHandler.loadAll();
         // this.inhibitorHandler.loadAll();
