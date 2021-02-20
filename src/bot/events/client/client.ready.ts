@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
 import { DiscordBot } from '../../../packages/core/src/client/Client';
-import { getApi } from '../../../packages/slash-commands/src/Client/Client';
 declare module 'discord.js' {
     interface PresenceData {
         activities: {
@@ -21,22 +21,30 @@ export default class ClientReadyEvent extends Listener {
     }
 
     async exec(): Promise<void> {
-        this.client.interaction.on('new', async (command, guild) => {
-            await command.reply('success!', { ephemeral: true });
+        this.client.interaction.on('new', async (command) => {
+            await command.ephemeral('success!');
+            await command.send({
+                content: 'success',
+                options: {
+                    username: 'test username',
+                    embeds: [
+                        new MessageEmbed({
+                            color: 0x00f00f,
+                            description: [
+                                'this is a test reponse'
+                            ].join('\n')
+                        }),
+                        new MessageEmbed({
+                            color: 0x00f00f,
+                            description: 'this is another embed.'
+                        })
+                    ]
+                }
+            });
         });
-
-        const g = this.client.guilds.cache.random();
-        if (g) {
-            const whooks = g.fetchWebhooks();
-            const f = (await whooks).first();
-            if (f) {
-                const api = getApi(this.client);
-                api.webhooks(web);
-            }
-        }
         this.client.user?.setPresence({
             activities: [{
-                name: 'with 0.0.1% mmath knowledge',
+                name: 'with 0.0.1% math knowledge',
                 type: 'PLAYING'
             }],
             status: 'dnd'
