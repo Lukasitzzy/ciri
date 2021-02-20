@@ -3,10 +3,12 @@ const ENABLE_FILE_LOGGING = process.env.ENABLE_FILE_LOGGING === 'true';
 export class Logger {
 
     private readonly _prefix: string;
+    private readonly _shards: number[];
 
+    constructor(prefix: string, shards = [0, 1]) {
+        this._prefix = `0 ${prefix}  --|`;
 
-    constructor(prefix: string) {
-        this._prefix = prefix;
+        this._shards = shards;
     }
 
 
@@ -29,6 +31,16 @@ export class Logger {
         const nType = this._parseType(type);
         const time = this._parseTime();
 
+        const str = [
+            this._prefix,
+            this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
+            `[${time}]`,
+            `<${nType}>`,
+            issuer ? `issued by ${issuer}` : '',
+            message
+        ].filter((v) => !!v).join(' ');
+
+        console.log(str);
 
         if (ENABLE_FILE_LOGGING) {
             return;
@@ -88,12 +100,23 @@ export class Logger {
 
         console.log(...[day, month, year, hour, minute]);
 
-        return newstr;
+        return newstr.replace(
+            /{{days}}/g, day
+
+        ).replace(
+            /{{months}}/g, month
+        ).replace(
+            /{{years}}/g, year.toString()
+        ).replace(
+            /{{hours}}/g, hour
+        ).replace(
+            /{{minutes}}/g, minute
+        );
     }
 
 
     private _parseNumber(n: number): string {
-        return n < 10 ? `0${n}` : n.toString();
+        return n < 10 ? `0${n} ` : n.toString();
     }
 
 }
