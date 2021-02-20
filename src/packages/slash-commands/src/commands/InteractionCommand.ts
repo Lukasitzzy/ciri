@@ -1,4 +1,6 @@
-import { APIMessage, MessageOptions } from 'discord.js';
+import { WebhookClient } from 'discord.js';
+import { GuildMember } from 'discord.js';
+import { WebhookMessageOptions } from 'discord.js';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../Client/Client';
 import { InteractionBase } from '../Client/Interaction';
@@ -9,9 +11,7 @@ export class InterActionCommand extends InteractionBase {
     private readonly _handle: Record<string, (options: { hideSource: boolean; }) => void>;
     private readonly _commandid: string;
     private readonly _options: iWsResponseData['options'];
-    /**
-     *
-     */
+    private _member?: GuildMember;
     constructor(client: DiscordBot, data: IWSResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
         super(client, data);
 
@@ -35,6 +35,7 @@ export class InterActionCommand extends InteractionBase {
             !!channel
         );
 
+        this._member = this.guild?.members.cache.get(member ?? '');
         return this;
     }
 
@@ -45,52 +46,57 @@ export class InterActionCommand extends InteractionBase {
 
 
     async ephemeral(content: string): Promise<any> {
-        return this.reply(content, { ephemeral: true });
+        return this.reply({ content, options: { ephemeral: true } });
     }
 
-    // async send(content: string) { };
+    async send({ content, options }: { content: string; options?: WebhookMessageOptions; }): Promise<void> {
+        return this.reply({ content, options: { ephemeral: false, options } });
+    }
 
 
-    private async reply(content: string, options?: { ephemeral: boolean; options?: MessageOptions; }): Promise<any> {
 
-        const api = getApi(this.client) as any;
+    private async reply({ content, options }: { content: string; options?: { ephemeral: boolean; options?: WebhookMessageOptions; }; }): Promise<any> {
 
-        const data = {
-            type: 2,
-            data: {
-                type: 2,
-                content: content,
-                flags: 0
-            }
-        };
+        const api = getApi(this.client);
+
+
         if (!this.client.user?.id) throw new Error('client not ready');
         if (options?.ephemeral) {
+            const data = {
+                type: 2,
+                data: {
+                    type: 2,
+                    content: content,
+                    flags: 0
+                }
+            };
             data.data.flags = 64;
             data.type = 3;
             data.data.type = 3;
+
             const res = await api.interactions(this.id, this.token).callback.post({ data });
-            console.log(res);
+            console.log('ephemeral message return', res);
             return;
         } else {
+            const id = this.client.user.id ?? (await this.client.fetchApplication()).id;
 
-            console.log(data);
+            const wh = new WebhookClient(id, this.token);
 
-            data.data.type = data.type;
-            const obj = APIMessage.create(
-                //@ts-ignore
-                this,
-                content
-            ).resolveData();
+            const data = {
+                content,
+                ...options
+            };
 
 
-            const res = await api.webhooks(this.client.user!.id, this.token).post({
-                data: obj.data,
-                files: obj.files,
-
-            }
-            );
+            const res = await wh.send(data.content, { username: options?.options?.username });
+            console.log('res2', res);
         }
         // return api.applications(this.client.user?.id).callback.post({ data });
+    }
+
+
+    get member(): GuildMember | undefined {
+        return this._member;
     }
 
 
