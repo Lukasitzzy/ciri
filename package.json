@@ -4,11 +4,13 @@
   "description": "the discord bot that somehow works",
   "main": "dist/index.js",
   "scripts": {
+    "compile:watch": "tsc -w",
+    "compile": "npm run pre-compile && tsc",
+    "lint:fix": "eslint ./src --ext .ts --fix",
     "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint ./src --ex .ts --fix",
-    "compile": "node scripts/compile.js",
-    "start": "node -r dotenv/config .",
-    "compile:watch": "tsc -w"
+    "pre-compile": "rm -rf dist",
+    "pre-start": "npm run lint:fix && npm run complile",
+    "start": "npm run pre-start && node -r dotenv/config dist/bot"
   },
   "author": "Lukasitzzy",
   "license": "MIT",
