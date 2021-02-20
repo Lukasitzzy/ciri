@@ -32,9 +32,11 @@ export interface Api {
 export interface InteractionApi {
     callback: {
         post(data: DiscordApiSendPost<{
-            content: string;
-            flags?: number;
-            type: number;
+            data: {
+                content: string;
+                flags?: number;
+                type: number;
+            };
         }>): Promise<any>;
     };
 }
