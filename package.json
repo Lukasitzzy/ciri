@@ -9,7 +9,7 @@
     "lint:fix": "eslint ./src --ext .ts --fix",
     "lint": "eslint ./src --ext .ts",
     "pre-compile": "rm -rf dist",
-    "pre-start": "npm run lint:fix && npm run complile",
+    "pre-start": "npm run lint:fix && npm run compile",
     "start": "npm run pre-start && node -r dotenv/config dist/bot"
   },
   "author": "Lukasitzzy",
