@@ -2,7 +2,7 @@ import { Base, Guild } from 'discord.js';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { TextbasedChannel } from '../../../core/src/commands/CommandContext';
 import { IWSResponse } from '../types/InteractionTypes';
-import { invertedInteractionType } from '../util/Constants';
+import { invertedInteractionType } from './Constants';
 
 export abstract class InteractionBase extends Base {
     public client!: DiscordBot;

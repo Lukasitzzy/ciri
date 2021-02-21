@@ -40,7 +40,7 @@ export class DiscordBot extends AkairoClient {
         this.interaction = new InteractionClient(this);
 
 
-        this.logger = new Logger('CLIENT');
+        this.logger = new Logger(this.ws.shards.map(shard => shard.id));
 
     }
 

@@ -5,15 +5,28 @@ export class Logger {
     private readonly _prefix: string;
     private readonly _shards: number[];
 
-    constructor(prefix: string, shards = [0, 1]) {
-        this._prefix = `0 ${prefix}  --|`;
+    constructor(shards = [0, 1]) {
+        this._prefix = '0 --|';
 
         this._shards = shards;
     }
 
 
-    public log(message: string): void {
+    public log(message: string, issuer?: string): void {
+        return this._write({
+            message,
+            issuer,
+            type: 'LOG'
+        });
         return;
+    }
+
+    public error(error: Error, issuer?: string): void {
+        return this._write({
+            message: `${error.name}: ${error.message}`,
+            type: 'ERROR',
+            issuer
+        });
     }
 
 

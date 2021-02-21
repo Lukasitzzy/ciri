@@ -2,7 +2,6 @@ import { CommandContext, TextbasedChannel } from '../../packages/core/src/comman
 import { CustomCommand } from '../../packages/core/src/commands/CustomCommand';
 
 export default class PingCommand extends CustomCommand {
-
     constructor() {
         super({
             id: 'ping',

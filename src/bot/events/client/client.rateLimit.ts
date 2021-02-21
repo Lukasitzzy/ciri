@@ -1,17 +1,22 @@
 import { Listener } from 'discord-akairo';
 import { RateLimitData } from 'discord.js';
+import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 
 
-export default class ClientRatelimitListener extends Listener {
+export default class ClientRatelimitListener extends CustomEvent {
     constructor() {
-        super('client.rateLimit', {
-            emitter: 'client',
-            event: 'rateLimit',
-            category: 'client'
-        });
+        super({
+            id: 'client.rateLimit',
+            options: {
+                emitter: 'client',
+                event: 'rateLimit',
+                category: 'client'
+            }
+        }
+        );
     }
 
-    exec(data: RateLimitData): void {
+    run(data: RateLimitData): void {
         return;
     }
 }

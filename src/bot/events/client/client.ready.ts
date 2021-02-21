@@ -1,6 +1,6 @@
-import { Listener } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { DiscordBot } from '../../../packages/core/src/client/Client';
+import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 declare module 'discord.js' {
     interface PresenceData {
         activities: {
@@ -11,16 +11,19 @@ declare module 'discord.js' {
     }
 }
 
-export default class ClientReadyEvent extends Listener {
+export default class ClientReadyEvent extends CustomEvent {
     client!: DiscordBot;
     constructor() {
-        super('client.ready', {
-            emitter: 'client',
-            event: 'ready'
+        super({
+            id: 'client.ready',
+            options: {
+                emitter: 'client',
+                event: 'ready'
+            }
         });
     }
 
-    async exec(): Promise<void> {
+    async run(): Promise<void> {
         this.client.interaction.on('new', async (command) => {
             await command.ephemeral('success!');
             await command.send({

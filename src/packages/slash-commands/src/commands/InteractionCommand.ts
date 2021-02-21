@@ -3,7 +3,7 @@ import { GuildMember } from 'discord.js';
 import { WebhookMessageOptions } from 'discord.js';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../Client/Client';
-import { InteractionBase } from '../Client/Interaction';
+import { InteractionBase } from '../util/Interaction';
 import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
 
 export class InterActionCommand extends InteractionBase {
