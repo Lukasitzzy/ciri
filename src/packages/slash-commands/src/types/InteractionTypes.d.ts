@@ -1,6 +1,5 @@
-import { Guild } from 'discord.js';
+
 import { Snowflake } from 'discord.js';
-import { InteractionCommandHandlerEvents } from '../util/Constants';
 
 export interface IWSResponse {
     channel_id: string;
@@ -71,11 +70,4 @@ interface IApplicationCommand {
     description: string;
     name: string;
     options?: IApplicationCommandOption[];
-}
-export interface InterctionCommandHandlerEventHandlers {
-    [InteractionCommandHandlerEvents.CREATE]: (command: IApplicationCommand, guild?: Guild) => void;
-    [InteractionCommandHandlerEvents.DELETE]: (command: IApplicationCommand, guild?: Guild) => void;
-    [InteractionCommandHandlerEvents.UPDATE]: (command: IApplicationCommand, guild?: Guild) => void;
-
-
 }

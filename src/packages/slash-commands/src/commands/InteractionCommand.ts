@@ -1,41 +1,41 @@
-import { WebhookClient } from 'discord.js';
-import { GuildMember } from 'discord.js';
-import { WebhookMessageOptions } from 'discord.js';
+import { GuildMember, User, WebhookMessageOptions } from 'discord.js';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../Client/Client';
 import { InteractionBase } from '../util/Interaction';
 import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
-
+import { InteractionResponseType } from '../util/Constants';
+import { Util } from 'discord.js';
 export class InterActionCommand extends InteractionBase {
 
-    private readonly _handle: Record<string, (options: { hideSource: boolean; }) => void>;
-    private readonly _commandid: string;
-    private readonly _options: iWsResponseData['options'];
     private _member?: GuildMember;
+    private _user?: User;
+    private readonly _commandid: string;
+    private readonly _data: IWSResponse;
+    private readonly _handle: Record<string, (options: { hideSource: boolean; }) => void>;
+    private readonly _name: string;
+    private readonly _options: iWsResponseData['options'];
+
     constructor(client: DiscordBot, data: IWSResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
         super(client, data);
 
         this._handle = syncHandle;
         this._commandid = data.data.id;
+        this._name = data.data.name;
         this._options = data.data.options || [];
+        this._data = data;
     }
 
     _parse(
         data: iWsResponseData,
         member?: string,
         user?: string,
-        guild?: string,
-        channel?: string
     ): this {
-        console.log(
-            !!data,
-            !!member,
-            !!user,
-            !!guild,
-            !!channel
-        );
-
-        this._member = this.guild?.members.cache.get(member ?? '');
+        if (member) {
+            this._member = this.guild?.members.cache.get(member ?? '');
+        }
+        if (user) {
+            this._user = this.client.users.cache.get(user);
+        }
         return this;
     }
 
@@ -44,26 +44,35 @@ export class InterActionCommand extends InteractionBase {
     }
 
 
-
-    async ephemeral(content: string): Promise<any> {
-        return this.reply({ content, options: { ephemeral: true } });
+    async reply({
+        content,
+        options,
+        type,
+        ephemeral
+    }: {
+        content: string;
+        options?: WebhookMessageOptions;
+        type?: number;
+        ephemeral?: boolean;
+    }): Promise<void> {
+        return this._reply({
+            content,
+            options: {
+                ephemeral: ephemeral || false,
+                options,
+            },
+            type: type || InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE
+        });
     }
 
-    async send({ content, options }: { content: string; options?: WebhookMessageOptions; }): Promise<void> {
-        return this.reply({ content, options: { ephemeral: false, options } });
-    }
 
 
-
-    private async reply({ content, options }: { content: string; options?: { ephemeral: boolean; options?: WebhookMessageOptions; }; }): Promise<any> {
-
+    private async _reply({ content, options, type }: { content: string; type: number, options?: { ephemeral: boolean; options?: WebhookMessageOptions; }; }): Promise<any> {
         const api = getApi(this.client);
-
-
         if (!this.client.user?.id) throw new Error('client not ready');
         if (options?.ephemeral) {
             const data = {
-                type: 2,
+                type: type || 2,
                 data: {
                     type: 2,
                     content: content,
@@ -73,30 +82,56 @@ export class InterActionCommand extends InteractionBase {
             data.data.flags = 64;
             data.type = 3;
             data.data.type = 3;
-
-            const res = await api.interactions(this.id, this.token).callback.post({ data });
-            console.log('ephemeral message return', res);
+            try {
+                await api.interactions(this.id, this.token).callback.post({ data });
+            } catch (error) {
+                this.client.logger.error(error, 'interaction.reply');
+            }
             return;
         } else {
-            const id = this.client.user.id ?? (await this.client.fetchApplication()).id;
-
-            const wh = new WebhookClient(id, this.token);
-
             const data = {
-                content,
-                ...options
+                type: type || 2,
+                data: {
+                    type: 2,
+                    content: content,
+                    flags: 0
+                }
             };
-
-
-            const res = await wh.send(data.content, { username: options?.options?.username });
-            console.log('res2', res);
+            try {
+                await api.interactions(this.id, this.token).callback.post({
+                    data
+                });
+            } catch (error) {
+                this.client.logger.error(error, 'interaction.reply.webhook');
+            }
         }
-        // return api.applications(this.client.user?.id).callback.post({ data });
     }
 
 
     get member(): GuildMember | undefined {
         return this._member;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get commandID(): string {
+        return this._commandid;
+    }
+
+    get command(): iWsResponseData {
+        return this._data.data;
+    }
+
+    get user(): User | undefined {
+        return this._user;
+    }
+
+    get data(): IWSResponse {
+        const copy = Util.cloneObject(this._data) as IWSResponse;
+        return copy;
+
     }
 
 

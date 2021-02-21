@@ -10,9 +10,7 @@ export class CustomCommandHandler<CMD extends Command> extends CommandHandler {
 
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    findCommand(name: string): CMD | undefined {
+    searchCommand(name: string): CMD | undefined {
         return (
             this.modules.get(name) ||
             this.modules.find(c => c.id === name || c.aliases && c.aliases.includes(name))

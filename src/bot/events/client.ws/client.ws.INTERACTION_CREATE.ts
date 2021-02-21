@@ -1,6 +1,3 @@
-
-import { Util } from 'discord.js';
-import { inspect } from 'util';
 import { DiscordBot } from '../../../packages/core/src/client/Client';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 import { IWSResponse } from '../../../packages/slash-commands/src/types/InteractionTypes';
@@ -22,6 +19,7 @@ export default class INTERACTION_CREATE_EVENT extends CustomEvent {
     }
 
     async run(data: IWSResponse): Promise<void> {
+        this.client.logger.debug(`received slash command ${data.data.name}`);
         await this.client.interaction.handle(data);
 
     }

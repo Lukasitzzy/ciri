@@ -49,7 +49,7 @@ export class DiscordBot extends AkairoClient {
             this._prepare();
             await this.login();
         } catch (error) {
-            console.log(`error on startup ${error}`);
+            this.logger.error(error);
 
         }
     }
@@ -65,9 +65,6 @@ export class DiscordBot extends AkairoClient {
             commandHandler: this.commandHandler,
             ws: this.ws
         });
-
-        this.logger.log('');
-
         this.listenerHandler.loadAll();
         // this.inhibitorHandler.loadAll();
     }

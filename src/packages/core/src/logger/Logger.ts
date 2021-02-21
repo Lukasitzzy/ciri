@@ -29,7 +29,6 @@ export class Logger {
         });
     }
 
-
     public debug(message: string, issuer?: string): void {
         return this._write({
             message,
@@ -40,7 +39,7 @@ export class Logger {
 
     private _write(
         { message, type, issuer }: { message: string; type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'; issuer?: string; }): void {
-
+        issuer = issuer?.toUpperCase();
         const nType = this._parseType(type);
         const time = this._parseTime();
 
@@ -49,19 +48,22 @@ export class Logger {
             this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
             `[${time}]`,
             `<${nType}>`,
-            issuer ? `issued by ${issuer}` : '',
+            issuer ? `[${issuer}]` : '',
             message
         ].filter((v) => !!v).join(' ');
 
         console.log(str);
-
         if (ENABLE_FILE_LOGGING) {
+            const LOG_FORMAT = process.env.LOG_FORMAT || '';
+            const LOG_FILE_NAME_FORMAT = process.env.LOG_FILE || '';
+            const LOG_FILE_EXT = process.env.LOG_FILE_EXT || '.log';
+
+            const r = chalk.reset(str);
+
+
             return;
         }
-
-        return;
     }
-
 
     private _parseType(type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'): string {
         let str = '';
@@ -105,17 +107,16 @@ export class Logger {
 
         const date = new Date();
 
-        const day = this._parseNumber(date.getDay());
+        const day = this._parseNumber(date.getUTCDate());
+
         const month = this._parseNumber(date.getMonth() + 1);
         const year = date.getFullYear();
         const hour = this._parseNumber(date.getHours());
         const minute = this._parseNumber(date.getMinutes());
 
-        console.log(...[day, month, year, hour, minute]);
 
         return newstr.replace(
             /{{days}}/g, day
-
         ).replace(
             /{{months}}/g, month
         ).replace(
@@ -129,7 +130,7 @@ export class Logger {
 
 
     private _parseNumber(n: number): string {
-        return n < 10 ? `0${n} ` : n.toString();
+        return n < 10 ? `0${n}` : n.toString();
     }
 
 }

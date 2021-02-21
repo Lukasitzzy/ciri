@@ -1,4 +1,3 @@
-import { MessageEmbed } from 'discord.js';
 import { DiscordBot } from '../../../packages/core/src/client/Client';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 declare module 'discord.js' {
@@ -24,27 +23,7 @@ export default class ClientReadyEvent extends CustomEvent {
     }
 
     async run(): Promise<void> {
-        this.client.interaction.on('new', async (command) => {
-            await command.ephemeral('success!');
-            await command.send({
-                content: 'success',
-                options: {
-                    username: 'test username',
-                    embeds: [
-                        new MessageEmbed({
-                            color: 0x00f00f,
-                            description: [
-                                'this is a test reponse'
-                            ].join('\n')
-                        }),
-                        new MessageEmbed({
-                            color: 0x00f00f,
-                            description: 'this is another embed.'
-                        })
-                    ]
-                }
-            });
-        });
+
         this.client.user?.setPresence({
             activities: [{
                 name: 'with 0.0.1% math knowledge',
@@ -52,6 +31,6 @@ export default class ClientReadyEvent extends CustomEvent {
             }],
             status: 'dnd'
         });
-        console.log(`[READY] ${this.client.user?.tag} is now ready. `);
+        this.client.logger.log(`[READY] ${this.client.user?.tag} is now ready. `);
     }
 }

@@ -1,3 +1,4 @@
+
 export const ApplicationCommandOptionType = {
     SUB_COMMAND: 1,
     SUB_COMMAND_GROUP: 2,
@@ -19,7 +20,6 @@ export const invertedInteractionType = {
     2: 'APPLICATION_COMMAND'
 };
 
-
 export const InteractionResponseType = {
     PONG: 1,
     ACKNOWLEDGE: 2,
@@ -27,16 +27,3 @@ export const InteractionResponseType = {
     CHANNEL_MESSAGE_WITH_SOURCE: 4,
     ACKNOWLEDGE_WITH_SOURCE: 5,
 };
-
-
-export enum InteractionCommandHandlerEvents {
-    CREATE = 'create',
-    DELETE = 'delete',
-    UPDATE = 'update'
-}
-
-export enum Events {
-    DEBUG = 'debug',
-    ERROR = 'error',
-}
-

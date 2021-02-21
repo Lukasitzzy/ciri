@@ -58,7 +58,7 @@ export class InteractionClient extends EventEmitter {
                     handle
                 );
 
-                this.emit('new', command, command.guild);
+                this.emit('create', command, command.guild);
 
                 return pr;
             default:
@@ -72,7 +72,7 @@ export class InteractionClient extends EventEmitter {
 
 
 
-    public on(event: 'new', handler: (interaction: InterActionCommand, guild?: Guild) => void): this;
+    public on(event: 'create', handler: (interaction: InterActionCommand, guild?: Guild) => void): this;
     public on(event: string, handler: (interaction: any, guild?: Guild) => void): this {
         return super.on(event, handler);
     }
