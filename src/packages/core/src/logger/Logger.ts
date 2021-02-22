@@ -1,4 +1,6 @@
 import * as chalk from 'chalk';
+import { appendFileSync, existsSync, writeFileSync } from 'fs';
+import { join } from 'path';
 const ENABLE_FILE_LOGGING = process.env.ENABLE_FILE_LOGGING === 'true';
 export class Logger {
 
@@ -54,13 +56,16 @@ export class Logger {
 
         console.log(str);
         if (ENABLE_FILE_LOGGING) {
-            const LOG_FORMAT = process.env.LOG_FORMAT || '';
-            const LOG_FILE_NAME_FORMAT = process.env.LOG_FILE || '';
+            const MESSAGE = chalk.reset(str);
             const LOG_FILE_EXT = process.env.LOG_FILE_EXT || '.log';
+            const date = time.split(/\s+/g)[0];
+            const FILE = join(process.cwd(), 'logs', `${date}.${LOG_FILE_EXT}`);
 
-            const r = chalk.reset(str);
-
-
+            if (existsSync(FILE)) {
+                appendFileSync(FILE, MESSAGE, { encoding: 'utf-8' });
+            } else {
+                writeFileSync(FILE, str, { encoding: 'utf-8' });
+            }
             return;
         }
     }
