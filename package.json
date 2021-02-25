@@ -4,6 +4,7 @@
   "description": "the discord bot that somehow works",
   "main": "dist/index.js",
   "scripts": {
+    
     "compile:watch": "tsc -w",
     "pre-commit": "npm run pre-compile --if-present && npm run  && npm run tests --if-present",
     "tsc": "tsc",
