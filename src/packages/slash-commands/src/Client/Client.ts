@@ -22,6 +22,8 @@ export class InteractionClient extends EventEmitter {
         return getApi(this._client).applications(id).commands.get();
     }
 
+
+
     async createCommand(
         name: string,
         description: string,
@@ -43,6 +45,16 @@ export class InteractionClient extends EventEmitter {
 
     }
 
+
+    async purge(
+        guildID?: string
+    ): Promise<void> {
+        const api = getApi(this._client).applications(await this._getID());
+        if (guildID) {
+            return api.guilds(guildID).commands.put({ data: [] });
+        }
+        return api.commands.put({ data: [] });
+    }
 
     async start(): Promise<void> {
         const commands = await this.fetchCommands();
@@ -122,7 +134,11 @@ export class InteractionClient extends EventEmitter {
         return super.on(event, handler);
     }
 
+    private async _getID(): Promise<string> {
 
+        if (this._client.user) return this._client.user.id;
+        return (await this._client.fetchApplication()).id;
+    }
     private async _runCommand(command: InterActionCommand) {
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `slash_commands.${command.name}.ts`);
 
