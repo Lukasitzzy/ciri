@@ -1,3 +1,4 @@
+import { Permissions } from 'discord.js';
 
 export const ApplicationCommandOptionType = {
     SUB_COMMAND: 1,
@@ -26,4 +27,8 @@ export const InteractionResponseType = {
     CHANNEL_MESSAGE: 3,
     CHANNEL_MESSAGE_WITH_SOURCE: 4,
     ACKNOWLEDGE_WITH_SOURCE: 5,
+};
+export const PermissionStrings = {
+    ...Permissions.FLAGS,
+    USE_APPLICATION_COMMANDS: 2147483648n
 };

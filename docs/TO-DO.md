@@ -4,10 +4,13 @@
 - [ ] standard commands 
 - [ ] auto-upate from repo
 - [ ] plugin support
-- [ ] api stuff
-- [ ] slash commands run like normal commands
+- [x] api stuff
+- [x] slash commands run like normal commands
 - [ ] automated backend
-- [ ] automated linting
+- [x] automated linting
 - [ ] automated frontend (changing status)
-- [ ] docs
-- [ ] MORE FEATURES
+- [/] docs
+- [/] MORE FEATURES
+- [ ] replacing all commands at once
+
+ 

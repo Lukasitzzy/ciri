@@ -26,11 +26,12 @@ export default class ClientReadyEvent extends CustomEvent {
 
         this.client.user?.setPresence({
             activities: [{
-                name: 'with 0.0.1% math knowledge',
+                name: 'use /help for help',
                 type: 'PLAYING'
             }],
             status: 'dnd'
         });
+
         this.client.logger.log(`[READY] ${this.client.user?.tag} is now ready. `);
     }
 }

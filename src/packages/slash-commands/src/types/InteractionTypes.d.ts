@@ -1,4 +1,3 @@
-
 import { Snowflake } from 'discord.js';
 
 export interface IWSResponse {
@@ -15,10 +14,23 @@ export interface IWSResponse {
 
 interface iWsResponseData {
     id: string;
-    options: any[];
+    options: iWsResponseData[];
     name: string;
+    value?: string | number | boolean;
     description?: string;
+    resolved?: IwsReponseDataResolved;
+}
 
+interface IwsReponseDataResolved {
+    users?: Record<string, any>;
+    members?: Record<string, any>;
+    channels?: Record<string, any>;
+    roles?: Record<string, any>;
+}
+interface IWSReponseDataOptions {
+    value: string;
+    type: number;
+    name: string;
 }
 interface IPartialInteractionUser {
     avatar: string;

@@ -45,14 +45,28 @@ export interface WebhookApi {
 }
 
 export interface ApplicationApi {
-    callback: {
-        post(
-            data: any
-        ): Promise<any>;
-    };
+
+    // guilds: any;
+    commands: CommandsApi;
+
 }
 
-type CommandApi = commandsApi | MethodApi<any, DiscordApiSendPost<types.IApplicationCommand>>;
+export interface CommandsApi {
+    (commandid: string): CommandApi;
+    get(): Promise<types.IApplicationCommand[]>;
+    delete(options: any): Promise<void>;
+    post(data: DiscordApiSendPost<IApplicationCommandDataPost>): Promise<types.IApplicationCommand>;
+}
+
+export interface IApplicationCommandDataPost {
+    name: string;
+    description: string;
+    options?: types.IApplicationCommandOption[];
+}
+interface CommandApi {
+    get(): Promise<types.IApplicationCommand>;
+
+}
 
 interface MethodApi<T, data> {
     get(): Promise<T>;
