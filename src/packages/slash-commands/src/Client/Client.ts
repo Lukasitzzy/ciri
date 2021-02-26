@@ -3,61 +3,30 @@ import { EventEmitter } from 'events';
 import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { InterActionCommand } from '../commands/InteractionCommand';
+import { InteractionCommandManager } from '../commands/InteractionCommandManager';
 import { Api } from '../types/Discord.js.Api';
-import { IApplicationCommand, IApplicationCommandOption, IWSResponse } from '../types/InteractionTypes';
+import { IWSResponse } from '../types/InteractionTypes';
 import { InteractionResponseType, InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {
     private readonly _client: DiscordBot;
     private readonly _commands: string[];
+    private readonly _commandManager: InteractionCommandManager;
     public constructor(client: DiscordBot) {
         super({ captureRejections: true });
         this._client = client;
         this.start();
         this._commands = [];
+
+        this._commandManager = new InteractionCommandManager(this, client);
     }
 
-    async fetchCommands(): Promise<IApplicationCommand[]> {
-        const id = this._client.user?.id || (await this._client.fetchApplication()).id;
-        return getApi(this._client).applications(id).commands.get();
-    }
-
-
-
-    async createCommand(
-        name: string,
-        description: string,
-        options: IApplicationCommandOption[] = []
-
-    ): Promise<IApplicationCommand> {
-        const id = this._client.user?.id || (await this._client.fetchApplication()).id;
-        return getApi(this._client).applications(id).commands.post({
-            data: {
-                name,
-                description,
-                options
-            },
-            query: {
-                wait: true
-            }
-        });
-
-
-    }
-
-
-    async purge(
-        guildID?: string
-    ): Promise<void> {
-        const api = getApi(this._client).applications(await this._getID());
-        if (guildID) {
-            return api.guilds(guildID).commands.put({ data: [] });
-        }
-        return api.commands.put({ data: [] });
+    async getApplicationID(): Promise<string> {
+        return this._getID();
     }
 
     async start(): Promise<void> {
-        const commands = await this.fetchCommands();
+        const commands = await this.commandManager.fetch();
 
         for (const { name } of commands) {
             this._commands.push(name);
@@ -65,14 +34,6 @@ export class InteractionClient extends EventEmitter {
 
         this.on('debug', (m) => this._client.logger.debug(m));
 
-        this.on('create', async (interaction) => {
-            if (interaction.name === 'test-command') {
-                console.log(interaction.data?.data);
-            }
-            if (this._commands.includes(interaction.name)) {
-                await this._runCommand(interaction);
-            }
-        });
     }
 
 
@@ -115,12 +76,7 @@ export class InteractionClient extends EventEmitter {
                     data,
                     handle
                 );
-                console.log(command.permissions?.serialize());
-
-
-                this.emit('create', command);
-
-
+                await this._runCommand(command);
                 return pr;
             default:
                 throw new Error('invalid response type');
@@ -129,9 +85,13 @@ export class InteractionClient extends EventEmitter {
     }
 
     public on(event: 'debug', handler: (message: string) => void): this;
-    public on(event: 'create', handler: (interaction: InterActionCommand) => void): this;
+    public on(event: 'runCommand', handler: (interaction: InterActionCommand) => void): this;
     public on(event: string, handler: (interaction: any) => void): this {
         return super.on(event, handler);
+    }
+
+    get client(): DiscordBot {
+        return this._client;
     }
 
     private async _getID(): Promise<string> {
@@ -140,6 +100,7 @@ export class InteractionClient extends EventEmitter {
         return (await this._client.fetchApplication()).id;
     }
     private async _runCommand(command: InterActionCommand) {
+        this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `slash_commands.${command.name}.ts`);
 
         try {
@@ -153,6 +114,9 @@ export class InteractionClient extends EventEmitter {
         } catch (error) {
             return null;
         }
+    }
+    get commandManager(): InteractionCommandManager {
+        return this._commandManager;
     }
 }
 

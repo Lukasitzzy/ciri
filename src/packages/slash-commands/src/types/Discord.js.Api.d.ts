@@ -74,7 +74,7 @@ export interface IApplicationCommandDataPost {
 }
 interface CommandApi {
     get(): Promise<types.IApplicationCommand>;
-
+    patch(data: DiscordApiSendPost<IApplicationCommandDataPost>): Promise<types.IApplicationCommand>;
 
 
 }
