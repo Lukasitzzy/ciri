@@ -8,6 +8,6 @@ else
 	npm run pre-commit --if-present
 fi
 if [ -d ".git" ]; then
-	git add -U
+	git add -u
 	echo "prepreared for commiting... hopefully nothing broke D:"
 fi
