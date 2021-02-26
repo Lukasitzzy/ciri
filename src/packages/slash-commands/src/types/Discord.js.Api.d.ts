@@ -62,7 +62,7 @@ interface GuildApi {
 export interface CommandsApi {
     (commandid: string): CommandApi;
     get(): Promise<types.IApplicationCommand[]>;
-    delete(options: any): Promise<void>;
+    delete(): Promise<void>;
     post(data: DiscordApiSendPost<IApplicationCommandDataPost>): Promise<types.IApplicationCommand>;
     put<T>(data: DiscordApiSendPost<T>): Promise<void>;
 }
@@ -74,6 +74,7 @@ export interface IApplicationCommandDataPost {
 }
 interface CommandApi {
     get(): Promise<types.IApplicationCommand>;
+    delete(): Promise<void>;
     patch(data: DiscordApiSendPost<IApplicationCommandDataPost>): Promise<types.IApplicationCommand>;
 
 

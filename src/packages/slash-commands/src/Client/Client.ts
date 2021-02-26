@@ -106,9 +106,10 @@ export class InteractionClient extends EventEmitter {
             await comm.run();
 
         } catch (error) {
-            console.log(error);
-
-            return null;
+            if (/Cannot find module/g.test(error.message)) {
+                return null;
+            }
+            this.client.logger.error(error, `commandRun.${command.commandID}:${command.name}`);
         }
     }
     get commandManager(): InteractionCommandManager {

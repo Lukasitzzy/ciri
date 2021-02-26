@@ -1,3 +1,4 @@
+import chalk = require('chalk');
 import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
 import { DiscordBot } from '../../../core/src/client/Client';
@@ -110,8 +111,22 @@ export class InteractionCommandManager extends EventEmitter {
         }
     }
 
-    async delete(): Promise<void> {
-        return;
+    async delete(
+        command: string,
+        guild?: string,
+
+    ): Promise<void> {
+        if (guild) {
+            await getApi(this._discordClient)
+                .applications(await this._client.getApplicationID())
+                .guilds(guild)
+                .commands(command)
+                .delete();
+        }
+        await getApi(this._discordClient)
+            .applications(await this._client.getApplicationID())
+            .commands
+            .delete();
     }
 
     async fetchCommand(command: string, guild?: string): Promise<IApplicationCommand> {
@@ -143,13 +158,15 @@ export class InteractionCommandManager extends EventEmitter {
                 .get();
         }
     }
-    async purge(guildID: string): Promise<unknown> {
+    async purge(guildID?: string): Promise<unknown> {
         const api = getApi(this._client.client).applications(await this._client.getApplicationID());
         if (guildID) {
+            this.emit('debug', `purging commands for ${guildID}`);
             return api.guilds(guildID).commands.put({ data: [] });
+        } else {
+            this.emit('debug', chalk.bold.bgCyan.black`purging all commands!`);
+            return api.commands.put({ data: [] });
         }
-        return api.commands.put({ data: [] });
-
     }
 
 }
