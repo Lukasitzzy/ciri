@@ -10,13 +10,13 @@ import { InteractionResponseType, InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {
     private readonly _client: DiscordBot;
-    private readonly _commands: string[];
+
     private readonly _commandManager: InteractionCommandManager;
     public constructor(client: DiscordBot) {
         super({ captureRejections: true });
         this._client = client;
         this.start();
-        this._commands = [];
+
 
         this._commandManager = new InteractionCommandManager(this, client);
     }
@@ -26,12 +26,6 @@ export class InteractionClient extends EventEmitter {
     }
 
     async start(): Promise<void> {
-        const commands = await this.commandManager.fetch();
-
-        for (const { name } of commands) {
-            this._commands.push(name);
-        }
-
         this.on('debug', (m) => this._client.logger.debug(m));
 
     }
@@ -101,7 +95,7 @@ export class InteractionClient extends EventEmitter {
     }
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
-        const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `slash_commands.${command.name}.ts`);
+        const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
 
         try {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -112,6 +106,8 @@ export class InteractionClient extends EventEmitter {
             await comm.run();
 
         } catch (error) {
+            console.log(error);
+
             return null;
         }
     }
