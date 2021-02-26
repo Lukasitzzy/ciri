@@ -11,15 +11,24 @@ async function main() {
 	const client = new Client({
 		intents: Intents.ALL,
 	});
+
+	await client.api.applications(process.env.DISCORD_CLIENT_ID)
+		.commands.put({
+			data: require('./commands.json')
+		});
+
 }
 
 
 function checkENV() {
 	ass.ok(
-		process.env.DISCORD_TOKEN !== '',
-		new Error
-	)
-
+		process.env.DISCORD_TOKEN !== undefined,
+		new Error('no discord token in the enviromental vars found')
+	);
+	ass.ok(
+		process.env.DISCORD_CLIENT_ID !== undefined,
+		new Error('no client id found!')
+	);
 }
 
 main().catch(error => {

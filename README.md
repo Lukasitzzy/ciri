@@ -4,7 +4,7 @@
 
 ## instalation guide
 
-> this project works on node v15.x+
+> this project works on node v15.9.0
 
 - make sure you have nodejs installed
 
