@@ -1,8 +1,8 @@
 {
-  "name": "@discord_bot_rewrite/repo",
-  "version": "0.2.0",
+  "name": "ciri-bot",
+  "version": "0.42.0",
   "description": "the discord bot that somehow works",
-  "main": "dist/index.js",
+  "main": "dist/bot/index.js",
   "scripts": {
     "compile:watch": "npm run pre-compile && tsc -w",
     "pre-commit": "npm run compile && npm run lint:fix",
