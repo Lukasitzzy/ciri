@@ -5,6 +5,7 @@ import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
+const allowRegexPrefix = process.env.ALLOW_REGEX_PREFIX;
 import { Message } from 'discord.js';
 export class DiscordBot extends AkairoClient {
 
@@ -18,16 +19,17 @@ export class DiscordBot extends AkairoClient {
      *
      */
     constructor(root: string) {
+
         super({
             ownerID: process.env.OWNER_ID?.split('--'),
             intents: Intents.ALL
         });
-
         this.commandHandler = new CustomCommandHandler(this, {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
             prefix: (msg: Message): string => {
+                if (!allowRegexPrefix) return '$';
                 const prefixMatch = msg.content.split(/\s+/g).slice(0, 2).join(' ')
                     ?.match(/hey\sCiri/gi);
                 console.log(prefixMatch);
