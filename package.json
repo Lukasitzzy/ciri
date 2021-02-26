@@ -1,6 +1,6 @@
 {
   "name": "ciri-bot",
-  "version": "0.42.0",
+  "version": "1.0.0",
   "description": "the discord bot that somehow works",
   "main": "dist/bot/index.js",
   "scripts": {
