@@ -14,7 +14,7 @@ export interface IWSResponse {
 
 interface iWsResponseData {
     id: string;
-    options: iWsResponseData[];
+    options?: iWsResponseData[];
     name: string;
     value?: string | number | boolean;
     description?: string;

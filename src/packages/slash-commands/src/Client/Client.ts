@@ -99,7 +99,7 @@ export class InteractionClient extends EventEmitter {
 
         try {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const cmd = require(path);
+            const cmd = require(path).default;
             if (!cmd) return null;
             const comm = new cmd();
             comm._interaction = command;
