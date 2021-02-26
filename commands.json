@@ -1,7 +1,13 @@
 [
     {
-        "name": "",
-        "description": "",
-        "options": []
+        "name": "snowflake",
+        "description": "deconstructing a discord id to a timestamp",
+        "options": [
+            {
+                "name": "snow_flake",
+                "description": "the id you want to convertz",
+                "type": 3
+            }
+        ]
     }
 ]
