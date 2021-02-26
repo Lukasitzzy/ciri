@@ -3,7 +3,7 @@ import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../Client/Client';
 import { InteractionBase } from '../util/Interaction';
 import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
-import { InteractionResponseType } from '../util/Constants';
+import { InteractionResponseType, PermissionStrings } from '../util/Constants';
 import { Util } from 'discord.js';
 import { Collection } from 'discord.js';
 import { GuildChannel } from 'discord.js';
@@ -118,6 +118,9 @@ export class InterActionCommand extends InteractionBase {
     public get user(): User | undefined {
         return this._user;
     }
+    get options(): iWsResponseData['options'] {
+        return this._options;
+    }
 
     public get data(): IWSResponse | null {
         if (this._data) {
@@ -128,10 +131,10 @@ export class InterActionCommand extends InteractionBase {
 
     }
 
-    public get permissions(): CustomPermissions | null {
-        if (!this.member) return null;
+    public get permissions(): CustomPermissions {
+        if (!this.member) return new CustomPermissions(0n);
         return new CustomPermissions(
-            CustomPermissions.resolve(BigInt(this.data?.member?.permissions))
+            CustomPermissions.resolve(BigInt(this.data?.member?.permissions || PermissionStrings.USE_APPLICATION_COMMANDS))
         );
 
     }
