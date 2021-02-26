@@ -8,7 +8,13 @@
 
 - make sure you have nodejs installed
 
-- run ``
+- rename the `.env_example`
+
+- run the [`first_run.sh`](./first_run.sh) file 
+
+- npm install
+
+- npm start
 
 ## key features
 

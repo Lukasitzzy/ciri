@@ -12,7 +12,7 @@
     "lint": "eslint ./src --ext .ts",
     "pre-compile": "rm -rf dist",
     "pre-start": "npm run lint:fix && npm run compile",
-    "start": "npm run pre-start && node -r dotenv/config dist/bot"
+    "start": "npm run pre-start && node -r dotenv/config ."
   },
   "author": "Lukasitzzy",
   "license": "MIT",

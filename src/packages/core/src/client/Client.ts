@@ -6,6 +6,7 @@ import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
 const allowRegexPrefix = process.env.ALLOW_REGEX_PREFIX;
+const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 import { Message } from 'discord.js';
 export class DiscordBot extends AkairoClient {
 
@@ -29,14 +30,14 @@ export class DiscordBot extends AkairoClient {
             handleEdits: true,
             commandUtil: true,
             prefix: (msg: Message): string => {
-                if (!allowRegexPrefix) return '$';
+                if (!allowRegexPrefix) return defaultPrefix;
                 const prefixMatch = msg.content.split(/\s+/g).slice(0, 2).join(' ')
                     ?.match(/hey\sCiri/gi);
                 console.log(prefixMatch);
                 if (prefixMatch) {
                     return 'hey ciri';
                 }
-                return '$';
+                return defaultPrefix;
             }
         });
 

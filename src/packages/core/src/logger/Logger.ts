@@ -73,33 +73,33 @@ export class Logger {
     private _parseType(type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'): string {
         let str = '';
         switch (type) {
-            case 'LOG':
-                str = chalk.rgb(229, 149, 175)(type);
-                break;
+        case 'LOG':
+            str = chalk.rgb(229, 149, 175)(type);
+            break;
 
 
-            case 'ERROR':
-                str = chalk.rgb(252, 12, 16)(type);
-                break;
+        case 'ERROR':
+            str = chalk.rgb(252, 12, 16)(type);
+            break;
 
-            case 'DEBUG':
-                str = chalk.yellow(type);
-                break;
+        case 'DEBUG':
+            str = chalk.yellow(type);
+            break;
 
-            case 'INFO':
+        case 'INFO':
 
-                str = chalk.blueBright(type);
-                break;
-            case 'SLASH-COMMAND-RUN':
-                str = chalk.rgb(50, 239, 16)(type.replace(/-/g, '_'));
-                break;
+            str = chalk.blueBright(type);
+            break;
+        case 'SLASH-COMMAND-RUN':
+            str = chalk.rgb(50, 239, 16)(type.replace(/-/g, '_'));
+            break;
 
-            case 'COMMAND-RUN':
-                str = chalk.rgb(12, 192, 252)(type.replace(/-/g, '_'));
-                break;
-            default:
-                str = chalk.hex('#e5a295')(type);
-                break;
+        case 'COMMAND-RUN':
+            str = chalk.rgb(12, 192, 252)(type.replace(/-/g, '_'));
+            break;
+        default:
+            str = chalk.hex('#e5a295')(type);
+            break;
         }
 
         return str;

@@ -37,43 +37,43 @@ export class InteractionClient extends EventEmitter {
         console.log(data.member?.permissions);
         if (!data) return { type: InteractionResponseType.PONG };
         switch (data.type) {
-            case InteractionType.PING:
+        case InteractionType.PING:
 
-                return {
-                    type: InteractionResponseType.PONG
-                };
+            return {
+                type: InteractionResponseType.PONG
+            };
 
-            case InteractionType.APPLICATION_COMMAND:
-                let timeout = false;
-                let resolve: (value: { type: number; }) => void;
-                const pr = new Promise<{ type: number; }>((r) => {
-                    resolve = r;
-                    this._client.setTimeout(() => {
-                        timeout = true;
-                        this.emit('debug', `did not respond to command "${data.data.name}".`);
-                        r({
+        case InteractionType.APPLICATION_COMMAND:
+            let timeout = false;
+            let resolve: (value: { type: number; }) => void;
+            const pr = new Promise<{ type: number; }>((r) => {
+                resolve = r;
+                this._client.setTimeout(() => {
+                    timeout = true;
+                    this.emit('debug', `did not respond to command "${data.data.name}".`);
+                    r({
+                        type: InteractionResponseType.ACKNOWLEDGE
+                    });
+                }, 1000);
+            });
+            const handle: Record<string, (options: { hideSource: boolean; }) => void> = {
+                ack(): void {
+                    if (!timeout) {
+                        resolve({
                             type: InteractionResponseType.ACKNOWLEDGE
                         });
-                    }, 1000);
-                });
-                const handle: Record<string, (options: { hideSource: boolean; }) => void> = {
-                    ack(): void {
-                        if (!timeout) {
-                            resolve({
-                                type: InteractionResponseType.ACKNOWLEDGE
-                            });
-                        }
                     }
-                };
-                const command = new InterActionCommand(
-                    this._client,
-                    data,
-                    handle
-                );
-                await this._runCommand(command);
-                return pr;
-            default:
-                throw new Error('invalid response type');
+                }
+            };
+            const command = new InterActionCommand(
+                this._client,
+                data,
+                handle
+            );
+            await this._runCommand(command);
+            return pr;
+        default:
+            throw new Error('invalid response type');
 
         }
     }
