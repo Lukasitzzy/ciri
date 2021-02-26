@@ -8,7 +8,7 @@ export class Logger {
     private readonly _shards: number[];
 
     constructor(shards = [0, 1]) {
-        this._prefix = '0 --|';
+        this._prefix = `${process.ppid} --|`;
 
         this._shards = shards;
     }
