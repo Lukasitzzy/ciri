@@ -9,7 +9,7 @@ on:
       - master
       - development
   pull_request:
-    branches: [ master ]
+    branches: [ development ]
 
 jobs:
   build:
