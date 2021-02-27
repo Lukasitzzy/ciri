@@ -143,6 +143,25 @@ export class InteractionCommandManager extends EventEmitter {
             .get();
 
     }
+    async bulkCreateCommands({
+        data,
+        guildID
+    }: {
+        data: IApplicationCommandDataPost[];
+        guildID?: string;
+    }): Promise<void> {
+        const api = getApi(this._discordClient)
+            .applications(await this._client.getApplicationID());
+        if (guildID) {
+            return api
+                .guilds(guildID)
+                .commands
+                .put({ data });
+        }
+        return api
+            .commands
+            .put({ data });
+    }
 
     async fetch(guildID?: string): Promise<IApplicationCommand[]> {
         if (guildID) {

@@ -1,13 +1,20 @@
 [
     {
         "name": "snowflake",
-        "description": "deconstructing a discord id to a timestamp",
+        "description": "convert a given id to a human readable time",
         "options": [
             {
                 "name": "snow_flake",
-                "description": "the id you want to convertz",
+                "choices": [],
+                "description": "the id you want to convet",
+                "required": true,
                 "type": 3
             }
         ]
+    },
+    {
+        "name": "info",
+        "description": "get stats for nerds about the bot",
+        "options": []
     }
 ]

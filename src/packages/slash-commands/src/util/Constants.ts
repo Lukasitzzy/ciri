@@ -1,6 +1,6 @@
 import { Permissions } from 'discord.js';
 
-export const ApplicationCommandOptionType = {
+export const InteractionCommandOptionType = {
     SUB_COMMAND: 1,
     SUB_COMMAND_GROUP: 2,
     STRING: 3,
