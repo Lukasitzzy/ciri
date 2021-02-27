@@ -98,8 +98,7 @@ export class InteractionClient extends EventEmitter {
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
 
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const cmd = require(path).default;
+            const cmd = (await import(path)).default;
             if (!cmd) return null;
             const comm = new cmd();
             comm._interaction = command;
