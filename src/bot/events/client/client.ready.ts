@@ -31,7 +31,11 @@ export default class ClientReadyEvent extends CustomEvent {
             }],
             status: 'dnd'
         });
+        this.client.logger.shards = this.client.ws.shards.size > 1 ?
+            this.client.ws.shards.map(s => s.id)
+            : [0, 1];
 
-        this.client.logger.log(`[READY] ${this.client.user?.tag} is now ready. `);
+        this.client.logger.log(`${this.client.user?.tag} is now ready. `, this.id);
+
     }
 }

@@ -5,12 +5,12 @@ const ENABLE_FILE_LOGGING = process.env.ENABLE_FILE_LOGGING === 'true';
 export class Logger {
 
     private readonly _prefix: string;
-    private readonly _shards: number[];
+    private _shards: number[];
 
     constructor(shards = [0, 1]) {
         this._prefix = `${process.ppid} --|`;
 
-        this._shards = shards;
+        this._shards = shards.length ? shards : [0, 1];
     }
 
 
@@ -31,6 +31,7 @@ export class Logger {
         });
     }
 
+    
     public debug(message: string, issuer?: string): void {
         return this._write({
             message,
@@ -39,17 +40,32 @@ export class Logger {
         });
     }
 
+    set shards (val: number[]) {
+        this._shards = val;
+    } 
+
     private _write(
         { message, type, issuer }: { message: string; type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'; issuer?: string; }): void {
         issuer = issuer?.toUpperCase();
-        const nType = this._parseType(type);
+        const newtype: string = 
+        type  !== 'SLASH-COMMAND-RUN' ?
+            type + ' '.repeat('SLASH-COMMAND-RUN'.length - type.length) 
+            : type;
+        const nType = this._parseType(newtype);
         const time = this._parseTime();
 
+        // this._parseType2(type);
+        message =  type === 'DEBUG' && message.startsWith('[WS') ?
+            message.slice('[WS => Shard 0]'.length)
+                .replace(/\r\n/gi, ' ')
+            : message;
         const str = [
             this._prefix,
             this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
             `[${time}]`,
             `<${nType}>`,
+            `[WS => Shard ${this._shards[0]}]`
+            ,
             issuer ? `[${issuer}]` : '',
             message
         ].filter((v) => !!v).join(' ');
@@ -70,7 +86,25 @@ export class Logger {
         }
     }
 
-    private _parseType(type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'): string {
+    // private _parseType2(type: string): string {
+    //     let str = type;
+    //     // console.log('slash-command-run'.length);
+    //     const fulllen = 'slash-command-run'.length;
+    //     const _ = fulllen - type.length;
+    //     console.log(">> ", fulllen, type.length);
+        
+    //     const len = _
+    //     console.log(len)
+
+    //     str = str;
+
+    //     return (() => {
+    //         const r = ' '.repeat(len);
+    //         return `${r}${type}${r}`
+    //     })();
+        
+    // }
+    private _parseType(type: string): string {
         let str = '';
         switch (type) {
         case 'LOG':

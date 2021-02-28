@@ -5,7 +5,9 @@ export default class PingCommand extends CustomCommand {
     constructor() {
         super({
             id: 'ping',
-            description: {},
+            description: {
+                text: 'get the bot latency to discord'
+            },
             options: {
                 aliases: ['ping']
             }
