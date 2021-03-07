@@ -10,7 +10,7 @@
 
 - rename the `.env_example`
 
-- run the [`first_run.sh`](./first_run.sh) file 
+- run the [`first_run.sh`](./first_run.sh) file
 
 - npm install
 
