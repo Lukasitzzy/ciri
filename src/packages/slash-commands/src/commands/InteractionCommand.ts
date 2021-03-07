@@ -1,14 +1,17 @@
-import { GuildMember, User, WebhookMessageOptions } from 'discord.js';
-import { DiscordBot } from '../../../core/src/client/Client';
-import { getApi } from '../Client/Client';
-import { InteractionBase } from '../util/Interaction';
-import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
-import { InteractionResponseType, PermissionStrings } from '../util/Constants';
-import { Util } from 'discord.js';
-import { Collection } from 'discord.js';
-import { GuildChannel } from 'discord.js';
-import { Role } from 'discord.js';
+import {
+    Collection, Role, NewsChannel,
+    Util, GuildMember, User,
+    WebhookMessageOptions, GuildChannel, TextChannel
+} from 'discord.js';
 import { CustomPermissions } from '../util/Permissions';
+import { DiscordBot } from '../../../core/src/client/Client';
+import { EMOTES } from '../../../util/Constants';
+import { getApi } from '../../../util/Functions';
+import { InteractionBase } from '../util/Interaction';
+import { InteractionResponseType, PermissionStrings } from '../util/Constants';
+import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
+
+
 export class InterActionCommand extends InteractionBase {
 
     private _member?: GuildMember;
@@ -99,6 +102,62 @@ export class InterActionCommand extends InteractionBase {
     }
 
 
+    async fail({
+        content,
+        ephemeral,
+        options
+    }: {
+        content: string,
+        ephemeral: boolean,
+        options?: WebhookMessageOptions;
+    }): Promise<void> {
+        const emote = this.emote('error');
+        content = `${emote} ${content}`;
+        return this._reply({
+            content,
+            options: {
+                ephemeral,
+                options
+            },
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE
+        });
+    }
+
+    async success({
+        content,
+        ephemeral,
+        options
+    }: {
+        content: string,
+        ephemeral: boolean,
+        options?: WebhookMessageOptions;
+    }): Promise<void> {
+
+        const emote = this.emote('success');
+        content = `${emote} ${content}`;
+        return this._reply({
+            content,
+            options: {
+                ephemeral,
+                options
+            },
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE
+        });
+    }
+
+    public emote(emote: keyof typeof EMOTES.CUSTOM): string {
+        if (this.channel instanceof TextChannel || this.channel instanceof NewsChannel) {
+            const hasPermission= this.channel.permissionsFor(this.guild?.roles.everyone.id ||'')?.has('USE_EXTERNAL_EMOJIS');
+            if (!hasPermission) {
+                return EMOTES.DEFAULT[emote];
+            }
+            else {
+                return EMOTES.CUSTOM[emote];
+            }
+        }
+        return EMOTES.DEFAULT[emote];
+    }
+
     public get member(): GuildMember | undefined {
         return this._member;
     }
@@ -155,7 +214,6 @@ export class InterActionCommand extends InteractionBase {
             options?: WebhookMessageOptions;
         };
     }): Promise<any> {
-        console.log(this.permissions);
 
         const api = getApi(this.client);
         if (!this.client.user?.id) throw new Error('client not ready');

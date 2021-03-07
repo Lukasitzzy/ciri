@@ -1,38 +1,38 @@
 {
-  "name": "ciri-bot",
-  "version": "1.0.0",
-  "description": "the discord bot that somehow works",
-  "main": "dist/bot/index.js",
+  "name": "@ciri-bot/bot",
+  "version": "0.100.0",
+  "description": "> this project works on node v15.9.0",
+  "main": "dist/bot",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
-    "compile:watch": "npm run pre-compile && tsc -w",
-    "pre-commit": "npm run compile && npm run lint:fix",
-    "tsc": "tsc",
-    "compile": "npm run pre-compile && npm run tsc",
-    "lint:fix": "eslint ./src --ext .ts --fix",
-    "lint": "eslint ./src --ext .ts",
-    "pre-compile": "rm -rf dist",
-    "pre-start": "npm run lint:fix && npm run compile",
-    "start": "npm run pre-start && node -r dotenv/config ."
+    "test": "exit 0",
+    "run:no_db": "DISABLE_DB=true node -r dotenv/config ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lukasitzzy/ciri.git"
   },
   "author": "Lukasitzzy",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lukasitzzy/ciri/issues"
+  },
+  "homepage": "https://github.com/Lukasitzzy/ciri#readme",
   "dependencies": {
-    "@discordjs/form-data": "^3.0.1",
     "@types/color-name": "^1.1.1",
     "@types/mongodb": "^3.6.8",
-    "@types/node": "^14.14.27",
+    "@types/node": "^14.14.31",
     "@types/node-fetch": "^2.5.8",
     "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
     "chalk": "^4.1.0",
     "discord-akairo": "github:discord-akairo/discord-akairo",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.2.0",
-    "moment": "^2.29.1",
+    "eslint": "^7.21.0",
     "mongodb": "^3.6.4"
-  },
-  "devDependencies": {
-    "@typescript-eslint/parser": "^4.16.1",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "eslint": "^7.21.0"
   }
 }

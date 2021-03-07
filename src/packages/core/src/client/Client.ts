@@ -5,6 +5,7 @@ import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
+import { DatabaseClient } from '../../../database/src/Client';
 const allowRegexPrefix = process.env.ALLOW_REGEX_PREFIX;
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 import { Message } from 'discord.js';
@@ -14,8 +15,8 @@ export class DiscordBot extends AkairoClient {
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
     public readonly interaction: InteractionClient;
-
     public readonly logger: Logger;
+    public readonly db: DatabaseClient;
     /**
      *
      */
@@ -33,7 +34,6 @@ export class DiscordBot extends AkairoClient {
                 if (!allowRegexPrefix) return defaultPrefix;
                 const prefixMatch = msg.content.split(/\s+/g).slice(0, 2).join(' ')
                     ?.match(/hey\sCiri/gi);
-                console.log(prefixMatch);
                 if (prefixMatch) {
                     return 'hey ciri';
                 }
@@ -53,12 +53,27 @@ export class DiscordBot extends AkairoClient {
 
 
         this.logger = new Logger();
+        this.db = new DatabaseClient({
+            appname: process.env.DATABASE_APP_NAME || 'ciri discord bot',
+            dbname: process.env.DATABASE_NAME || 'discord_bot',
+            host: 'localhost',
+            port: 27017,
+            auth: process.env.DATABASE_AUTH ?
+                (() => {
+                    const [user, pass] = process.env.DATABASE_AUTH.split('ßßß');
+                    return {
+                        user,
+                        password: pass
+                    };
+                })() : undefined
+        });
 
     }
 
     async start(): Promise<void> {
         try {
             this._prepare();
+            await this.db.connect();
             await this.login();
         } catch (error) {
             this.logger.error(error);

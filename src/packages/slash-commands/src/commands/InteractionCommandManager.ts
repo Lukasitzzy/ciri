@@ -2,7 +2,8 @@ import chalk = require('chalk');
 import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
 import { DiscordBot } from '../../../core/src/client/Client';
-import { InteractionClient, getApi } from '../Client/Client';
+import { getApi } from '../../../util/Functions';
+import { InteractionClient } from '../Client/Client';
 import { IApplicationCommandDataPost } from '../types/Discord.js.Api';
 import { IApplicationCommand, IApplicationCommandOption } from '../types/InteractionTypes';
 

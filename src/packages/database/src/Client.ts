@@ -1,5 +1,3 @@
-import { Util } from 'discord.js';
-import { relativeTimeThreshold } from 'moment';
 import * as mongo from 'mongodb';
 
 export class DatabaseClient {
@@ -40,10 +38,13 @@ export class DatabaseClient {
     }
 
     async connect(): Promise<void> {
+        if (process.env.DISABLE_DB === 'true') return;
         const client = await mongo.connect(
             `mongodb://${this._options.host}:${this._options.port}`,
             {
                 useNewUrlParser: true,
+                useUnifiedTopology: true,
+                
                 appname: this._options.appname,
                 auth: this._options.auth ? this._options.auth : undefined
             }

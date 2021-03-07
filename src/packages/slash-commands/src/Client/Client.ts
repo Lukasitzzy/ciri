@@ -34,7 +34,6 @@ export class InteractionClient extends EventEmitter {
 
 
     public async handle(data: IWSResponse): Promise<{ type: number; }> {
-        console.log(data.member?.permissions);
         if (!data) return { type: InteractionResponseType.PONG };
         switch (data.type) {
         case InteractionType.PING:
@@ -52,7 +51,7 @@ export class InteractionClient extends EventEmitter {
                     timeout = true;
                     this.emit('debug', `did not respond to command "${data.data.name}".`);
                     r({
-                        type: InteractionResponseType.ACKNOWLEDGE
+                        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
                     });
                 }, 1000);
             });
@@ -78,11 +77,7 @@ export class InteractionClient extends EventEmitter {
         }
     }
 
-    public on(event: 'debug', handler: (message: string) => void): this;
-    public on(event: 'runCommand', handler: (interaction: InterActionCommand) => void): this;
-    public on(event: string, handler: (interaction: any) => void): this {
-        return super.on(event, handler);
-    }
+
 
     get client(): DiscordBot {
         return this._client;
@@ -114,8 +109,16 @@ export class InteractionClient extends EventEmitter {
     get commandManager(): InteractionCommandManager {
         return this._commandManager;
     }
+
+    public on(event: 'debug', handler: (message: string) => void): this;
+    public on(event: 'runCommand', handler: (interaction: InterActionCommand) => void): this;
+    public on(event: string, handler: (interaction: any) => void): this {
+        return super.on(event, handler);
+    }
+    public emit(event: 'debug', ...args: [string]): boolean;
+    public emit(event: 'runCommand', ...args: [InterActionCommand]): boolean;
+    public emit(event: string, ...args: any[]): boolean {
+        return super.emit(event, ...args);
+    }
 }
 
-export function getApi(client: DiscordBot): Api {
-    return Reflect.get(client, 'api');
-}
