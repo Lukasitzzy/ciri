@@ -4,7 +4,6 @@ import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { InterActionCommand } from '../commands/InteractionCommand';
 import { InteractionCommandManager } from '../commands/InteractionCommandManager';
-import { Api } from '../types/Discord.js.Api';
 import { IWSResponse } from '../types/InteractionTypes';
 import { InteractionResponseType, InteractionType } from '../util/Constants';
 
@@ -30,9 +29,6 @@ export class InteractionClient extends EventEmitter {
 
     }
 
-
-
-
     public async handle(data: IWSResponse): Promise<{ type: number; }> {
         if (!data) return { type: InteractionResponseType.PONG };
         switch (data.type) {
@@ -51,7 +47,7 @@ export class InteractionClient extends EventEmitter {
                     timeout = true;
                     this.emit('debug', `did not respond to command "${data.data.name}".`);
                     r({
-                        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+                        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
                     });
                 }, 1000);
             });
@@ -76,9 +72,6 @@ export class InteractionClient extends EventEmitter {
 
         }
     }
-
-
-
     get client(): DiscordBot {
         return this._client;
     }
@@ -112,7 +105,7 @@ export class InteractionClient extends EventEmitter {
     get commandManager(): InteractionCommandManager {
         return this._commandManager;
     }
-
+    
     public on(event: 'debug', handler: (message: string) => void): this;
     public on(event: 'runCommand', handler: (interaction: InterActionCommand) => void): this;
     public on(event: string, handler: (interaction: any) => void): this {
