@@ -102,6 +102,19 @@ export class InterActionCommand extends InteractionBase {
     }
 
 
+    async panik({
+        error,
+    }: {
+        error: Error;
+    }): Promise<void> {
+        const content = 
+        `${this.emote('error')} failed to run the command\n\`\`\`js\n${error.name}: ${error.message}\`\`\``;
+        return this.reply({
+            content,
+            ephemeral: true
+        });
+    }
+
     async fail({
         content,
         ephemeral,
@@ -112,7 +125,7 @@ export class InterActionCommand extends InteractionBase {
         options?: WebhookMessageOptions;
     }): Promise<void> {
         const emote = this.emote('error');
-        content = `${emote} ${content}`;
+        content = `${emote} failed to run the command \`${this.name}\` reason:\n${content}`;
         return this._reply({
             content,
             options: {
@@ -147,7 +160,7 @@ export class InterActionCommand extends InteractionBase {
 
     public emote(emote: keyof typeof EMOTES.CUSTOM): string {
         if (this.channel instanceof TextChannel || this.channel instanceof NewsChannel) {
-            const hasPermission= this.channel.permissionsFor(this.guild?.roles.everyone.id ||'')?.has('USE_EXTERNAL_EMOJIS');
+            const hasPermission = this.channel.permissionsFor(this.guild?.roles.everyone.id || '')?.has('USE_EXTERNAL_EMOJIS');
             if (!hasPermission) {
                 return EMOTES.DEFAULT[emote];
             }
@@ -246,14 +259,21 @@ export class InterActionCommand extends InteractionBase {
                             parse: []
                         }
 
+
                     },
                     flags: 0
                 }
             };
+            if (options?.options) {
+                data.data.options = {
+                    ...options.options,
+                    allowed_mentions: {
+                        parse: []
+                    }
+                };
+            }
             try {
-                await api.interactions(this.id, this.token).callback.post({
-                    data
-                });
+                await api.webhooks(this.id, this.token).post(data);
             } catch (error) {
                 this.client.logger.error(error, 'interaction.reply.webhook');
             }

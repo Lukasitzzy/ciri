@@ -103,6 +103,9 @@ export class InteractionClient extends EventEmitter {
             if (/Cannot find module/g.test(error.message)) {
                 return null;
             }
+            if (process.env.SHOW_ERROR_TO_USERS) {
+                await command.panik({ error });
+            }
             this.client.logger.error(error, `commandRun.${command.commandID}:${command.name}`);
         }
     }
