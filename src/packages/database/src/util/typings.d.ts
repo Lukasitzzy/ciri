@@ -4,7 +4,7 @@ interface BaseSettings {
     __v: never;
 }
 
-export interface GuildSettings extends BaseSettings {
+export interface IGuildSettings extends BaseSettings {
     /**
      * @required
      */

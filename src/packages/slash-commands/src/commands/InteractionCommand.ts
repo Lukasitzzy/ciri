@@ -33,6 +33,7 @@ export class InterActionCommand extends InteractionBase {
         this._handle = syncHandle;
         this._commandid = data.data.id;
         this._name = data.data.name;
+
         this._options = data.data.options || [];
         this._data = data;
         this._resolved = {};
@@ -195,11 +196,9 @@ export class InterActionCommand extends InteractionBase {
     }
 
     public get data(): IWSResponse | null {
-        if (this._data) {
-            const copy = Util.cloneObject(this._data) as IWSResponse;
-            return copy;
-        }
-        return null;
+        const copy = Util.cloneObject(this._data) as IWSResponse;
+        return copy;
+        
 
     }
 

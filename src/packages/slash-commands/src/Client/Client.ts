@@ -8,15 +8,12 @@ import { IWSResponse } from '../types/InteractionTypes';
 import { InteractionResponseType, InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {
-    private readonly _client: DiscordBot;
-
+    private readonly _client: DiscordBot; 
     private readonly _commandManager: InteractionCommandManager;
     public constructor(client: DiscordBot) {
         super({ captureRejections: true });
         this._client = client;
         this.start();
-
-
         this._commandManager = new InteractionCommandManager(this, client);
     }
 
@@ -33,12 +30,17 @@ export class InteractionClient extends EventEmitter {
         if (!data) return { type: InteractionResponseType.PONG };
         switch (data.type) {
         case InteractionType.PING:
-
             return {
                 type: InteractionResponseType.PONG
             };
 
         case InteractionType.APPLICATION_COMMAND:
+            if (!data.data) {
+                this.emit('debug', 'failed to parse the command, discord did not send a "data" property');
+                return {
+                    type: -1
+                };
+            }
             let timeout = false;
             let resolve: (value: { type: number; }) => void;
             const pr = new Promise<{ type: number; }>((r) => {
@@ -55,11 +57,12 @@ export class InteractionClient extends EventEmitter {
                 ack(): void {
                     if (!timeout) {
                         resolve({
-                            type: InteractionResponseType.ACKNOWLEDGE
+                            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
                         });
                     }
                 }
             };
+
             const command = new InterActionCommand(
                 this._client,
                 data,
@@ -84,7 +87,12 @@ export class InteractionClient extends EventEmitter {
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
-
+        if (command.data?.data.name == 'balance') {
+            return command.success({
+                content: 'your balance is $6969696969696969696',
+                ephemeral: true
+            });
+        }
         try {
             const cmd = (await import(path)).default;
             if (!cmd) return null;

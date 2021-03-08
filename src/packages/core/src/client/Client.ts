@@ -5,7 +5,7 @@ import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
-import { DatabaseClient } from '../../../database/src/Client';
+import { Database } from '../../../database/src/Database';
 const allowRegexPrefix = process.env.ALLOW_REGEX_PREFIX;
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 import { Message } from 'discord.js';
@@ -16,7 +16,7 @@ export class DiscordBot extends AkairoClient {
     public readonly inhibitorHandler: InhibitorHandler;
     public readonly interaction: InteractionClient;
     public readonly logger: Logger;
-    public readonly db: DatabaseClient;
+    public readonly db: Database;
     /**
      *
      */
@@ -53,7 +53,7 @@ export class DiscordBot extends AkairoClient {
 
 
         this.logger = new Logger();
-        this.db = new DatabaseClient({
+        this.db = new Database({
             appname: process.env.DATABASE_APP_NAME || 'ciri discord bot',
             dbname: process.env.DATABASE_NAME || 'discord_bot',
             host: 'localhost',
