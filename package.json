@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lukasitzzy/ciri.git"
+    "url": "git+https://github.com/ItzzLucy/ciri.git"
   },
-  "author": "Lukasitzzy",
+  "author": "ItzzLucy",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Lukasitzzy/ciri/issues"
+    "url": "https://github.com/ItzzLucy/ciri/issues"
   },
-  "homepage": "https://github.com/Lukasitzzy/ciri#readme",
+  "homepage": "https://github.com/ItzzLucy/ciri#readme",
   "dependencies": {
     "@types/color-name": "^1.1.1",
     "@types/mongodb": "^3.6.9",
