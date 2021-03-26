@@ -25,13 +25,13 @@ export class Logger {
 
     public error(error: Error, issuer?: string): void {
         return this._write({
-            message: `${error.name}: ${error.message}`,
+            message: `${error.name}: ${error.message}\n\n${error.stack}`,
             type: 'ERROR',
             issuer
         });
     }
 
-    
+
     public debug(message: string, issuer?: string): void {
         return this._write({
             message,
@@ -40,22 +40,22 @@ export class Logger {
         });
     }
 
-    set shards (val: number[]) {
+    set shards(val: number[]) {
         this._shards = val;
-    } 
+    }
 
     private _write(
         { message, type, issuer }: { message: string; type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'; issuer?: string; }): void {
         issuer = issuer?.toUpperCase();
-        const newtype: string = 
-        type  !== 'SLASH-COMMAND-RUN' ?
-            type + ' '.repeat('SLASH-COMMAND-RUN'.length - type.length) 
-            : type;
+        const newtype: string =
+            type !== 'SLASH-COMMAND-RUN' ?
+                type + ' '.repeat('SLASH-COMMAND-RUN'.length - type.length)
+                : type;
         const nType = this._parseType(newtype);
         const time = this._parseTime();
 
         // this._parseType2(type);
-        message =  type === 'DEBUG' && message.startsWith('[WS') ?
+        message = type === 'DEBUG' && message.startsWith('[WS') ?
             message.slice('[WS => Shard 0]'.length)
                 .replace(/\r\n/gi, ' ')
             : message;
@@ -92,7 +92,7 @@ export class Logger {
     //     const fulllen = 'slash-command-run'.length;
     //     const _ = fulllen - type.length;
     //     console.log(">> ", fulllen, type.length);
-        
+
     //     const len = _
     //     console.log(len)
 
@@ -102,7 +102,7 @@ export class Logger {
     //         const r = ' '.repeat(len);
     //         return `${r}${type}${r}`
     //     })();
-        
+
     // }
     private _parseType(type: string): string {
         let str = '';
