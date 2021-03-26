@@ -10,6 +10,7 @@ import { getApi } from '../../../util/Functions';
 import { InteractionBase } from '../util/Interaction';
 import { InteractionResponseType, PermissionStrings } from '../util/Constants';
 import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
+import { SnowflakeUtil } from 'discord.js';
 
 
 export class InterActionCommand extends InteractionBase {
@@ -18,7 +19,6 @@ export class InterActionCommand extends InteractionBase {
     private _user?: User;
     private readonly _commandid: string;
     private readonly _data: IWSResponse;
-    private readonly _handle: Record<string, (options: { hideSource: boolean; }) => void>;
     private readonly _name: string;
     private readonly _options: iWsResponseData['options'];
     private readonly _resolved: {
@@ -27,10 +27,9 @@ export class InterActionCommand extends InteractionBase {
         channels?: Collection<string, GuildChannel>;
         roles?: Collection<string, Role>;
     };
-    public constructor(client: DiscordBot, data: IWSResponse, syncHandle: Record<string, (options: { hideSource: boolean; }) => void>) {
+    public constructor(client: DiscordBot, data: IWSResponse,) {
         super(client, data);
 
-        this._handle = syncHandle;
         this._commandid = data.data.id;
         this._name = data.data.name;
 
@@ -76,11 +75,6 @@ export class InterActionCommand extends InteractionBase {
         return this;
     }
 
-    public ack(hideSource: boolean): void {
-        this._handle.ack({ hideSource });
-    }
-
-
     public async reply({
         content,
         options,
@@ -108,8 +102,8 @@ export class InterActionCommand extends InteractionBase {
     }: {
         error: Error;
     }): Promise<void> {
-        const content = 
-        `${this.emote('error')} failed to run the command\n\`\`\`js\n${error.name}: ${error.message}\`\`\``;
+        const content =
+            `${this.emote('error')} failed to run the command\n\`\`\`js\n${error.name}: ${error.message}\`\`\``;
         return this.reply({
             content,
             ephemeral: true
@@ -142,17 +136,22 @@ export class InterActionCommand extends InteractionBase {
         ephemeral,
         options
     }: {
-        content: string,
-        ephemeral: boolean,
+        content?: string,
+        ephemeral?: boolean,
         options?: WebhookMessageOptions;
     }): Promise<void> {
 
+        if (!content && !options?.embeds) {
+            return this.panik({
+                error: new Error('invalid command option, please contact my developer about this')
+            });
+        }
         const emote = this.emote('success');
         content = `${emote} ${content}`;
         return this._reply({
             content,
             options: {
-                ephemeral,
+                ephemeral: ephemeral || false,
                 options
             },
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE
@@ -196,10 +195,7 @@ export class InterActionCommand extends InteractionBase {
     }
 
     public get data(): IWSResponse | null {
-        const copy = Util.cloneObject(this._data) as IWSResponse;
-        return copy;
-        
-
+        return this._data;
     }
 
     public get permissions(): CustomPermissions {
@@ -264,15 +260,21 @@ export class InterActionCommand extends InteractionBase {
                 }
             };
             if (options?.options) {
-                data.data.options = {
+                data.data = {
+                    ...data.data,
                     ...options.options,
+                    //@ts-ignore
                     allowed_mentions: {
                         parse: []
                     }
                 };
             }
             try {
-                await api.webhooks(this.id, this.token).post(data);
+                if ((Date.now() - this.createdTimestamp) < 2500) {
+                    await api.interactions(this.id, this.token).callback.post({ data });
+                    return;
+                }
+                await api.webhooks(this.client.user.id, this.token).post(data);
             } catch (error) {
                 this.client.logger.error(error, 'interaction.reply.webhook');
             }
@@ -344,5 +346,9 @@ export class InterActionCommand extends InteractionBase {
             }
             continue;
         }
+    }
+
+    public get createdTimestamp() {
+        return SnowflakeUtil.deconstruct(this.id).timestamp;
     }
 }

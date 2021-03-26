@@ -64,7 +64,7 @@ export interface CommandsApi {
     get(): Promise<types.IApplicationCommand[]>;
     delete(): Promise<void>;
     post(data: DiscordApiSendPost<IApplicationCommandDataPost>): Promise<types.IApplicationCommand>;
-    put<T>(data: DiscordApiSendPost<T>): Promise<void>;
+    put<T>(data: DiscordApiSendPost<T>): Promise<types.IApplicationCommand[]>;
 }
 
 export interface IApplicationCommandDataPost {

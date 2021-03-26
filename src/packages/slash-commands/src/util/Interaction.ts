@@ -13,13 +13,11 @@ export abstract class InteractionBase extends Base {
     private readonly _id: string;
     private readonly _token: string;
     private readonly _guild?: Guild;
-
     public constructor(client: DiscordBot, data: IWSResponse) {
         super(client);
         this._id = data.id;
         this._typestr = invertedInteractionType[data.type as 1];
         this._typeint = data.type;
-
 
         this._token = data.token;
         this._channel = this.client.channels.cache.get(data.channel_id) as TextbasedChannel;

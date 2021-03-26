@@ -8,8 +8,9 @@ import { IWSResponse } from '../types/InteractionTypes';
 import { InteractionResponseType, InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {
-    private readonly _client: DiscordBot; 
+    private readonly _client: DiscordBot;
     private readonly _commandManager: InteractionCommandManager;
+    private readonly _test: any;
     public constructor(client: DiscordBot) {
         super({ captureRejections: true });
         this._client = client;
@@ -29,49 +30,39 @@ export class InteractionClient extends EventEmitter {
     public async handle(data: IWSResponse): Promise<{ type: number; }> {
         if (!data) return { type: InteractionResponseType.PONG };
         switch (data.type) {
-        case InteractionType.PING:
-            return {
-                type: InteractionResponseType.PONG
-            };
-
-        case InteractionType.APPLICATION_COMMAND:
-            if (!data.data) {
-                this.emit('debug', 'failed to parse the command, discord did not send a "data" property');
+            case InteractionType.PING:
                 return {
-                    type: -1
+                    type: InteractionResponseType.PONG
                 };
-            }
-            let timeout = false;
-            let resolve: (value: { type: number; }) => void;
-            const pr = new Promise<{ type: number; }>((r) => {
-                resolve = r;
-                this._client.setTimeout(() => {
-                    timeout = true;
-                    this.emit('debug', `did not respond to command "${data.data.name}".`);
-                    r({
-                        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
-                    });
-                }, 1000);
-            });
-            const handle: Record<string, (options: { hideSource: boolean; }) => void> = {
-                ack(): void {
-                    if (!timeout) {
-                        resolve({
-                            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
-                        });
-                    }
-                }
-            };
 
-            const command = new InterActionCommand(
-                this._client,
-                data,
-                handle
-            );
-            await this._runCommand(command);
-            return pr;
-        default:
-            throw new Error('invalid response type');
+            case InteractionType.APPLICATION_COMMAND:
+                if (!data.data) {
+                    this.emit('debug', 'failed to parse the command, discord did not send a "data" property');
+                    return {
+                        type: -1
+                    };
+                }
+                let timeout = false;
+                let resolve: (value: { type: number; }) => void;
+                const pr = new Promise<{ type: number; }>((r) => {
+                    resolve = r;
+                    this._client.setTimeout(() => {
+                        timeout = true;
+                        this.emit('debug', `did not respond to command "${data.data.name}".`);
+                        // r({
+                        //     type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+                        // });
+                    }, 1000);
+                });
+
+                const command = new InterActionCommand(
+                    this._client,
+                    data,
+                );
+                await this._runCommand(command);
+                return pr;
+            default:
+                throw new Error('invalid response type');
 
         }
     }
@@ -113,7 +104,7 @@ export class InteractionClient extends EventEmitter {
     get commandManager(): InteractionCommandManager {
         return this._commandManager;
     }
-    
+
     public on(event: 'debug', handler: (message: string) => void): this;
     public on(event: 'runCommand', handler: (interaction: InterActionCommand) => void): this;
     public on(event: string, handler: (interaction: any) => void): this {
