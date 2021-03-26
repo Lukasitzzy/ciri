@@ -9,7 +9,6 @@
         "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        "indent": "error",
         "semi": "error",
         "quotes": [
             "error",
