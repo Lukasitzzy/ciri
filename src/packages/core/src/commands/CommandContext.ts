@@ -1,8 +1,9 @@
 import { CommandUtil } from 'discord-akairo';
 import {
     DMChannel, NewsChannel, TextChannel,
-    Message, Guild, GuildMember
+    Message, Guild, GuildMember, MessageOptions
 } from 'discord.js';
+import { EMOTES } from '../../../util/Constants';
 import { CustomCommand } from './CustomCommand';
 export type TextbasedChannel = Message['channel'];
 export class CommandContext<Iargs extends Record<string, unknown>, IChannel extends TextChannel | DMChannel | NewsChannel> {
@@ -15,10 +16,32 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         command: CustomCommand,
         args: Iargs,
     ) {
+        console.log(args);
 
         this._msg = msg;
         this._command = command;
         this._args = args;
+    }
+
+    async send(content: string, options?: MessageOptions) {
+        return (
+            this.util ||
+            this.channel
+        ).send(content, options!);
+    }
+
+
+    public emote(emote: keyof typeof EMOTES.CUSTOM): string {
+        if (this.channel instanceof TextChannel || this.channel instanceof NewsChannel) {
+            const hasPermission = this.channel.permissionsFor(this.guild?.roles.everyone.id || '')?.has('USE_EXTERNAL_EMOJIS');
+            if (!hasPermission) {
+                return EMOTES.DEFAULT[emote];
+            }
+            else {
+                return EMOTES.CUSTOM[emote];
+            }
+        }
+        return EMOTES.DEFAULT[emote];
     }
 
     /**
