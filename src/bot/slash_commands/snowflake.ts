@@ -1,5 +1,5 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
-import { SnowflakeUtil } from 'discord.js';
+import { SnowflakeUtil, MessageEmbed } from 'discord.js';
 
 export default class SnowFlakeSlashCommand extends SlashCommand {
 
@@ -25,13 +25,30 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
 
             if (date) {
                 const content = [
-                    `successfully parsed the snowflake \`${snowflake}\` `,
                     `date: \`${this._parseTime(date)}\` `,
                     `Binary: \`${binary}\``,
-                    `timestamp: \`${timestamp}\` `
+                    `timestamp: \`${timestamp}\` `,
+                    '',
+                    '',
+                    '[reference](https://discord.com/developers/docs/reference#snowflakes)'
                 ].join('\n');
 
-                return this.interaction.success({ content, ephemeral: true });
+                return this.interaction.success({
+                    content: `successfully parsed the snowflake \`${snowflake}\` `,
+                    // ephemeral: true,
+                    options: {
+                        embeds: [
+                            new MessageEmbed()
+                                .setColor(0xd287ff)
+                                .setDescription(content)
+                                .setAuthor(
+                                    `Slash commands powered by ${this.client.user?.username} `,
+                                    this.client.user?.displayAvatarURL({ dynamic: true, size: 512 })
+                                )
+                                .setFooter(`requested by ${this.interaction.user?.username}`)
+                        ]
+                    }
+                });
             }
         }
 
