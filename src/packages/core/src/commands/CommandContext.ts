@@ -23,11 +23,12 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         this._args = args;
     }
 
-    async send(content: string, options?: MessageOptions) {
+    async send(content: string, options?: MessageOptions): Promise<Message> {
         return (
             this.util ||
             this.channel
-        ).send(content, options!);
+
+        ).send(content, options || {}) as unknown as Message;
     }
 
 
@@ -41,7 +42,7 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
                 return EMOTES.CUSTOM[emote];
             }
         }
-        return EMOTES.DEFAULT[emote];
+        return EMOTES.CUSTOM[emote];
     }
 
     /**
