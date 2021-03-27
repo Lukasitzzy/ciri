@@ -15,7 +15,10 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
         }
         if (snowflake) {
             if (!/\d+/g.test(snowflake)) {
-                return this.interaction.fail({ content: 'invalid snowflake id', ephemeral: true });
+                return this.interaction.fail({
+                    content: 'invalid snowflake id',
+                    ephemeral: true
+                });
             }
             const {
                 binary,
