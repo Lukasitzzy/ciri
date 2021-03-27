@@ -16,7 +16,6 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         command: CustomCommand,
         args: Iargs,
     ) {
-        console.log(args);
 
         this._msg = msg;
         this._command = command;
