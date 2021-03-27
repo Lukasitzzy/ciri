@@ -65,7 +65,16 @@ export default class EvalCommand extends CustomCommand {
 
 
         } catch (error) {
-            await ctx.send('ereeeeeeeeeeeeeeeeeeee');
+            this.client.logger.error(error, this.id);
+            const e: string = await this.parseRes(error).catch(error => error.toString());
+            await ctx.send([
+                `${ctx.emote('error')} failed to run the command`,
+                '```',
+                e,
+                '```',
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                `${this.client.user?.username} v${require('../../../../package.json').version} | node ${process.version} | type ${error?.name || 'Error'}`
+            ].join('\n'));
         }
 
 
@@ -92,7 +101,7 @@ export default class EvalCommand extends CustomCommand {
         );
         return thing.replace(
             pat, '--'
-        );
+        ).replace(reg, '\n');
     }
 
 }
