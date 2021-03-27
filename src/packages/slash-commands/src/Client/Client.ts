@@ -43,13 +43,13 @@ export class InteractionClient extends EventEmitter {
                     data,
                 );
 
-                this._client.setTimeout(() => {
+                this._client.setTimeout(async () => {
                     if (!command.resolved) {
                         this.emit('debug', `did not respond to command "${data.data.name}".`);
+                        await command.defer();
+                        return;
                     }
-                    // r({
-                    //     type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
-                    // });
+                    return;
                 }, 1000);
 
                 await this._runCommand(command);
