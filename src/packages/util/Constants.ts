@@ -1,4 +1,4 @@
-
+export const VERSION = '0.69.420';
 export const EMOTES = {
     DEFAULT: {
         'settings.automod.spam': '🍖',

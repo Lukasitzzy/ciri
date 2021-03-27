@@ -1,6 +1,7 @@
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import * as NodeUtil from 'util';
+import { VERSION } from '../../../packages/util/Constants';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 export default class EvalCommand extends CustomCommand {
@@ -49,8 +50,7 @@ export default class EvalCommand extends CustomCommand {
                 await ctx.send([
                     `${ctx.emote('success')} sucessfully evaled.`,
                     'message was to long to be send.',
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    `${this.client.user?.username} v${require('../../../../package.json').version} | node ${process.version} | type ${typeof evaled}`
+                    `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${typeof evaled}`
                 ].join('\n'));
                 return;
             }
@@ -59,27 +59,22 @@ export default class EvalCommand extends CustomCommand {
                 '```js',
                 str,
                 '```',
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                `${this.client.user?.username} v${require('../../../../package.json').version} | node ${process.version} | type ${typeof evaled}`
+
+                `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${typeof evaled}`
             ].join('\n'));
 
 
         } catch (error) {
             this.client.logger.error(error, this.id);
-            const e: string = await this.parseRes(error).catch(error => error.toString());
+            const e = `${error.name}: ${error.message}`;
             await ctx.send([
                 `${ctx.emote('error')} failed to run the command`,
                 '```',
                 e,
                 '```',
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                `${this.client.user?.username} v${require('../../../../package.json').version} | node ${process.version} | type ${error?.name || 'Error'}`
+                `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${error?.name || 'Error'}`
             ].join('\n'));
         }
-
-
-
-
     }
 
     private async parseRes(thing: any): Promise<string> {
