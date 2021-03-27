@@ -12,11 +12,13 @@ import { InteractionResponseType, PermissionStrings } from '../util/Constants';
 import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
 import { SnowflakeUtil } from 'discord.js';
 
-
 export class InterActionCommand extends InteractionBase {
 
+    private _deferred: boolean;
     private _member?: GuildMember;
+    private _responded: boolean;
     private _user?: User;
+
     private readonly _commandid: string;
     private readonly _data: IWSResponse;
     private readonly _name: string;
@@ -27,7 +29,6 @@ export class InterActionCommand extends InteractionBase {
         channels?: Collection<string, GuildChannel>;
         roles?: Collection<string, Role>;
     };
-    private _responded: boolean;
 
     public constructor(client: DiscordBot, data: IWSResponse,) {
         super(client, data);
@@ -39,6 +40,7 @@ export class InterActionCommand extends InteractionBase {
         this._data = data;
         this._resolved = {};
         this._responded = false;
+        this._deferred = false;
     }
 
     public _parse(
@@ -98,6 +100,19 @@ export class InterActionCommand extends InteractionBase {
             type: type || InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE
         });
     }
+
+    async defer(): Promise<unknown> {
+        this._deferred = true;
+
+        return this._reply({
+            content: 'this command may takes a lot more time, please wait a bit sank you!',
+            options: {
+                ephemeral: true,
+                options: {}
+            },
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+        });
+    } 
 
 
     async panik({
