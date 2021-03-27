@@ -1,5 +1,5 @@
 import chalk = require('chalk');
-import { DiscordAPIError, MessageEmbed } from 'discord.js';
+import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../../../util/Functions';
@@ -154,9 +154,6 @@ export class InteractionCommandManager extends EventEmitter {
         guildID?: string;
     }): Promise<IApplicationCommand[]> {
         console.log('first');
-
-        const api = getApi(this._discordClient).applications(await this._client.getApplicationID());
-        console.log('second');
         const oldCommands = await this.fetch(guildID);
         const newarr = [...oldCommands || [], ...data];
         return this.bulkCreateCommands({
