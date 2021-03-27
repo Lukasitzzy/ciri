@@ -14,27 +14,25 @@ export class Logger {
         this._shards = shards.length ? shards : [0, 1];
     }
 
-
     public log(message: string, issuer?: string): void {
         return this._write({
             message,
             issuer,
             type: 'LOG'
         });
-        return;
+    
     }
 
     public error(error: Error, issuer?: string): void {
 
-
+        let message = '';
         if (error instanceof CustomError) {
-            // const n = error.toString();
+            message = error.toString();
         }
-        const message = [
-            error.name,
+        else {
+            message = `${error.name}: ${error.message}\n${error.stack ? error.stack.split('\n').slice(1).join('\n'): ''}`;
+        }
 
-            error.message
-        ].join('');
         return this._write({
             message,
             type: 'ERROR',
@@ -60,12 +58,6 @@ export class Logger {
         issuer = issuer?.toUpperCase();
         const nType = this._parseType(type);
         const time = this._parseTime();
-
-        message = type === 'DEBUG' && message.startsWith('[WS') ?
-            message.slice('[WS => Shard 0]'.length)
-                .replace(/\r\n/gi, ' ')
-            : message;
-
         const str = [
             this._prefix,
             this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
@@ -74,7 +66,7 @@ export class Logger {
             `[WS => Shard (${this._shards.join(', ')})]`
             ,
             issuer ? `[${issuer}]` : '',
-            message
+            this._parseMessage(message)
         ].filter((v) => !!v).join(' ');
 
         console.log(str);
@@ -93,24 +85,6 @@ export class Logger {
         }
     }
 
-    // private _parseType2(type: string): string {
-    //     let str = type;
-    //     // console.log('slash-command-run'.length);
-    //     const fulllen = 'slash-command-run'.length;
-    //     const _ = fulllen - type.length;
-    //     console.log(">> ", fulllen, type.length);
-
-    //     const len = _
-    //     console.log(len)
-
-    //     str = str;
-
-    //     return (() => {
-    //         const r = ' '.repeat(len);
-    //         return `${r}${type}${r}`
-    //     })();
-
-    // }
     private _parseType(type: string): string {
         let str = '';
         switch (type) {
@@ -146,6 +120,13 @@ export class Logger {
         return str;
     }
 
+    private _parseMessage(message: string): string {
+        message = message.startsWith('[WS') ?
+            message.slice('[WS => Shard 0]'.length)
+                .replace(/\r\n/gi, ' ')
+            : message; 
+            return message;
+    }
 
     private _parseTime() {
 
