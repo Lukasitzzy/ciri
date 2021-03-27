@@ -14,20 +14,13 @@ export class InteractionClient extends EventEmitter {
     public constructor(client: DiscordBot) {
         super({ captureRejections: true });
         this._client = client;
-        this.start();
         this._commandManager = new InteractionCommandManager(this, client);
     }
 
     async getApplicationID(): Promise<string> {
         return this._getID();
     }
-
-    async start(): Promise<void> {
-        this.on('debug', (m) => this._client.logger.debug(m));
-
-    }
-
-    public async handle(data: IWSResponse): Promise<void> {
+    public async handle(data: IWSResponse): Promise<InterActionCommand |void> {
         if (!data) return;
         switch (data.type) {
             case InteractionType.PING:
@@ -47,18 +40,21 @@ export class InteractionClient extends EventEmitter {
                     if (!command.resolved) {
                         this.emit('debug', `did not respond to command "${data.data.name}".`);
                         await command.defer();
-                        return;
                     }
                     return;
                 }, 1000);
-
-                await this._runCommand(command);
-                break;
+                try {
+                    await this._runCommand(command);
+                } catch (err) {                    
+                    await command.panik({ error: err });
+                    this.client.logger.error(err, command.id);
+                }
+                return command;
             default:
                 throw new Error('invalid response type');
-
         }
     }
+
     get client(): DiscordBot {
         return this._client;
     }
@@ -68,6 +64,7 @@ export class InteractionClient extends EventEmitter {
         if (this._client.user) return this._client.user.id;
         return (await this._client.fetchApplication()).id;
     }
+
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
@@ -79,18 +76,20 @@ export class InteractionClient extends EventEmitter {
             await comm.run();
 
         } catch (error) {
+            // TODO: refractor this to not error 
             if (/Cannot find module/g.test(error.message)) {
                 return null;
             }
-            if (process.env.SHOW_ERROR_TO_USERS) {
                 await command.panik({ error });
-            }
-            this.client.logger.error(error, `commandRun.${command.commandID}:${command.name}`);
+
+            this.client.logger.error(error, `SlashcommandRun:${command.name}`);
         }
     }
+
     get commandManager(): InteractionCommandManager {
         return this._commandManager;
     }
+
     get commands(): InteractionCommandManager {
         return this._commandManager;
     }
