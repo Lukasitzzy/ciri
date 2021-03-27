@@ -1,9 +1,10 @@
 import { Command, CommandOptions } from 'discord-akairo';
 import { Message } from 'discord.js';
+import { DiscordBot } from '../client/Client';
 import { CommandContext } from './CommandContext';
 
 export abstract class CustomCommand extends Command {
-
+    client!: DiscordBot;
 
     /**
          *
