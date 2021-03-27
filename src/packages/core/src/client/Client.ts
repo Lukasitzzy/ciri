@@ -6,9 +6,7 @@ import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/src/Database';
-const allowRegexPrefix = process.env.ALLOW_REGEX_PREFIX;
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
-import { Message } from 'discord.js';
 export class DiscordBot extends AkairoClient {
 
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
@@ -30,15 +28,7 @@ export class DiscordBot extends AkairoClient {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
-            prefix: (msg: Message): string => {
-                if (!allowRegexPrefix) return defaultPrefix;
-                const prefixMatch = msg.content.split(/\s+/g).slice(0, 2).join(' ')
-                    ?.match(/hey\sCiri/gi);
-                if (prefixMatch) {
-                    return 'hey ciri';
-                }
-                return defaultPrefix;
-            }
+            prefix: defaultPrefix
         });
 
         this.inhibitorHandler = new InhibitorHandler(this, {
