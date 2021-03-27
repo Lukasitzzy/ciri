@@ -1,6 +1,7 @@
 import * as chalk from 'chalk';
 import { appendFileSync, existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { CustomError } from '../errors/CustomError';
 const ENABLE_FILE_LOGGING = process.env.ENABLE_FILE_LOGGING === 'true';
 export class Logger {
 
@@ -24,8 +25,18 @@ export class Logger {
     }
 
     public error(error: Error, issuer?: string): void {
+
+
+        if (error instanceof CustomError) {
+            // const n = error.toString();
+        }
+        const message = [
+            error.name,
+
+            error.message
+        ].join('');
         return this._write({
-            message: `${error.name}: ${error.message}\n\n${error.stack}`,
+            message,
             type: 'ERROR',
             issuer
         });
@@ -47,24 +58,20 @@ export class Logger {
     private _write(
         { message, type, issuer }: { message: string; type: 'LOG' | 'ERROR' | 'DEBUG' | 'INFO' | 'SLASH-COMMAND-RUN' | 'COMMAND-RUN'; issuer?: string; }): void {
         issuer = issuer?.toUpperCase();
-        const newtype: string =
-            type !== 'SLASH-COMMAND-RUN' ?
-                type + ' '.repeat('SLASH-COMMAND-RUN'.length - type.length)
-                : type;
-        const nType = this._parseType(newtype);
+        const nType = this._parseType(type);
         const time = this._parseTime();
 
-        // this._parseType2(type);
         message = type === 'DEBUG' && message.startsWith('[WS') ?
             message.slice('[WS => Shard 0]'.length)
                 .replace(/\r\n/gi, ' ')
             : message;
+
         const str = [
             this._prefix,
             this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
             `[${time}]`,
             `<${nType}>`,
-            `[WS => Shard ${this._shards[0]}]`
+            `[WS => Shard (${this._shards.join(', ')})]`
             ,
             issuer ? `[${issuer}]` : '',
             message
@@ -107,33 +114,33 @@ export class Logger {
     private _parseType(type: string): string {
         let str = '';
         switch (type) {
-        case 'LOG':
-            str = chalk.rgb(229, 149, 175)(type);
-            break;
+            case 'LOG':
+                str = chalk.rgb(229, 149, 175)(type);
+                break;
 
 
-        case 'ERROR':
-            str = chalk.rgb(252, 12, 16)(type);
-            break;
+            case 'ERROR':
+                str = chalk.rgb(252, 12, 16)(type);
+                break;
 
-        case 'DEBUG':
-            str = chalk.yellow(type);
-            break;
+            case 'DEBUG':
+                str = chalk.yellow(type);
+                break;
 
-        case 'INFO':
+            case 'INFO':
 
-            str = chalk.blueBright(type);
-            break;
-        case 'SLASH-COMMAND-RUN':
-            str = chalk.rgb(50, 239, 16)(type.replace(/-/g, '_'));
-            break;
+                str = chalk.blueBright(type);
+                break;
+            case 'SLASH-COMMAND-RUN':
+                str = chalk.rgb(50, 239, 16)(type.replace(/-/g, '_'));
+                break;
 
-        case 'COMMAND-RUN':
-            str = chalk.rgb(12, 192, 252)(type.replace(/-/g, '_'));
-            break;
-        default:
-            str = chalk.hex('#e5a295')(type);
-            break;
+            case 'COMMAND-RUN':
+                str = chalk.rgb(12, 192, 252)(type.replace(/-/g, '_'));
+                break;
+            default:
+                str = chalk.hex('#e5a295')(type);
+                break;
         }
 
         return str;
