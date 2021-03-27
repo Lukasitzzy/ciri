@@ -5,7 +5,7 @@ import { DiscordBot } from '../../../core/src/client/Client';
 import { InterActionCommand } from '../commands/InteractionCommand';
 import { InteractionCommandManager } from '../commands/InteractionCommandManager';
 import { IWSResponse } from '../types/InteractionTypes';
-import { InteractionResponseType, InteractionType } from '../util/Constants';
+import { InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {
     private readonly _client: DiscordBot;
@@ -27,40 +27,33 @@ export class InteractionClient extends EventEmitter {
 
     }
 
-    public async handle(data: IWSResponse): Promise<{ type: number; }> {
-        if (!data) return { type: InteractionResponseType.PONG };
+    public async handle(data: IWSResponse): Promise<void> {
+        if (!data) return;
         switch (data.type) {
             case InteractionType.PING:
-                return {
-                    type: InteractionResponseType.PONG
-                };
-
+                console.log('got PING command  ignoring ');
+                break;
             case InteractionType.APPLICATION_COMMAND:
                 if (!data.data) {
                     this.emit('debug', 'failed to parse the command, discord did not send a "data" property');
-                    return {
-                        type: -1
-                    };
+                    break;
                 }
-                let timeout = false;
-                let resolve: (value: { type: number; }) => void;
-                const pr = new Promise<{ type: number; }>((r) => {
-                    resolve = r;
-                    this._client.setTimeout(() => {
-                        timeout = true;
-                        this.emit('debug', `did not respond to command "${data.data.name}".`);
-                        // r({
-                        //     type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
-                        // });
-                    }, 1000);
-                });
-
                 const command = new InterActionCommand(
                     this._client,
                     data,
                 );
+
+                this._client.setTimeout(() => {
+                    if (!command.resolved) {
+                        this.emit('debug', `did not respond to command "${data.data.name}".`);
+                    }
+                    // r({
+                    //     type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+                    // });
+                }, 1000);
+
                 await this._runCommand(command);
-                return pr;
+                break;
             default:
                 throw new Error('invalid response type');
 
@@ -78,12 +71,6 @@ export class InteractionClient extends EventEmitter {
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
-        if (command.data?.data.name == 'balance') {
-            return command.success({
-                content: 'your balance is $6969696969696969696',
-                ephemeral: true
-            });
-        }
         try {
             const cmd = (await import(path)).default;
             if (!cmd) return null;
@@ -102,6 +89,9 @@ export class InteractionClient extends EventEmitter {
         }
     }
     get commandManager(): InteractionCommandManager {
+        return this._commandManager;
+    }
+    get commands(): InteractionCommandManager {
         return this._commandManager;
     }
 

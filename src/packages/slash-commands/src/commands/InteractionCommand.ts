@@ -1,6 +1,6 @@
 import {
     Collection, Role, NewsChannel,
-    Util, GuildMember, User,
+    GuildMember, User,
     WebhookMessageOptions, GuildChannel, TextChannel
 } from 'discord.js';
 import { CustomPermissions } from '../util/Permissions';
@@ -27,6 +27,8 @@ export class InterActionCommand extends InteractionBase {
         channels?: Collection<string, GuildChannel>;
         roles?: Collection<string, Role>;
     };
+    private _responded: boolean;
+
     public constructor(client: DiscordBot, data: IWSResponse,) {
         super(client, data);
 
@@ -36,6 +38,7 @@ export class InterActionCommand extends InteractionBase {
         this._options = data.data.options || [];
         this._data = data;
         this._resolved = {};
+        this._responded = false;
     }
 
     public _parse(
@@ -239,6 +242,7 @@ export class InterActionCommand extends InteractionBase {
             data.data.type = 3;
             try {
                 await api.interactions(this.id, this.token).callback.post({ data });
+                this._responded = true;
             } catch (error) {
                 this.client.logger.error(error, 'interaction.reply');
             }
@@ -253,8 +257,6 @@ export class InterActionCommand extends InteractionBase {
                         allowed_mentions: {
                             parse: []
                         }
-
-
                     },
                     flags: 0
                 }
@@ -263,6 +265,7 @@ export class InterActionCommand extends InteractionBase {
                 data.data = {
                     ...data.data,
                     ...options.options,
+                    //eslint-disable-next-line
                     //@ts-ignore
                     allowed_mentions: {
                         parse: []
@@ -275,6 +278,7 @@ export class InterActionCommand extends InteractionBase {
                     return;
                 }
                 await api.webhooks(this.client.user.id, this.token).post(data);
+                this._responded =  true;
             } catch (error) {
                 this.client.logger.error(error, 'interaction.reply.webhook');
             }
@@ -348,7 +352,11 @@ export class InterActionCommand extends InteractionBase {
         }
     }
 
-    public get createdTimestamp() {
+    public get createdTimestamp(): number {
         return SnowflakeUtil.deconstruct(this.id).timestamp;
+    }
+
+    get reponded(): boolean {
+        return this.reponded;
     }
 }
