@@ -4,17 +4,15 @@
 
 ## instalation guide
 
-> this project works on node v15.9.0
+> this project works has been tested on node v15.9.0
 
 - make sure you have nodejs installed
 
 - rename the `.env_example`
 
-- run the [`first_run.sh`](./first_run.sh) file
+- run `npm install`
 
-- npm install
-
-- npm start
+- run `npm start`
 
 ## key features
 
