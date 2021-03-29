@@ -33,7 +33,7 @@
     "discord-akairo": "github:discord-akairo/discord-akairo",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.2.0",
-    "eslint": "^7.22.0",
+    "eslint": "^7.23.0",
     "mongodb": "^3.6.5"
   }
 }
