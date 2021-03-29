@@ -30,6 +30,7 @@ export class Database {
      */
     constructor(options?: {
         appname: string;
+        shards: number[];
         auth?: { user: string; password: string; };
         dbname: string;
         host: string;
@@ -43,7 +44,7 @@ export class Database {
             port: options.port
         } : DefaultDatabaseConfig;
 
-        this.logger = new Logger([]);
+        this.logger = new Logger(options?.shards);
         this._collections = [];
 
     }

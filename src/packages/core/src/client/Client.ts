@@ -42,15 +42,23 @@ export class DiscordBot extends AkairoClient {
         this.interaction = new InteractionClient(this);
 
 
+        const SHARDS: number[] = [];
+
+        if (this.ws.shards.size) {
+            for (const shard of this.ws.shards.values()) SHARDS.push(shard.id);
+        }
+
+
         this.logger = new Logger();
         this.db = new Database({
             appname: process.env.DATABASE_APP_NAME || 'ciri discord bot',
             dbname: process.env.DATABASE_NAME || 'discord_bot',
             host: 'localhost',
+            shards: SHARDS,
             port: 27017,
             auth: process.env.DATABASE_AUTH ?
                 (() => {
-                    const [user, pass] = process.env.DATABASE_AUTH.split('ßßß');
+                    const [user, pass] = process.env.DATABASE_AUTH.split(':<:>:');
                     return {
                         user,
                         password: pass
