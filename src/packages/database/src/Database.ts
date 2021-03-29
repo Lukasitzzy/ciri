@@ -6,13 +6,13 @@ import {
     AllowedCollectionNames,
     EMOTES
 } from '../../util/Constants';
-import { GuildSettings } from './models/guilds/GuildSettings';
+import { GuildSettingsModel } from './models/guilds/GuildSettings';
 export class Database {
 
     private _db!: mongo.Db;
     public readonly logger: Logger;
     private readonly _collections: mongo.Collection<Record<string, unknown>>[];
-    private _settings!: GuildSettings;
+    private _settings!: GuildSettingsModel;
 
 
     private readonly _options: {
@@ -24,7 +24,7 @@ export class Database {
             user: string;
             password: string;
         };
-    };
+    }; 
     /**
      *
      */
@@ -56,13 +56,12 @@ export class Database {
             {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
-
                 appname: this._options.appname,
                 auth: this._options.auth ? this._options.auth : undefined
             }
         );
         this._db = client.db(this._options.dbname);
-
+        this._checkReady();
 
         const collections = await this._db.collections();
         const allowedNames = Object.values(AllowedCollectionNames);
@@ -73,7 +72,7 @@ export class Database {
             }
             switch (coll.collectionName) {
             case AllowedCollectionNames.GuildSettings:
-                this._settings = new GuildSettings(this, coll);
+                this._settings = new GuildSettingsModel(this, coll);
                 await this._settings.init();
                 break;
             default:
