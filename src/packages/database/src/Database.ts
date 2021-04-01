@@ -13,7 +13,7 @@ export class Database {
     public readonly logger: Logger;
     private readonly _collections: mongo.Collection<Record<string, unknown>>[];
     private _settings!: GuildSettingsModel;
-
+    private readonly _shards: number[];
 
     private readonly _options: {
         appname: string;
@@ -46,6 +46,7 @@ export class Database {
 
         this.logger = new Logger(options?.shards);
         this._collections = [];
+        this._shards = options?.shards || [0, 1];
 
     }
 
@@ -82,8 +83,6 @@ export class Database {
         }
         this.logger.log(`${EMOTES.DEFAULT.success} successfully connected to the ${this._options.dbname} database.`, this.constructor.name);
     }
-
-
 
     private _checkReady() {
         if (!this._db) throw new Error('not ready');
