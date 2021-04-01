@@ -1,6 +1,10 @@
 import * as chalk from 'chalk';
+import { Provider } from 'discord-akairo';
+import { Message } from 'discord.js';
 import { appendFileSync, existsSync, writeFileSync } from 'fs';
+import { PerformanceObserver } from 'node:perf_hooks';
 import { join } from 'path';
+import { CustomCommand } from '../commands/CustomCommand';
 import { CustomError } from '../errors/CustomError';
 const ENABLE_FILE_LOGGING = process.env.ENABLE_FILE_LOGGING === 'true';
 export class Logger {
@@ -20,7 +24,33 @@ export class Logger {
             issuer,
             type: 'LOG'
         });
-    
+
+    }
+    public commandRun(command: CustomCommand, msg: Message, args: Record<string, unknown>): void {
+        if (
+            process.env.EXTENDED_COMMAND_LOGGING && 
+            process.env.DEBUG_MODE === 'true' &&
+            process.env.NODE_ENV !== 'production'
+        ) {
+
+            let argsstr = '';
+            for (const arg of Object.keys(args)) {
+                if (Object.prototype.hasOwnProperty.call(args, arg)) {
+                    argsstr += `${arg}: ${args[arg]}`;
+                }
+            }
+
+            return this._write({
+                message: `running comamnd ${command.id} by user (${msg.author.id}; guild:${msg.guild ? msg.guild.id : 'dm'})\n${argsstr}`,
+                type: 'COMMAND-RUN',
+                issuer: 'client.commandhandler.commandrun'
+            });
+        }
+        return this._write({
+            message: `running command ${command.categoryID}:${command.id}`,
+            type: 'COMMAND-RUN',
+            issuer: 'client.commandhandler.commandrun'
+        });
     }
 
     public error(error: Error, issuer?: string): void {
@@ -30,7 +60,7 @@ export class Logger {
             message = error.toString();
         }
         else {
-            message = `${error.name}: ${error.message}\n${error.stack ? error.stack.split('\n').slice(1).join('\n'): ''}`;
+            message = `${error.name}: ${error.message}\n${error.stack ? error.stack.split('\n').slice(1).join('\n') : ''}`;
         }
 
         return this._write({
@@ -68,6 +98,7 @@ export class Logger {
             issuer ? `[${issuer}]` : '',
             this._parseMessage(message)
         ].filter((v) => !!v).join(' ');
+        message = message.split('\n').join(' | ');
 
         console.log(str);
         if (ENABLE_FILE_LOGGING) {
@@ -124,8 +155,8 @@ export class Logger {
         message = message.startsWith('[WS') ?
             message.slice('[WS => Shard 0]'.length)
                 .replace(/\r\n/gi, ' ')
-            : message; 
-            return message;
+            : message;
+        return message;
     }
 
     private _parseTime() {
