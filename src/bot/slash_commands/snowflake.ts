@@ -8,6 +8,7 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
 
         const snowflake = this.interaction.data?.data.options?.[0].value;
         if (typeof snowflake !== 'string') {
+            this.client.logger.debug('no snowflake send by discord.', this.constructor.name);
             return this.interaction.fail({
                 content: `invalid value for ${name || 'snow_flake'} wanted string got ${typeof snowflake}`,
                 ephemeral: true
@@ -15,6 +16,8 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
         }
         if (snowflake) {
             if (!/\d+/g.test(snowflake)) {
+                this.client.logger.debug('Invalid snowflake send by discord.', this.constructor.name);
+
                 return this.interaction.fail({
                     content: 'invalid snowflake id',
                     ephemeral: true
@@ -51,6 +54,10 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
                                 .setFooter(`requested by ${this.interaction.user?.username}`)
                         ]
                     }
+                });
+            } else {
+                return this.interaction.panik({
+                    error: new Error('invalid date object')
                 });
             }
         }
