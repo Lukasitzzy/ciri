@@ -1,5 +1,6 @@
 import { DiscordBot } from '../../../packages/core/src/client/Client';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
+import { InteractionCommandOptionType } from '../../../packages/slash-commands/src/util/Constants';
 declare module 'discord.js' {
     interface PresenceData {
         activities: {
@@ -34,7 +35,6 @@ export default class ClientReadyEvent extends CustomEvent {
         this.client.logger.shards = this.client.ws.shards.size > 1 ?
             this.client.ws.shards.map(s => s.id)
             : [0, 1];
-
         this.client.logger.log(`${this.client.user?.tag} is now ready. `, this.id);
 
     }

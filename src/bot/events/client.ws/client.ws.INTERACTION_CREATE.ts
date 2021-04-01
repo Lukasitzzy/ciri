@@ -19,7 +19,7 @@ export default class INTERACTION_CREATE_EVENT extends CustomEvent {
     }
 
     async run(data: IWSResponse): Promise<void> {
-        this.client.logger.debug(`received slash command ${data.data.name}`);
+        this.client.logger.debug(`received slash command ${data.data.name}`, this.id);
         await this.client.interaction.handle(data);
 
     }

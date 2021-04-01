@@ -17,7 +17,7 @@ export default class ClientRatelimitListener extends CustomEvent {
 
     run(data: RateLimitData): void {
 
-        this.client.logger.debug(` hit ratelimit on "${data.route}"  (remaining: ${data.timeout}${data.limit})`);
+        this.client.logger.debug(` hit ratelimit on "${data.route}"  (remaining: ${data.timeout}${data.limit})`, this.id);
         return;
     }
 }
