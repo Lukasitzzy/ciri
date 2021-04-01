@@ -8,7 +8,9 @@ export default class PingCommand extends CustomCommand {
             description: {
                 text: 'get the bot latency to discord'
             },
+
             options: {
+                category: 'util',
                 aliases: ['ping']
             }
         });

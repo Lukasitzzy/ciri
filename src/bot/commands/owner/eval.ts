@@ -14,6 +14,7 @@ export default class EvalCommand extends CustomCommand {
             options: {
                 aliases: ['eval'],
                 ownerOnly: true,
+                category: 'owner',
                 args: [{
                     id: 'code',
                     match: 'restContent'
