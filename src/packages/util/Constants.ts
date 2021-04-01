@@ -15,7 +15,7 @@ export const EMOTES = {
         'settings.enabled': '<:AloyEnabled:781095223005806615>',
         'settings.paused':'<:paused:818033976974639125>',
         error: '<:AloyError:781095223148412933>',
-        loading: '<a:loading_2:817816589831241738',
+        loading: '<a:loading_3:781095224171823114>',
         success: '<:AloySuccess:781095252269727775>'
     }
 } as const;
