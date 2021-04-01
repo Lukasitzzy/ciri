@@ -30,6 +30,13 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         ).send(content, options || {}) as unknown as Message;
     }
 
+    public async loading(content: string): Promise<Message> {
+        return (
+            this.util || 
+            this.channel
+        ).send(`${this.emote('loading')} ${content}`) as unknown as Message;
+    }
+
 
     public emote(emote: keyof typeof EMOTES.CUSTOM): string {
         if (this.channel instanceof TextChannel || this.channel instanceof NewsChannel) {
