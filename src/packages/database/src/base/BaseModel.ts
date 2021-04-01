@@ -25,7 +25,7 @@ export abstract class BaseModel<T extends IBaseSettings> {
         return this._db;
     }
 
-    public get query(): mongo.Collection<T> {
+    public get collection(): mongo.Collection<T> {
         return this._query;
     }
 
