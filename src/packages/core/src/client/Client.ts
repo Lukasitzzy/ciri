@@ -33,7 +33,7 @@ export class DiscordBot extends AkairoClient {
             prefix: async (msg): Promise<string> => {
                 if (msg.guild) {
                     const settings = this.db.settings.cache.get(msg.guild?.id) || await this.db.settings
-                    .collection.findOne({ guild_id: msg.guild.id });
+                        .collection.findOne({ guild_id: msg.guild.id });
                     if (!settings) return defaultPrefix;
                     return settings.prefix;
                 } else {
@@ -90,13 +90,14 @@ export class DiscordBot extends AkairoClient {
         }
     }
 
-    async fetchApplication(): Promise<ClientApplication> {
+    async fetchApplication(): Promise<ClientApplication | undefined> {
+        if (this.user) {
+            const data = await getApi(this)
+                .applications(this.user.id)
+                .get();
 
-        const data = await getApi(this)
-            .applications(this.user!.id)
-            .get();
-
-        return new ClientApplication(this, data);
+            return new ClientApplication(this, data);
+        }
     }
 
     private _prepare(): void {

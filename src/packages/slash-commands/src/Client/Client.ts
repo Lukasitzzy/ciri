@@ -1,6 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { Provider } from 'discord-akairo';
-import { Client } from 'discord.js';
+
 import { EventEmitter } from 'events';
 import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
@@ -66,9 +65,9 @@ export class InteractionClient extends EventEmitter {
     get client(): DiscordBot {
         return this._client;
     }
-    private async _getID(): Promise<string> {
+    private async _getID(): Promise<string|undefined> {
         if (this._client.user) return this._client.user.id;
-        return this.client.fetchApplication().then(res => res.id);
+        return this.client.fetchApplication().then(res => res?.id);
     }
 
     private async _runCommand(command: InterActionCommand) {

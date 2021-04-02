@@ -34,7 +34,7 @@ export default class EvalCommand extends CustomCommand {
         }, TextbasedChannel>
     ): Promise<void> {
         try {
-            const code = ctx.args.code
+            const code = ctx.args.code;
             if (!code) {
                 await ctx.send(`${ctx.emote('error')} cannot find something to evaluate`);
                 return;
