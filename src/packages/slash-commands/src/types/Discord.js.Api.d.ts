@@ -49,6 +49,7 @@ export interface ApplicationApi {
     // guilds: any;
     commands: CommandsApi;
     guilds: GuildApi;
+    get(): Promise<any>;
 
 }
 

@@ -6,6 +6,8 @@ import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/src/Database';
+import { getApi } from '../../../util/Functions';
+import { ClientApplication } from 'discord.js';
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 export class DiscordBot extends AkairoClient {
 
@@ -28,7 +30,16 @@ export class DiscordBot extends AkairoClient {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
-            prefix: defaultPrefix
+            prefix: async (msg): Promise<string> => {
+                if (msg.guild) {
+                    const settings = this.db.settings.cache.get(msg.guild?.id) || await this.db.settings
+                    .collection.findOne({ guild_id: msg.guild.id });
+                    if (!settings) return defaultPrefix;
+                    return settings.prefix;
+                } else {
+                    return defaultPrefix;
+                }
+            }
         });
 
         this.inhibitorHandler = new InhibitorHandler(this, {
@@ -77,6 +88,15 @@ export class DiscordBot extends AkairoClient {
             this.logger.error(error);
 
         }
+    }
+
+    async fetchApplication(): Promise<ClientApplication> {
+
+        const data = await getApi(this)
+            .applications(this.user!.id)
+            .get();
+
+        return new ClientApplication(this, data);
     }
 
     private _prepare(): void {

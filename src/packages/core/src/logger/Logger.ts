@@ -1,8 +1,6 @@
 import * as chalk from 'chalk';
-import { Provider } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { appendFileSync, existsSync, writeFileSync } from 'fs';
-import { PerformanceObserver } from 'node:perf_hooks';
 import { join } from 'path';
 import { CustomCommand } from '../commands/CustomCommand';
 import { CustomError } from '../errors/CustomError';

@@ -1,4 +1,6 @@
 /* eslint-disable no-case-declarations */
+import { Provider } from 'discord-akairo';
+import { Client } from 'discord.js';
 import { EventEmitter } from 'events';
 import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
@@ -20,17 +22,19 @@ export class InteractionClient extends EventEmitter {
     async getApplicationID(): Promise<string> {
         return this._getID();
     }
-    public async handle(data: IWSResponse): Promise<InterActionCommand |void> {
+    public async handle(data: IWSResponse): Promise<InterActionCommand | void> {
         if (!data) return;
         switch (data.type) {
             case InteractionType.PING:
                 console.log('got PING command  ignoring ');
                 break;
             case InteractionType.APPLICATION_COMMAND:
+
                 if (!data.data) {
                     this.emit('debug', 'failed to parse the command, discord did not send a "data" property');
                     break;
                 }
+
                 const command = new InterActionCommand(
                     this._client,
                     data,
@@ -40,12 +44,16 @@ export class InteractionClient extends EventEmitter {
                     if (!command.resolved) {
                         this.emit('debug', `did not respond to command "${data.data.name}".`);
                         await command.defer();
+                        return;
+                    } else {
+                        this.emit('debug', 'failed to respond to command, using default fallback');
+                        await command.fail({ content: 'this command is not yet available ', ephemeral: true });
                     }
                     return;
-                }, 1000);
+                }, 2500);
                 try {
                     await this._runCommand(command);
-                } catch (err) {                    
+                } catch (err) {
                     await command.panik({ error: err });
                     this.client.logger.error(err, command.id);
                 }
@@ -58,11 +66,9 @@ export class InteractionClient extends EventEmitter {
     get client(): DiscordBot {
         return this._client;
     }
-
     private async _getID(): Promise<string> {
-
         if (this._client.user) return this._client.user.id;
-        return (await this._client.fetchApplication()).id;
+        return this.client.fetchApplication().then(res => res.id);
     }
 
     private async _runCommand(command: InterActionCommand) {
@@ -73,14 +79,18 @@ export class InteractionClient extends EventEmitter {
             if (!cmd) return null;
             const comm = new cmd();
             comm._interaction = command;
-            await comm.run();
-
+            if (typeof cmd.userPermissions === 'function') {
+                const res = await cmd.userPermissions();
+                if (res) {
+                    await comm.run();
+                }
+            }
         } catch (error) {
             // TODO: refractor this to not error 
             if (/Cannot find module/g.test(error.message)) {
                 return null;
             }
-                await command.panik({ error });
+            await command.panik({ error });
 
             this.client.logger.error(error, `SlashcommandRun:${command.name}`);
         }

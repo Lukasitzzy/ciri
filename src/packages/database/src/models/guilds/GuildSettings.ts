@@ -26,25 +26,42 @@ export class GuildSettingsModel extends BaseModel<IGuildSettings> {
         automodsettings: keyof IGuildSettingsAutomod, 
         data: IGuildSettingsAutomod[typeof automodsettings]
         ): Promise<IGuildSettingsAutomod | undefined> {
-            const allAutomod = (await this.collection.findOne({ guild_id: guild }).then(settings => settings?.automod)) || {
+            const allAutomod = (await this.collection.findOne({ guild_id: guild }).then(settings => settings?.automod)) ||({
                 enabled: false,
                 filters: {
                     messages: {
+                        regexps: [],
                         enabled: false,
-                        invites: false
+                        invites: {
+                            allowed_invites: [],
+                            enabled: false,
+                            messages: [],
+                        },
+                        links: {
+                            allowed_domains: [],
+                            enabled: false,
+                            messages: []
+                        },
+                        messages: {
+                            enabled: false,
+                            messages: [],
+                            regexps:  []
+                        }
                     },
                     names: {
                         enabled: false,
                         filters: [],
-
+                        action: 'KICK',
+                        regexps: []
                     }
                 }
-            } as IGuildSettingsAutomod;
+            }) as  IGuildSettingsAutomod;
             if (allAutomod[automodsettings]) {
-                //@ts-ignore
-                allAutomod[automodsettings] = data;
+                if (typeof allAutomod[automodsettings] === typeof data) {
+                allAutomod[automodsettings] = data as any;
+                }
             }
-            allAutomod[automodsettings]
+            allAutomod[automodsettings];
             return this.collection.findOneAndUpdate({ 
                 guild_id: guild
             }, { $set: {

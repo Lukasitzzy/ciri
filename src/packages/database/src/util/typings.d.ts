@@ -15,7 +15,7 @@ export interface IGuildSettings extends IBaseSettings {
      */
     allow_slash_commands: boolean;
     automod: IGuildSettingsAutomod;
-
+    version: number;
     prefix: string;
 }
 
@@ -32,15 +32,34 @@ export interface IGuildSettingsAutomodFilter {
 export interface IGuildSettingsAutomodFilterMessages {
     enabled: boolean;
     invites: IGuildSettingsAutomodFilterMessagesInvite;
+    links: IGuildSettingsAutomodFilterMessagesLinks;
+    messages: IGuildSettingsAutomodFilterMessagesMessages;
 
 }
 
-export interface IGuildSettingsAutomodFilterMessagesInvite {}
-export interface IGuildSettingsAutomodFilterMessagesImages {}
-export interface IGuildSettingsAutomodFilterMessages {}
+export interface IGuildSettingsAutomodFilterMessagesInvite {
+    enabled: boolean;
+    messages: string[];
+    allowed_invites: string[];
+
+}
+export interface IGuildSettingsAutomodFilterMessagesLinks {
+    allowed_domains: string[];
+    enabled: boolean;
+    messages: string[];
+}
+export interface IGuildSettingsAutomodFilterMessagesMessages {
+    enabled: boolean;
+    messages: string[];
+    regexps: string[];
+}
 
 
-export interface IGuildSettingsAutomodFilterNames {}
+export interface IGuildSettingsAutomodFilterNames {
+    enabled: boolean;
+    regexps: string[];
+    action: 'KICK' |'BAN';
+}
 
 
 export interface ISlashCommandGuildPermissions extends IBaseSettings {

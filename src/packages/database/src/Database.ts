@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import * as mongo from 'mongodb';
+import { DiscordBot } from '../../core/src/client/Client';
 import { Logger } from '../../core/src/logger/Logger';
 import {
     DefaultDatabaseConfig,
@@ -24,7 +25,7 @@ export class Database {
             user: string;
             password: string;
         };
-    }; 
+    };
     /**
      *
      */
@@ -72,23 +73,81 @@ export class Database {
                 continue;
             }
             switch (coll.collectionName) {
-            case AllowedCollectionNames.GuildSettings:
-                this._settings = new GuildSettingsModel(this, coll);
-                await this._settings.init();
-                break;
-            default:
-                break;
+                case AllowedCollectionNames.GuildSettings:
+                    this._settings = new GuildSettingsModel(this, coll);
+                    // await this._settings.init();
+                    break;
+                case AllowedCollectionNames.GlobalBlacklist:
+                    break;
+                default:
+                    break;
             }
             this._collections.push(coll);
         }
         this.logger.log(`${EMOTES.DEFAULT.success} successfully connected to the ${this._options.dbname} database.`, this.constructor.name);
     }
 
+    async checkGuilds(client: DiscordBot): Promise<void> {
+        try {
+            if (client.guilds.cache.size) {
+                for (const [guild_id] of client.guilds.cache) {
+                    console.log(guild_id);
+                    if (this.settings.cache.has(guild_id)) continue;
+
+                    await this.settings.collection.insertOne({
+                        _id: new mongo.ObjectID(),
+                        allow_slash_commands: true,
+                        version: 1,
+                        automod: {
+                            enabled: false,
+                            filters: {
+                                messages: {
+                                    enabled: false,
+                                    invites: {
+                                        allowed_invites: [],
+                                        enabled: false,
+                                        messages: []
+                                    },
+                                    links: {
+                                        allowed_domains: [],
+                                        enabled: false,
+                                        messages: []
+                                    },
+                                    messages: {
+                                        enabled: false,
+                                        messages: [],
+                                        regexps: []
+                                    }
+                                },
+                                names: {
+                                    action: 'KICK',
+                                    enabled: false,
+                                    regexps: []
+                                }
+                            }
+                        },
+                        guild_id,
+                        prefix: '$'
+                });
+                }
+                await this.settings.init();
+            } else {
+                this.logger.debug(' no channels found yet..', this.constructor.name);
+            }
+        } catch (error) {
+            console.log('erroring adding stuff, ', error);
+        }
+    }
+
     private _checkReady() {
         if (!this._db) throw new Error('not ready');
     }
-    get name (): string {
+    get name(): string {
         return this.constructor.name;
+    }
+
+    get settings(): GuildSettingsModel {
+        return this._settings;
     }
 
 }

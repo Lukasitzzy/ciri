@@ -14,6 +14,9 @@ export abstract class SlashCommand {
         return this._interaction;
     }
 
+    public userPermissions?(): boolean | Promise<boolean>;
+
+    public clientPermissions?(): boolean | Promise<boolean>;
     public abstract run(): void | Promise<void>;
 
 

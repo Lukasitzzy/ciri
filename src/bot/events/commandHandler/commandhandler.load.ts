@@ -1,4 +1,3 @@
-import { Message } from 'discord.js';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 
