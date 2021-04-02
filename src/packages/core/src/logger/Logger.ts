@@ -88,7 +88,6 @@ export class Logger {
         const time = this._parseTime();
         const str = [
             this._prefix,
-            this._shards.length ? `[ ${this._shards.join(', ')} ]` : '',
             `[${time}]`,
             `<${nType}>`,
             `[WS => Shard (${this._shards.join(', ')})]`
