@@ -8,6 +8,7 @@ interface DiscordApiSendPost<T> {
 
 
 export interface Api {
+    oauth2: OauthApi;
     applications(id: string): ApplicationApi;
     interactions(id: string, token: string): InteractionApi;
     webhooks(id: string, token: string): {
@@ -26,6 +27,10 @@ export interface Api {
             delete(): Promise<any>;
         };
     };
+}
+
+export interface OauthApi {
+    applications(id: string): ApplicationApi;
 }
 
 

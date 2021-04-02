@@ -90,14 +90,13 @@ export class DiscordBot extends AkairoClient {
         }
     }
 
-    async fetchApplication(): Promise<ClientApplication | undefined> {
-        if (this.user) {
+    async fetchApplication(): Promise<ClientApplication> {
             const data = await getApi(this)
-                .applications(this.user.id)
+                .oauth2
+                .applications('@me')
                 .get();
-
             return new ClientApplication(this, data);
-        }
+        
     }
 
     private _prepare(): void {
