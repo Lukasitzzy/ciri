@@ -92,7 +92,8 @@ export class Database {
             if (client.guilds.cache.size) {
                 for (const [guild_id] of client.guilds.cache) {
                     console.log(guild_id);
-                    if (this.settings.cache.has(guild_id)) continue;
+                    const exists = this.settings.cache.has(guild_id) ||await this.settings.collection.findOne({ guild_id }).then(res => !!res);
+                    if (exists) continue;
 
                     await this.settings.collection.insertOne({
                         _id: new mongo.ObjectID(),
