@@ -1,6 +1,7 @@
 import chalk = require('chalk');
 import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
+import { getHeapStatistics } from 'node:v8';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../../../util/Functions';
 import { InteractionClient } from '../Client/Client';
@@ -24,8 +25,9 @@ export class InteractionCommandManager extends EventEmitter {
             options: IApplicationCommandDataPost['options'];
         };
         guildID?: string;
-    }): Promise<IApplicationCommand> {
+    }): Promise<IApplicationCommand | null> {
         const id = await this._client.getApplicationID();
+        if (id) {
         if (options.guildID) {
             return getApi(this._discordClient)
                 .applications(id)
@@ -35,6 +37,9 @@ export class InteractionCommandManager extends EventEmitter {
 
         return getApi(this._client.client)
             .applications(id).commands.post({ data: options.options });
+    } else {
+        return null;
+    }
     }
 
     async edit(
@@ -49,9 +54,11 @@ export class InteractionCommandManager extends EventEmitter {
         error?: Error;
     }> {
         try {
+            const id = await this._client.getApplicationID();
+            if (id) {
             if (guildID) {
                 const data = await getApi(this._client.client)
-                    .applications(await this._client.getApplicationID())
+                    .applications(id)
                     .guilds(guildID)
                     .commands(commandID)
                     .patch({
@@ -70,7 +77,7 @@ export class InteractionCommandManager extends EventEmitter {
                 }
             }
             const data = await getApi(this._client.client)
-                .applications(await this._client.getApplicationID())
+                .applications(id)
                 .commands(commandID)
                 .patch({
                     data: {
@@ -92,6 +99,13 @@ export class InteractionCommandManager extends EventEmitter {
                 data: null,
                 error: undefined
             };
+        } else {
+            return {
+                data: null,
+                success: false,
+                error: undefined
+            };
+        }
         } catch (error) {
             if (error instanceof DiscordAPIError) {
                 if (error.code === 10063) {
@@ -117,32 +131,39 @@ export class InteractionCommandManager extends EventEmitter {
         guild?: string,
 
     ): Promise<void> {
+        const id = await this._client.getApplicationID();
+        if (id) {
         if (guild) {
             await getApi(this._discordClient)
-                .applications(await this._client.getApplicationID())
+                .applications(id)
                 .guilds(guild)
                 .commands(command)
                 .delete();
         }
         await getApi(this._discordClient)
-            .applications(await this._client.getApplicationID())
+            .applications(id)
             .commands
             .delete();
     }
+    }
 
-    async fetchCommand(command: string, guild?: string): Promise<IApplicationCommand> {
+    async fetchCommand(command: string, guild?: string): Promise<IApplicationCommand | null> {
+        const id = await this._client.getApplicationID();
+        if (id) {
         if (guild) {
             return getApi(this._client.client)
-                .applications(await this._client.getApplicationID())
+                .applications(id)
                 .guilds(guild)
                 .commands(command)
                 .get();
         }
         return getApi(this._client.client)
-            .applications(await this._client.getApplicationID())
+            .applications(id)
             .commands(command)
             .get();
-
+    } else {
+        return null;
+    }
     }
 
 
@@ -169,8 +190,11 @@ export class InteractionCommandManager extends EventEmitter {
         data: IApplicationCommandDataPost[];
         guildID?: string;
     }): Promise<IApplicationCommand[]> {
+        const id = await this._client.getApplicationID();
+        if (id) {
+
         const api = getApi(this._discordClient)
-            .applications(await this._client.getApplicationID());
+            .applications(id);
         if (guildID) {
             return api
                 .guilds(guildID)
@@ -180,30 +204,41 @@ export class InteractionCommandManager extends EventEmitter {
         return api
             .commands
             .put({ data });
+    } else {
+        return [];
+    }
     }
 
     async fetch(guildID?: string): Promise<IApplicationCommand[]> {
-        if (guildID) {
-            return getApi(this._client.client)
-                .applications(await this._client.getApplicationID())
-                .guilds(guildID)
-                .commands
-                .get();
+        const id = await this._client.getApplicationID();
+        if (id) {
+            if (guildID) {
+                return getApi(this._client.client)
+                    .applications(id)
+                    .guilds(guildID)
+                    .commands
+                    .get();
+            } else {
+                return getApi(this._client.client)
+                    .applications(id)
+                    .commands
+                    .get();
+            }
         } else {
-            return getApi(this._client.client)
-                .applications(await this._client.getApplicationID())
-                .commands
-                .get();
+            return [];
         }
     }
     async purge(guildID?: string): Promise<unknown> {
-        const api = getApi(this._client.client).applications(await this._client.getApplicationID());
-        if (guildID) {
-            this.emit('debug', `purging commands for ${guildID}`);
-            return api.guilds(guildID).commands.put({ data: [] });
-        } else {
-            this.emit('debug', chalk.bold.bgCyan.black`purging all commands!`);
-            return api.commands.put({ data: [] });
+        const id = await this._client.getApplicationID();
+        if (id) {
+            const api = getApi(this._client.client).applications(id);
+            if (guildID) {
+                this.emit('debug', `purging commands for ${guildID}`);
+                return api.guilds(guildID).commands.put({ data: [] });
+            } else {
+                this.emit('debug', chalk.bold.bgCyan.black`purging all commands!`);
+                return api.commands.put({ data: [] });
+            }
         }
     }
 

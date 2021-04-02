@@ -18,7 +18,7 @@ export class InteractionClient extends EventEmitter {
         this._commandManager = new InteractionCommandManager(this, client);
     }
 
-    async getApplicationID(): Promise<string> {
+    async getApplicationID(): Promise<string | undefined> {
         return this._getID();
     }
     public async handle(data: IWSResponse): Promise<InterActionCommand | void> {
