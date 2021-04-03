@@ -1,7 +1,6 @@
 import chalk = require('chalk');
 import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
-import { getHeapStatistics } from 'node:v8';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { getApi } from '../../../util/Functions';
 import { InteractionClient } from '../Client/Client';
@@ -174,7 +173,6 @@ export class InteractionCommandManager extends EventEmitter {
         data: IApplicationCommandDataPost[];
         guildID?: string;
     }): Promise<IApplicationCommand[]> {
-        console.log('first');
         const oldCommands = await this.fetch(guildID);
         const newarr = [...oldCommands || [], ...data];
         return this.bulkCreateCommands({

@@ -25,7 +25,7 @@ export class InteractionClient extends EventEmitter {
         if (!data) return;
         switch (data.type) {
             case InteractionType.PING:
-                console.log('got PING command  ignoring ');
+                this.client.logger.debug('got PING command  ignoring ', 'interaction_create');
                 break;
             case InteractionType.APPLICATION_COMMAND:
 
