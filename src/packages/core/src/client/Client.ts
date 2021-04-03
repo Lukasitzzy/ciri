@@ -42,6 +42,7 @@ export class DiscordBot extends AkairoClient {
             }
         });
 
+
         this.inhibitorHandler = new InhibitorHandler(this, {
             directory: join(root, 'inhibitors')
         });

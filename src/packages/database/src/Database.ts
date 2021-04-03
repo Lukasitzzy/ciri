@@ -91,7 +91,7 @@ export class Database {
         try {
             if (client.guilds.cache.size) {
                 for (const [guild_id] of client.guilds.cache) {
-                    console.log(guild_id);
+
                     const exists = this.settings.cache.has(guild_id) ||await this.settings.collection.findOne({ guild_id }).then(res => !!res);
                     if (exists) continue;
 
@@ -136,7 +136,7 @@ export class Database {
                 this.logger.debug(' no channels found yet..', this.constructor.name);
             }
         } catch (error) {
-            console.log('erroring adding stuff, ', error);
+            this.logger.error(error, 'Datbase.checkGuilds');
         }
     }
 
