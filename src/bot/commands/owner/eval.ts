@@ -41,21 +41,19 @@ export default class EvalCommand extends CustomCommand {
             }
 
             const evaled = eval(code);
-            console.log(evaled);
-
-
+            const start = Date.now();
             const str = await this.parseRes(evaled);
             if (str.length >= 1700) {
                 console.log(str);
                 await ctx.send([
-                    `${ctx.emote('success')} sucessfully evaled.`,
+                    `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                     'message was to long to be send.',
                     `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${typeof evaled}`
                 ].join('\n'));
                 return;
             }
             await ctx.send([
-                `${ctx.emote('success')} sucessfully evaled.`,
+                `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                 '```js',
                 str,
                 '```',
