@@ -9,12 +9,12 @@ export class SlashCommandPermissionGuildModel extends BaseModel<ISlashCommandGui
     }
 
     async init(): Promise<void> {
-        const kesy = this.key;
+        const key = this.key;
         const entries = await this.collection.find().toArray();
         for (const entry of entries) {
-            const ID = entry[kesy];
+            const ID = entry[key];
             if (typeof ID !== 'string') {
-                this.db.logger.debug(`Collection ${this.collection.collectionName} does not have a valid "entry id" ${kesy} `, this.name);
+                this.db.logger.debug(`Collection ${this.collection.collectionName} does not have a valid "entry id" ${key} `, this.name);
                 continue;
             }
             this.cache.set(`${ID}:${entry.slash_command}`, entry);
