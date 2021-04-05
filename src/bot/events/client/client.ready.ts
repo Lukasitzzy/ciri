@@ -26,7 +26,7 @@ export default class ClientReadyEvent extends CustomEvent {
 
         this.client.user?.setPresence({
             activities: [{
-                name: 'use /help for help',
+                name: 'use $help for help',
                 type: 'PLAYING'
             }],
             status: 'dnd'

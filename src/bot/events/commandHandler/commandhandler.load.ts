@@ -18,6 +18,6 @@ export default class CommandLoadEvent extends CustomEvent {
     }
 
     async run(command: CustomCommand, reload?: boolean): Promise<void> {
-        this.client.logger.debug(`command ${command.id} has been ${reload ? 're' : ''} loaded`, this.id);
+        this.client.logger.log(`command ${command.id} has been ${reload ? 're' : ''} loaded`, this.id);
     }
 }

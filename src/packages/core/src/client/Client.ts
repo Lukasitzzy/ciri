@@ -63,7 +63,7 @@ export class DiscordBot extends AkairoClient {
 
         this.logger = new Logger();
         this.db = new Database({
-            appname: process.env.DATABASE_APP_NAME || 'ciri discord bot',
+            appname: process.env.DATABASE_APP_NAME || 'christina',
             dbname: process.env.DATABASE_NAME || 'discord_bot',
             host: 'localhost',
             shards: SHARDS,

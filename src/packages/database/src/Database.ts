@@ -7,6 +7,7 @@ import {
     AllowedCollectionNames,
     EMOTES
 } from '../../util/Constants';
+import { GuildEconomyModel } from './models/guilds/economy/GuildEconomy';
 import { GuildSettingsModel } from './models/guilds/GuildSettings';
 export class Database {
 
@@ -14,6 +15,7 @@ export class Database {
     public readonly logger: Logger;
     private readonly _collections: mongo.Collection<Record<string, unknown>>[];
     private _settings!: GuildSettingsModel;
+    private _economy!: GuildEconomyModel;
     private readonly _shards: number[];
 
     private readonly _options: {
@@ -65,6 +67,7 @@ export class Database {
         this._db = client.db(this._options.dbname);
         this._checkReady();
 
+        
         const collections = await this._db.collections();
         const allowedNames = Object.values(AllowedCollectionNames);
         for (const coll of collections) {
@@ -79,6 +82,9 @@ export class Database {
                     break;
                 case AllowedCollectionNames.GlobalBlacklist:
                     break;
+                case AllowedCollectionNames.GuildEconomy:
+                    this._economy = new GuildEconomyModel(this, coll);
+                    break;
                 default:
                     break;
             }
@@ -89,47 +95,73 @@ export class Database {
 
     async checkGuilds(client: DiscordBot): Promise<void> {
         try {
+            this._checkReady();
             if (client.guilds.cache.size) {
-                for (const [guild_id] of client.guilds.cache) {
+                for (const [guild_id, { ownerID }] of client.guilds.cache) {
 
-                    const exists = this.settings.cache.has(guild_id) ||await this.settings.collection.findOne({ guild_id }).then(res => !!res);
-                    if (exists) continue;
-
-                    await this.settings.collection.insertOne({
-                        _id: new mongo.ObjectID(),
-                        allow_slash_commands: true,
-                        version: 1,
-                        automod: {
-                            enabled: false,
-                            filters: {
-                                messages: {
+                    if (this._settings) {
+                        const exists = this.settings.cache.has(guild_id) || await this.settings.collection.findOne({ guild_id }).then(res => !!res);
+                        if (!exists) {
+                            this.logger.debug(`found guild ${guild_id} not in db`, 'guild.settings');
+                            await this.settings.collection.insertOne({
+                                _id: new mongo.ObjectID(),
+                                allow_slash_commands: true,
+                                version: 1,
+                                automod: {
                                     enabled: false,
-                                    invites: {
-                                        allowed_invites: [],
-                                        enabled: false,
-                                        messages: []
-                                    },
-                                    links: {
-                                        allowed_domains: [],
-                                        enabled: false,
-                                        messages: []
-                                    },
-                                    messages: {
-                                        enabled: false,
-                                        messages: [],
-                                        regexps: []
+                                    filters: {
+                                        messages: {
+                                            enabled: false,
+                                            invites: {
+                                                allowed_invites: [],
+                                                enabled: false,
+                                                messages: []
+                                            },
+                                            links: {
+                                                allowed_domains: [],
+                                                enabled: false,
+                                                messages: []
+                                            },
+                                            messages: {
+                                                enabled: false,
+                                                messages: [],
+                                                regexps: []
+                                            }
+                                        },
+                                        names: {
+                                            action: 'KICK',
+                                            enabled: false,
+                                            regexps: []
+                                        }
                                     }
                                 },
-                                names: {
-                                    action: 'KICK',
-                                    enabled: false,
-                                    regexps: []
-                                }
-                            }
-                        },
-                        guild_id,
-                        prefix: '$'
-                });
+                                guild_id,
+                                prefix: '$'
+                            });
+                        }
+                    }
+
+                    if (this._economy) {
+                        if (!(this.economy.cache.has(guild_id) || await this.economy.collection.findOne({ guild_id }))) {
+                            this.logger.debug(`found guild ${guild_id} not in db`, 'economy.settings');
+                            
+                            await this._economy.collection.insertOne({
+                                _id: new mongo.ObjectID(),
+                                enabled: true,
+                                bank: {
+                                    accounts: [],
+                                    owner_id: ownerID,
+                                    taxes: {
+                                        account_holding: 0.1,
+                                        receiving: 0.1,
+                                        sending: 0.1
+                                    },
+                                    vault: 150_000
+                                },
+                                guild_id,
+                            });
+                        }
+                    }
                 }
                 await this.settings.init();
             } else {
@@ -149,6 +181,9 @@ export class Database {
 
     get settings(): GuildSettingsModel {
         return this._settings;
+    }
+    get economy(): GuildEconomyModel {
+        return this._economy;
     }
 
 }

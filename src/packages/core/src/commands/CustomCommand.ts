@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 import { DiscordBot } from '../client/Client';
 import { CommandContext } from './CommandContext';
 
-export abstract class CustomCommand extends Command {
+export class CustomCommand extends Command {
     client!: DiscordBot;
 
     /**
@@ -25,7 +25,7 @@ export abstract class CustomCommand extends Command {
     }
 
 
-    abstract run(ctx: CommandContext<Record<string, unknown>, Message['channel']>): any;
+    run?(ctx: CommandContext<Record<string, unknown>, Message['channel']>): any;
 
 
     public async exec(msg: Message, args: Record<string, unknown>): Promise<void> {
@@ -37,7 +37,9 @@ export abstract class CustomCommand extends Command {
                 args
             );
 
-            await this.run(ctx);
+            if (this.run) {
+                await this.run(ctx);
+            }
         } catch (error) {
             //
         }

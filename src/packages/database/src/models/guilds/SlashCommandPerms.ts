@@ -1,5 +1,5 @@
 import { Database } from '../../Database';
-import { ISlashCommandGuildPermissions } from '../../util/typings';
+import { ISlashCommandGuildPermissions } from '../../util/settings';
 import * as mongo from 'mongodb';
 import { BaseModel } from '../../base/BaseModel';
 export class SlashCommandPermissionGuildModel extends BaseModel<ISlashCommandGuildPermissions> {

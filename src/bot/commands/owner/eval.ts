@@ -2,27 +2,26 @@ import { CommandContext, TextbasedChannel } from '../../../packages/core/src/com
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
+import { applyOptions } from '../../../packages/util/Functions';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
-export default class EvalCommand extends CustomCommand {
-    constructor() {
-        super({
-            id: 'eval',
-            description: {
-                text: ''
-            },
-            options: {
-                aliases: ['eval'],
-                ownerOnly: true,
-                category: 'owner',
-                args: [{
-                    id: 'code',
-                    match: 'restContent'
-                }]
-            }
-        });
-
+@applyOptions({
+    id: 'eval',
+    description: {
+        text: ''
+    },
+    options: {
+        aliases: ['eval'],
+        ownerOnly: true,
+        category: 'owner',
+        args: [{
+            id: 'code',
+            match: 'restContent'
+        }]
     }
+})
+export default class EvalCommand extends CustomCommand {
+
 
     public async run(ctx: CommandContext<{ code: string; }, TextbasedChannel>): Promise<any> {
         await this.parseEval(ctx);

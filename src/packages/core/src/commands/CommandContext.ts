@@ -1,4 +1,5 @@
 import { CommandUtil } from 'discord-akairo';
+import { User } from 'discord.js';
 import {
     DMChannel, NewsChannel, TextChannel,
     Message, Guild, GuildMember, MessageOptions
@@ -10,7 +11,7 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
 
     private readonly _msg: Message;
     private readonly _command: CustomCommand;
-    private readonly _args: Iargs;
+    private readonly _args: Partial<Iargs>;
     public constructor(
         msg: Message,
         command: CustomCommand,
@@ -37,6 +38,9 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         ).send(`${this.emote('loading')} ${content}`) as unknown as Message;
     }
 
+    async sendNew(content: string): Promise<Message> {
+        return this.channel.send(content);
+    }
 
     public emote(emote: keyof typeof EMOTES.CUSTOM): string {
         if (this.channel instanceof TextChannel || this.channel instanceof NewsChannel) {
@@ -54,7 +58,7 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
     /**
      * the arguments of the command
      */
-    public get args(): Iargs {
+    public get args(): Partial<Iargs> {
         return this._args;
     }
 
@@ -95,5 +99,9 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
      */
     public get command(): CustomCommand {
         return this._command;
+    }
+
+    public get author(): User {
+        return this.msg.author;
     }
 }

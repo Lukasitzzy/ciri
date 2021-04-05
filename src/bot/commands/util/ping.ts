@@ -1,21 +1,20 @@
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
+import { applyOptions } from '../../../packages/util/Functions';
 
-export default class PingCommand extends CustomCommand {
-    constructor() {
-        super({
-            id: 'ping',
-            description: {
-                text: 'get the bot latency to discord'
-            },
+@applyOptions({
+    id: 'ping',
+    description: {
+        text: 'get the bot latency to discord'
+    },
 
-            options: {
-                category: 'util',
-                aliases: ['ping']
-            }
-        });
-
+    options: {
+        category: 'util',
+        aliases: ['ping']
     }
+})
+export default class PingCommand extends CustomCommand {
+
 
     public async run(ctx: CommandContext<Record<string, unknown>, TextbasedChannel>): Promise<any> {
         const m = await ctx.util?.send('pinging....');
