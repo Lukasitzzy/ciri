@@ -10,6 +10,7 @@
     "test": "exit 0",
     "lint": "eslint ./src --ext .ts",
     "start": "node -r dotenv/config .",
+    "build": "tsc",
     "run:no_db": "DISABLE_DB=true node -r dotenv/config ."
   },
   "repository": {
