@@ -32,10 +32,14 @@ export class DiscordBot extends AkairoClient {
             commandUtil: true,
             prefix: async (msg): Promise<string> => {
                 if (msg.guild) {
+                    if (!process.env.DISABLE_DB) {
                     const settings = this.db.settings.cache.get(msg.guild?.id) || await this.db.settings
                         .collection.findOne({ guild_id: msg.guild.id });
                     if (!settings) return defaultPrefix;
                     return settings.prefix;
+                    } else {
+                        return defaultPrefix;
+                    }
                 } else {
                     return defaultPrefix;
                 }

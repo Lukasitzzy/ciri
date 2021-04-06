@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 
+import { midnightblue } from 'color-name';
 import { EventEmitter } from 'events';
 import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
@@ -38,20 +39,28 @@ export class InteractionClient extends EventEmitter {
                     this._client,
                     data,
                 );
-
+                if (command.name === 'test') {
+                    return command.reply({ ephemeral: true, content: 'yes even here <:items4Lurk:814620882663637084> <- twitch emote btw' });
+                }
+                // console.log(command);
+                
                 this._client.setTimeout(async () => {
-                    if (!command.resolved) {
+                    if (!command._responded) {
                         this.emit('debug', `did not respond to command "${data.data.name}".`);
                         await command.defer();
                         return;
                     } else {
-                        this.emit('debug', 'failed to respond to command, using default fallback');
-                        await command.fail({ content: 'this command is not yet available ', ephemeral: true });
+                        // this.emit('debug', 'failed to respond to command, using default fallback');
+                        // await command.fail({ content: 'this command is not yet available ', ephemeral: true });
                     }
                     return;
                 }, 2500);
                 try {
+                    console.log('before');
+                    
                     await this._runCommand(command);
+                    console.log('after');
+                    
                 } catch (err) {
                     await command.panik({ error: err });
                     this.client.logger.error(err, command.id);
@@ -73,20 +82,37 @@ export class InteractionClient extends EventEmitter {
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
+        console.log(path);
+        
         try {
-            const cmd = (await import(path)).default;
+            console.log('before12');
+            
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const cmd = require(path).default;
+            console.log('after13');
+            
+            console.log(cmd);
+            
             if (!cmd) return null;
             const comm = new cmd();
             comm._interaction = command;
+            command._responded = true;
             if (typeof cmd.userPermissions === 'function') {
                 const res = await cmd.userPermissions();
                 if (res) {
                     await comm.run();
                 }
+                await comm.run();
+            }else {
+                await comm.run();
             }
+            command._responded = true;
         } catch (error) {
+            
             // TODO: refractor this to not error 
             if (/Cannot find module/g.test(error.message)) {
+                console.log('cannot find comamnd');
+                
                 return null;
             }
             await command.panik({ error });

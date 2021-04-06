@@ -16,13 +16,13 @@ export class InterActionCommand extends InteractionBase {
 
     private _deferred: boolean;
     private _member?: GuildMember;
-    private _responded: boolean;
     private _user?: User;
 
     private readonly _commandid: string;
     private readonly _data: IWSResponse;
     private readonly _name: string;
     private readonly _options: iWsResponseData['options'];
+    _responded: boolean;
     private readonly _resolved: {
         users?: Collection<string, User>;
         members?: Collection<string, GuildMember>;
@@ -372,6 +372,7 @@ export class InterActionCommand extends InteractionBase {
     }
 
     get reponded(): boolean {
-        return this.reponded;
+        return this._responded;
     }
+
 }

@@ -31,7 +31,7 @@ export default class BankCommand extends CustomCommand {
 
             if (account.password) {
                 const msg2 = await ctx.sendNew(`${ctx.emote('info')} you have a password set for this account, sending you a verification...`);
-                const msg = await ctx.author.send(`${ctx.emote('info')} please type your password to confirm the view...`);
+                const msg = await ctx.author.send(`${ctx.emote('info')} please type your password to confirm the view...\n\n type \`cancel\` to cancel `);
                 if (msg) {
                     await msg2.edit(`${ctx.emote('loading')} waiting for your verification... `);
                 } else {
@@ -45,9 +45,29 @@ export default class BankCommand extends CustomCommand {
                     await msg.edit(`${ctx.emote('info')} did not responsd after 5 second...`);
                     return msg2.edit(`${ctx.emote('info')} canceled command.`);
                 }
-                
 
+                const first = msgs.first();
 
+                if (!first) {
+                    await msg.edit(`${ctx.emote('info')} did not responsd after 5 second...`);
+                    return msg2.edit(`${ctx.emote('info')} canceled command.`);
+                }
+
+                const content = first.content;
+
+                if (content === 'cancel') {
+                    await msg.edit(`${ctx.emote('success')} cancel command.`);
+                    return msg2.delete();
+                }
+                console.log(`"${account.password}" :: "${content}" `);
+                if (account.password !== content) {
+                    await msg.edit(`${ctx.emote('error')} wrong password, please try again.\n\n[canceled command]`);
+                    await msg2.delete();
+                    return;
+                }
+
+                await msg.edit(`${ctx.emote('success')} password matched, your account value is $${account.vault}`);
+                await msg2.edit(`${ctx.emote('success')} your account `);
             }
 
         }

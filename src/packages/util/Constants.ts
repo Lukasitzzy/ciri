@@ -1,24 +1,54 @@
 export const VERSION = '0.69.420';
 export const EMOTES = {
     DEFAULT: {
-        'settings.automod.spam': '🍖',
-        'settings.disabled': '🔴',
-        'settings.enabled': '🟢',
-        'settings.paused':'⚫',
+        default_member_boost: '❇',
         error: '❌',
-        loading: '⏳',
         info: 'ℹ',
+        loading:'⌛',
+        member_idle: '🟨',
+        member_online: '🟩',
+        mobile_dnd: '🔴',
+        mobile_idle: '🟡',
+        mobile_online: '🟢',
+        paused: '⏸',
+        server_boost_level_0: '🌠',
+        server_boost_level_1: '⭐',
+        server_boost_level_2: '🌟',
+        server_boost_level_3: '✨',
+        server_community: '🌍',
+        server_partnered: '',
+        server_verified: '\\♋',
+        settings_disabled: '🟢',
+        settings_enabled: '🔴',
         success: '✅'
     },
     CUSTOM: {
-        'settings.automod.spam': '<:SPAM:818024711224164372>',
-        'settings.disabled': '<:disabled:764431350706995221>',
-        'settings.enabled': '<:AloyEnabled:781095223005806615>',
-        'settings.paused':'<:paused:818033976974639125>',
-        error: '<:AloyError:781095223148412933>',
-        loading: '<a:loading_3:781095224171823114>',
-        info: '<:Info:781095222863069196>',
-        success: '<:AloySuccess:781095252269727775>'
+        // i do NOT own any of the following emotes 
+        // emotes images are owned by discord and all rights are kept
+        // to them and i do not have any 'authorized' use of them.
+        // i ONLY have the permissions to use the loading emote
+        // since i did create it myself on a stechy website
+        // please don't sue me discord thanks
+        default_member_boost: '<:member_boost:828616412166619196>',
+        error: '<:error:828614605352730685>',
+        info: '<:info:828615222586507325>',
+        loading: '<a:loading:828615360139493426>',
+        member_idle: '<:idle:828614978952232991>',
+        member_online: '<:online:828615170086404146>',
+        mobile_dnd: '<:member_mobile_dnd:828616901809799180>',
+        mobile_idle: '<:member_mobile_idle:828616743122763826>',
+        mobile_online: '<:member_mobile_online:828616647710474261>',
+        paused: '<:settings_pused:828617832065269781>',
+        server_boost_level_0: '<:boost_level0:828615920049717328>',
+        server_boost_level_1: '<:boost_level1:828615802084261958>',
+        server_boost_level_2: '<:boost_level2:828615687702315098>',
+        server_boost_level_3: '<:boost_level3:828615545548308560>',
+        server_community: '<:server_community:828616326393495582>',
+        server_partnered: '<a:server_partnered:828616175297626113>',
+        server_verified: '<:server_verified:828616125850845245>',
+        settings_disabled: '<:disabled:828615476183302165>',
+        settings_enabled: '<:enabled:828615984687349761>',
+        success: '<:success:828614918688604191>',
     }
 } as const;
 
@@ -27,7 +57,7 @@ export const DefaultDatabaseConfig = {
     dbname: 'discord_bot',
     host: 'localhost',
     port: 27017,
-    appname: 'ciri discord bot',
+    appname: 'christina discord bot',
 
 } as const;
 

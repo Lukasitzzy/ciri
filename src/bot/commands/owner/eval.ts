@@ -3,6 +3,8 @@ import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand
 import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
 import { applyOptions } from '../../../packages/util/Functions';
+import { Util } from 'discord.js';
+import { EMOTES } from '../../../packages/util/Constants';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({
@@ -38,7 +40,10 @@ export default class EvalCommand extends CustomCommand {
                 await ctx.send(`${ctx.emote('error')} cannot find something to evaluate`);
                 return;
             }
-
+            const client = this.client;
+            const db = client.db;
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const constants = require('../../../packages/util/Constants');
             const evaled = eval(code);
             const start = Date.now();
             const str = await this.parseRes(evaled);
@@ -96,4 +101,12 @@ export default class EvalCommand extends CustomCommand {
         ).replace(reg, '\n');
     }
 
+    private async _sendEmotes(ctx: CommandContext<Record<string, any>, TextbasedChannel>) {
+        const keys = Object.keys(EMOTES.CUSTOM) as (keyof typeof EMOTES.CUSTOM)[];
+
+        for (const key of keys) {
+            await Util.delayFor(1000);
+            await ctx.sendNew(` ${key.toUpperCase()} :: ${EMOTES.CUSTOM[key]}  ::  \\${EMOTES.CUSTOM[key]} :: ${EMOTES.DEFAULT[key]}  `);
+        }
+    } 
 }
