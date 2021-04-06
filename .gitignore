@@ -108,3 +108,5 @@ test/
 bin/
 out/
 src/bot/events/client/client.message.ts
+data/emotes*
+.yarn/*

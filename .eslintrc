@@ -8,6 +8,9 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "globals": {
+        "_": "off"
+    },
     "rules": {
         "semi": "error",
         "quotes": [
