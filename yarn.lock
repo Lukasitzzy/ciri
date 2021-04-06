@@ -37,18 +37,19 @@ __metadata:
   resolution: "@ciri-bot/bot@workspace:."
   dependencies:
     "@types/color-name": ^1.1.1
-    "@types/mongodb": ^3.6.11
+    "@types/mongodb": ^3.6.12
     "@types/node": ^14.14.37
-    "@types/node-fetch": ^2.5.8
+    "@types/node-fetch": ^2.5.9
     "@types/ws": ^7.4.1
-    "@typescript-eslint/eslint-plugin": ^4.20.0
-    "@typescript-eslint/parser": ^4.20.0
+    "@typescript-eslint/eslint-plugin": ^4.21.0
+    "@typescript-eslint/parser": ^4.21.0
     chalk: ^4.1.0
     discord-akairo: "github:discord-akairo/discord-akairo"
     discord.js: "github:discordjs/discord.js"
     dotenv: ^8.2.0
     eslint: ^7.23.0
     mongodb: ^3.6.5
+    typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
@@ -137,7 +138,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mongodb@npm:^3.6.11":
+"@types/mongodb@npm:^3.6.12":
   version: 3.6.12
   resolution: "@types/mongodb@npm:3.6.12"
   dependencies:
@@ -147,7 +148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.5.8":
+"@types/node-fetch@npm:^2.5.9":
   version: 2.5.9
   resolution: "@types/node-fetch@npm:2.5.9"
   dependencies:
@@ -173,7 +174,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.20.0":
+"@typescript-eslint/eslint-plugin@npm:^4.21.0":
   version: 4.21.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.21.0"
   dependencies:
@@ -211,7 +212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.20.0":
+"@typescript-eslint/parser@npm:^4.21.0":
   version: 4.21.0
   resolution: "@typescript-eslint/parser@npm:4.21.0"
   dependencies:
@@ -1713,6 +1714,26 @@ __metadata:
   version: 0.8.1
   resolution: "type-fest@npm:0.8.1"
   checksum: f8c4b4249f52e8bea7a4fc55b3653c96c2d547240e4c772e001d02b7cc38b8c3eb493ab9fbe985a76a203cd1aa7044776b728a71ba12bf36e7131f989597885b
+  languageName: node
+  linkType: hard
+
+typescript@^4.2.3:
+  version: 4.2.3
+  resolution: "typescript@npm:4.2.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 06e8470f317db6f5e2fce809b20eb84a67a7d8179057abff36e5427bd1b891bd08e54581ff81f0fa36aef9b6d1eb0f54eaf6e2643c6dbd4e37a0adcc41eed256
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.2.3#builtin<compat/typescript>":
+  version: 4.2.3
+  resolution: "typescript@patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: a8956044aabf730699bcc3c2475efdd3f35e509329325cf60b4989761d4c2188e2c474183e2cf92b8c201fcf976814a5a16f144508b2a832643c4f972d0ab803
   languageName: node
   linkType: hard
 
