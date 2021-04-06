@@ -19,15 +19,15 @@ jobs:
     strategy:
       matrix:
         node-version: [15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        # See supported  release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn global add  yarn
-    - run: npm global add  typescript
-    - run: yarn
+    - run: npm install -g yarn
+    - run: yarn add  typescript
+    - run: yarn 
     - run: yarn run lint
     - run: yarn run build
