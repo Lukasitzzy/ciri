@@ -1,4 +1,3 @@
-import { GuildMember } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { applyOptions } from '../../../packages/util/Functions';
@@ -21,7 +20,7 @@ interface ClientStatusOptions {
         channel: 'guild'
     }
 })
-export default class MemberCommand extends CustomCommand {
+export default class MembersCommand extends CustomCommand {
 
 
     public async run(ctx: CommandContext<Record<string, unknown>, TextbasedChannel>): Promise<any> {
@@ -55,22 +54,31 @@ export default class MemberCommand extends CustomCommand {
             if (member.presence.clientStatus.desktop) {
                 filtered.desktop[member.presence.clientStatus.desktop]++;
             }
+            console.log(member.presence.clientStatus.mobile);
+            
             if (member.presence.clientStatus.mobile) {
-                filtered.desktop[member.presence.clientStatus.mobile]++;
+                filtered.mobile[member.presence.clientStatus.mobile]++;
 
             }
             if (member.presence.clientStatus.web) {
-                filtered.desktop[member.presence.clientStatus.web]++;
+                filtered.web[member.presence.clientStatus.web]++;
 
             }
         }
-        const dndTotal = members.filter(member => member.presence.status === 'dnd');
-        const idleTotal = members.filter(member => member.presence.status === 'idle');
-        const onlineTotal = members.filter(member => member.presence.status === 'online');
-        const offlineTotal = members.filter(member => member.presence.status === 'offline');
+        const dndTotal = members.filter(member => member.presence.status === 'dnd').size;
+        const idleTotal = members.filter(member => member.presence.status === 'idle').size;
+        const onlineTotal = members.filter(member => member.presence.status === 'online').size;
+        const offlineTotal = members.filter(member => member.presence.status === 'offline').size;
 
-        const { web, desktop, mobile } = filtered;
-        await ctx.send(`${ctx.emote('info')} current member stats:\n\n`);
+        const { mobile } = filtered;
+        await ctx.send([
+            `${ctx.emote('info')} current member stats:`,
+            onlineTotal ? `online: ${onlineTotal} ${ctx.emote('member_online')}${mobile.online ? `( on mobile ${ctx.emote('mobile_online')} ${mobile.online})` : ''} ` : '',
+            idleTotal ? `idle: ${idleTotal} ${ctx.emote('member_idle')}${mobile.idle ? `(on mobile ${ctx.emote('mobile_idle')} ${mobile.idle})` : ''}`: '',
+            dndTotal ? `dnd: ${dndTotal} ${ctx.emote('member_idle')}${mobile.dnd ? `( on mobile ${ctx.emote('mobile_idle')} ${mobile.dnd})` : ''}`: '',
+            offlineTotal ? `offline: ${offlineTotal} ${ctx.emote('member_offline')}${mobile.offline ? `( on mobile ${ctx.emote('member_offline')} ${mobile.offline})` : ''}` : '',
+
+        ].filter(n => n !=='').join('\n'));
 
     }
 

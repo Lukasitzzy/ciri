@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import * as NodeUtil from 'util';
@@ -40,6 +41,7 @@ export default class EvalCommand extends CustomCommand {
                 await ctx.send(`${ctx.emote('error')} cannot find something to evaluate`);
                 return;
             }
+            //
             const client = this.client;
             const db = client.db;
             // eslint-disable-next-line @typescript-eslint/no-var-requires

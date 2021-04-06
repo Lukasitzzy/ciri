@@ -1,6 +1,4 @@
 /* eslint-disable no-case-declarations */
-
-import { midnightblue } from 'color-name';
 import { EventEmitter } from 'events';
 import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';

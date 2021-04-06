@@ -1,5 +1,4 @@
-import { TextChannel, GuildFeatures, MessageEmbed } from 'discord.js';
-import { MongoServerSelectionError } from 'mongodb';
+import { TextChannel, GuildFeatures } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { applyOptions } from '../../../packages/util/Functions';
@@ -19,23 +18,11 @@ export default class ServerInfoCommand extends CustomCommand {
         
         if (!ctx.guild) return;
         const guild = await ctx.guild.fetch();
-        const {
-            premiumSubscriptionCount,
-            premiumTier,
-            features: ServerFeatures,
-            name,
-            id,
-            createdAt,
-            description,
-            explicitContentFilter,
-            verified
-        } = guild;
-        const embed = this.client.util.embed().setColor('RANDOM');
-        const features = this._parseFeatures(ctx, ServerFeatures);
-
+        
+        if (!guild) {
+            await ctx.send(`${ctx.emote('error')} failed to fetch information.`);
+        }
     }
-
-    private _parsePremiumSubscriptionCount(subs: number, tier: 0 | 1 | 2 | 3) {}
 
     private _parseFeatures(
         ctx:  CommandContext<Record<string, undefined>, TextbasedChannel>,
@@ -53,8 +40,6 @@ export default class ServerInfoCommand extends CustomCommand {
                     break;
                 case 'PARTNERED':
                     list.push(ctx.emote('server_partnered'));
-                default:
-                    break;
             }
         }
         return list;
