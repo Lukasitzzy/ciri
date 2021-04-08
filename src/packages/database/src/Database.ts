@@ -148,6 +148,7 @@ export class Database {
                             await this._economy.collection.insertOne({
                                 _id: new mongo.ObjectID(),
                                 enabled: true,
+                                prefix: '$',
                                 bank: {
                                     accounts: [],
                                     owner_id: ownerID,

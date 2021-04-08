@@ -3,6 +3,7 @@ import { IBaseSettings } from './settings';
 export interface IGuildEconomySettings extends IBaseSettings {
     guild_id: string;
     bank: IBank;
+    prefix: string;
     enabled: boolean;
 }
 
