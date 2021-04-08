@@ -6,13 +6,16 @@
 
 > this project works has been tested on node v15.9.0
 
+
 - make sure you have nodejs installed
 
-- rename the `.env_example`
+- a mongodb running locally or running on mongodb atlas
 
-- run `npm install`
+- rename the `.env_example` to .env and fill it out with the correct values
 
-- run `npm start`
+- run `yarn install`
+
+- run `yarn run start`
 
 ## key features
 
