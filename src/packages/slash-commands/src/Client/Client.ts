@@ -54,11 +54,8 @@ export class InteractionClient extends EventEmitter {
                     return;
                 }, 2500);
                 try {
-                    console.log('before');
-                    
                     await this._runCommand(command);
-                    console.log('after');
-                    
+        
                 } catch (err) {
                     await command.panik({ error: err });
                     this.client.logger.error(err, command.id);
@@ -80,17 +77,10 @@ export class InteractionClient extends EventEmitter {
     private async _runCommand(command: InterActionCommand) {
         this.emit('runCommand', command);
         const path = join(process.cwd(), 'dist', 'bot', 'slash_commands', `${command.name}.js`);
-        console.log(path);
         
         try {
-            console.log('before12');
-            
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const cmd = require(path).default;
-            console.log('after13');
-            
-            console.log(cmd);
-            
+            const cmd = require(path).default;            
             if (!cmd) return null;
             const comm = new cmd();
             comm._interaction = command;
@@ -109,8 +99,7 @@ export class InteractionClient extends EventEmitter {
             
             // TODO: refractor this to not error 
             if (/Cannot find module/g.test(error.message)) {
-                console.log('cannot find comamnd');
-                
+                console.log(`cannot find command for ${command.name}`);
                 return null;
             }
             await command.panik({ error });
