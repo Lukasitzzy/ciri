@@ -53,9 +53,7 @@ export default class MembersCommand extends CustomCommand {
             if (!member.presence.clientStatus) continue;
             if (member.presence.clientStatus.desktop) {
                 filtered.desktop[member.presence.clientStatus.desktop]++;
-            }
-            console.log(member.presence.clientStatus.mobile);
-            
+            }            
             if (member.presence.clientStatus.mobile) {
                 filtered.mobile[member.presence.clientStatus.mobile]++;
 
@@ -75,7 +73,7 @@ export default class MembersCommand extends CustomCommand {
             `${ctx.emote('info')} current member stats:`,
             onlineTotal ? `online: ${onlineTotal} ${ctx.emote('member_online')}${mobile.online ? `( on mobile ${ctx.emote('mobile_online')} ${mobile.online})` : ''} ` : '',
             idleTotal ? `idle: ${idleTotal} ${ctx.emote('member_idle')}${mobile.idle ? `(on mobile ${ctx.emote('mobile_idle')} ${mobile.idle})` : ''}`: '',
-            dndTotal ? `dnd: ${dndTotal} ${ctx.emote('member_idle')}${mobile.dnd ? `( on mobile ${ctx.emote('mobile_idle')} ${mobile.dnd})` : ''}`: '',
+            dndTotal ? `dnd: ${dndTotal} ${ctx.emote('member_dnd')}${mobile.dnd ? `( on mobile ${ctx.emote('mobile_dnd')} ${mobile.dnd})` : ''}`: '',
             offlineTotal ? `offline: ${offlineTotal} ${ctx.emote('member_offline')}${mobile.offline ? `( on mobile ${ctx.emote('member_offline')} ${mobile.offline})` : ''}` : '',
 
         ].filter(n => n !=='').join('\n'));
