@@ -141,7 +141,7 @@ export class InteractionCommandManager extends EventEmitter {
         }
         await getApi(this._discordClient)
             .applications(id)
-            .commands
+            .commands(command)
             .delete();
     }
     }

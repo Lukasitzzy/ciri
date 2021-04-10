@@ -32,7 +32,10 @@ export class DiscordBot extends AkairoClient {
 
         super({
             ownerID: process.env.OWNER_ID?.split('--'),
-            intents: Intents.ALL
+            intents: Intents.ALL,
+            http: {
+                version: 8
+            }
         });
         this.commandHandler = new CustomCommandHandler(this, {
             directory: join(root, 'commands'),

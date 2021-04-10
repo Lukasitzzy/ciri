@@ -1,16 +1,73 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
 import { TextChannel } from 'discord.js';
-import { InteractionResponseType } from '../../packages/slash-commands/src/util/Constants';
-
+import { IApplicationCommand } from '../../packages/slash-commands/src/types/InteractionTypes';
 export default class HelpSlashCommand extends SlashCommand {
 
     public async run(): Promise<void> {
-        await this.interaction.reply({
-            content: 'not yet here',
-            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            ephemeral: true
-        });
 
+        const commands = await this.client.interaction.commands.fetch();
+        const serverCommands: IApplicationCommand[] = [];
+        if (this.interaction.guild) {
+            const _commands = await this.client.interaction.commands.fetch(this.interaction.guild.id);
+            serverCommands.push(..._commands);
+        }
+        const command = this.interaction.options?.[0];
+
+        if (command) {
+            if (typeof command.value === 'string') {
+                const content: string[] = [];
+                content.push(`help for ${this.interaction.name}\n${this.interaction.data?.data.description}`);
+                const _command = await this.client.interaction.commands.fetchCommand(command.value).catch(() => null);
+                if (_command) {
+                    content.push(this._parseCommand(_command));
+                    return this.interaction.reply({
+                        content: content.join('\n'),
+                        ephemeral: true
+                    });
+                } else {
+                    return this.interaction.reply({
+                        content: 'command not found',
+                        ephemeral: true
+                    });
+                }
+            }
+        } else {
+            const content = [
+                commands.map(
+                    command => `\`/${command.name}\`: ${command.description}`
+                ).join('\n'),
+                serverCommands.length ?
+                    `\n\n**server specific commands**:\n${serverCommands.map(
+                        command => `\`/${command.name}\`: ${command.description}`
+                    ).join('\n')}`
+                    : ''
+            ].filter(c => c !== '').join('\n');
+
+            return this.interaction.reply({
+                content: content,
+                ephemeral: true
+            });
+        }
+
+    }
+
+    private _parseCommand(command: IApplicationCommand) {
+        const {
+            description: _description,
+            name: _name,
+            options: _options
+        } = command;
+
+        return [
+            `name: ${_name}`,
+            `description: ${_description}`,
+            _options?.length ?
+                _options.map(option => {
+                    console.log((option as any).type);
+                    return option.name;
+                })
+                : ''
+        ].filter(v => v !== '').join('\r\n');
     }
 
     async userPermissions(): Promise<boolean> {
