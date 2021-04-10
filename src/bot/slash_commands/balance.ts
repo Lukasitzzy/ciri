@@ -4,11 +4,10 @@ import { TextChannel } from 'discord.js';
 export default class BalanceCommand extends SlashCommand {
 
     public async run(): Promise<void> {
-        const { bank, prefix } = (this.interaction.guild ?
+        const { bank } = (this.interaction.guild ?
             this.client.db.economy.get(this.interaction.guild.id) || await this.client.db.economy.fetch(this.interaction.guild.id)
                 .then(res => res)
                 : null) || { bank: null, prefix: '$' };
-        // console.log(accounts);
 
         if (!bank?.accounts?.length) {
             return this.interaction.reply({ content: 'this server does not have a bank ', ephemeral: true });
