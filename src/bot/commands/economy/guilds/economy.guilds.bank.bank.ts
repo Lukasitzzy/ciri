@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
-import { CommandContext, TextbasedChannel } from '../../../../../packages/core/src/commands/CommandContext';
-import { CustomCommand } from '../../../../../packages/core/src/commands/CustomCommand';
-import { applyOptions } from '../../../../../packages/util/Functions';
+import { CommandContext, TextbasedChannel } from '../../../../packages/core/src/commands/CommandContext';
+import { CustomCommand } from '../../../../packages/core/src/commands/CustomCommand';
+import { applyOptions } from '../../../../packages/util/Functions';
 
 @applyOptions({
     id: 'economy.guilds.bank.bank',
@@ -59,7 +59,6 @@ export default class BankCommand extends CustomCommand {
                     await msg.edit(`${ctx.emote('success')} cancel command.`);
                     return msg2.delete();
                 }
-                console.log(`"${account.password}" :: "${content}" `);
                 if (account.password !== content) {
                     await msg.edit(`${ctx.emote('error')} wrong password, please try again.\n\n[canceled command]`);
                     await msg2.delete();

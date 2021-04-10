@@ -3,9 +3,10 @@ import { CommandContext, TextbasedChannel } from '../../../packages/core/src/com
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
-import { applyOptions } from '../../../packages/util/Functions';
+import { applyOptions, getApi } from '../../../packages/util/Functions';
 import { Util } from 'discord.js';
 import { EMOTES } from '../../../packages/util/Constants';
+import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/slash-commands/src/types/InteractionTypes';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({
@@ -28,6 +29,35 @@ export default class EvalCommand extends CustomCommand {
 
     public async run(ctx: CommandContext<{ code: string; }, TextbasedChannel>): Promise<any> {
         await this.parseEval(ctx);
+    }
+
+    public createCustomCommand(
+        name: string, 
+        description: string,
+        options: IApplicationCommandOption[], 
+        guildID?: string
+        ): Promise<IApplicationCommand>  {
+        if (!this.client.user) throw new Error('client no ready');
+        return guildID ?
+        getApi(this.client)
+        .applications(this.client.user.id)
+        .guilds(guildID)
+        .commands.post({
+            data: {
+                name: name,
+                description: description,
+                options: options
+            }
+        })
+        : getApi(this.client)
+        .applications(this.client.user?.id)
+        .commands.post({
+            data: {
+                name: name,
+                description: description,
+                options: options
+            }
+        });
     }
 
     public async parseEval(
@@ -110,5 +140,5 @@ export default class EvalCommand extends CustomCommand {
             await Util.delayFor(1000);
             await ctx.sendNew(` ${key.toUpperCase()} :: ${EMOTES.CUSTOM[key]}  ::  \\${EMOTES.CUSTOM[key]} :: ${EMOTES.DEFAULT[key]}  `);
         }
-    } 
+    }
 }

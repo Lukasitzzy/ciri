@@ -8,13 +8,21 @@ import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/src/Database';
 import { getApi } from '../../../util/Functions';
 import { ClientApplication } from 'discord.js';
+import { EconomyManager } from '../../../economy/src/EconomyManager';
+import { guildFunction } from '../../../extentions/Guild';
+import { userFunction } from '../../../extentions/User';
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
+
+guildFunction();
+userFunction();
+
 export class DiscordBot extends AkairoClient {
 
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
     public readonly interaction: InteractionClient;
+    public readonly economy: EconomyManager;
     public readonly logger: Logger;
     public readonly db: Database;
     /**
@@ -81,6 +89,8 @@ export class DiscordBot extends AkairoClient {
                     };
                 })() : undefined
         });
+
+        this.economy = new EconomyManager(this, this.db.economy);
 
     }
 

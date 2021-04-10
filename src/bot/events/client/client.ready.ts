@@ -27,8 +27,10 @@ export default class ClientReadyEvent extends CustomEvent {
 
         this.client.logger.shards = this.client.ws.shards.size > 1 ?
             this.client.ws.shards.map(s => s.id)
-            : [0, 1];
+        : [0, 1];
+        
         if (!process.env.DISABLE_DB) {
+            
             await this.client.db.checkGuilds(this.client);
         }
 

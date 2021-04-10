@@ -40,7 +40,6 @@ export class InteractionClient extends EventEmitter {
                 if (command.name === 'test') {
                     return command.reply({ ephemeral: true, content: 'yes even here <:items4Lurk:814620882663637084> <- twitch emote btw' });
                 }
-                // console.log(command);
                 
                 this._client.setTimeout(async () => {
                     if (!command._responded) {

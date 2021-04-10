@@ -23,14 +23,14 @@ export class InterActionCommand extends InteractionBase {
     private readonly _name: string;
     private readonly _options: iWsResponseData['options'];
     _responded: boolean;
-    private readonly _resolved: {
+    private _resolved: {
         users?: Collection<string, User>;
         members?: Collection<string, GuildMember>;
         channels?: Collection<string, GuildChannel>;
         roles?: Collection<string, Role>;
     };
 
-    public constructor(client: DiscordBot, data: IWSResponse,) {
+    public constructor(client: DiscordBot, data: IWSResponse) {
         super(client, data);
 
         this._commandid = data.data.id;
@@ -55,24 +55,29 @@ export class InterActionCommand extends InteractionBase {
         if (user) {
             this._user = this.client.users.cache.get(user);
         }
-        if (this.data?.data.resolved) {
+        
+        if (data.resolved) {
             const {
                 channels,
                 members,
                 roles,
                 users
-            } = this.data.data.resolved;
-
+            } = data.resolved;
+            
             if (channels) {
+                this.client.logger.debug('parsing channels');
                 this._parseChannels(channels);
             }
             if (users) {
+                this.client.logger.debug('parsing users');
                 this._parseUsers(users);
             }
             if (members) {
+                this.client.logger.debug('parsing members');
                 this._parseMembers(members);
             }
             if (roles) {
+                this.client.logger.debug('parsing roles');
                 this._parseRoles(roles);
             }
         }
@@ -339,6 +344,7 @@ export class InterActionCommand extends InteractionBase {
 
     private _parseUsers(users: Record<string, any>) {
         const userIDs = Object.keys(users);
+        if (!this._resolved) this._resolved = {};
         this._resolved.users = new Collection();
         for (const userID of userIDs) {
             const rawUser = users[userID];
