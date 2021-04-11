@@ -1,7 +1,7 @@
 import { CommandOptions } from 'discord-akairo';
 import { DiscordBot } from '../core/src/client/Client';
 import { CustomCommand } from '../core/src/commands/CustomCommand';
-import { Api } from '../slash-commands/src/types/Discord.js.Api';
+import { Api } from './typings/Discord.js.Api';
 
 export function getApi(client: DiscordBot): Api {
     return Reflect.get(client, 'api');

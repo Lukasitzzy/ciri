@@ -1,6 +1,6 @@
 import { Database } from '../Database';
 import * as mongo from 'mongodb';
-import { IBaseSettings } from '../util/settings';
+import { IBaseSettings } from '../../../util/typings/settings';
 import { Cache } from '../../../util/Cache';
 export abstract class BaseModel<T extends IBaseSettings> {
 

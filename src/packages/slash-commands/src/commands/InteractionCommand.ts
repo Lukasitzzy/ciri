@@ -9,7 +9,7 @@ import { EMOTES } from '../../../util/Constants';
 import { getApi } from '../../../util/Functions';
 import { InteractionBase } from '../util/Interaction';
 import { InteractionResponseType, PermissionStrings } from '../util/Constants';
-import { IWSResponse, iWsResponseData } from '../types/InteractionTypes';
+import { IWSResponse, iWsResponseData } from '../../../util/typings/InteractionTypes';
 import { SnowflakeUtil } from 'discord.js';
 
 export class InterActionCommand extends InteractionBase {

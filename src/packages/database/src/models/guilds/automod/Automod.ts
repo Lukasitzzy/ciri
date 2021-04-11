@@ -1,6 +1,6 @@
 import { Cache } from '../../../../../util/Cache';
 import { EMOTES } from '../../../../../util/Constants';
-import { IGuildSettingsAutomod } from '../../../util/settings';
+import { IGuildSettingsAutomod } from '../../../../../util/typings/settings';
 import { GuildSettingsModel } from '../GuildSettings';
 
 export class GuildSettingsAutomodModel {

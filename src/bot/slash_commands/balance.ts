@@ -1,6 +1,5 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
 import { TextChannel } from 'discord.js';
-
 export default class BalanceCommand extends SlashCommand {
 
     public async run(): Promise<void> {

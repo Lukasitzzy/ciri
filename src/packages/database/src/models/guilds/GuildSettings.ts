@@ -1,5 +1,5 @@
 import { Database } from '../../Database';
-import { IGuildSettings } from '../../util/settings';
+import { IGuildSettings } from '../../../../util/typings/settings';
 import * as mongo from 'mongodb';
 import { EMOTES } from '../../../../util/Constants';
 import { BaseModel } from '../../base/BaseModel';

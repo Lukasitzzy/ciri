@@ -1,6 +1,6 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
 import { TextChannel } from 'discord.js';
-import { IApplicationCommand } from '../../packages/slash-commands/src/types/InteractionTypes';
+import { IApplicationCommand } from '../../packages/util/typings/InteractionTypes';
 export default class HelpSlashCommand extends SlashCommand {
 
     public async run(): Promise<void> {

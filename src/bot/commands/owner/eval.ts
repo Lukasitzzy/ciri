@@ -6,7 +6,7 @@ import { VERSION } from '../../../packages/util/Constants';
 import { applyOptions, getApi } from '../../../packages/util/Functions';
 import { Util } from 'discord.js';
 import { EMOTES } from '../../../packages/util/Constants';
-import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/slash-commands/src/types/InteractionTypes';
+import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({

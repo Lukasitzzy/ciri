@@ -4,7 +4,7 @@ import { join } from 'path';
 import { DiscordBot } from '../../../core/src/client/Client';
 import { InterActionCommand } from '../commands/InteractionCommand';
 import { InteractionCommandManager } from '../commands/InteractionCommandManager';
-import { IWSResponse } from '../types/InteractionTypes';
+import { IWSResponse } from '../../../util/typings/InteractionTypes';
 import { InteractionType } from '../util/Constants';
 
 export class InteractionClient extends EventEmitter {

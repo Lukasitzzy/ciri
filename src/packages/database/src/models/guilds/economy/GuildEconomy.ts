@@ -2,7 +2,7 @@ import * as mongo from 'mongodb';
 import { EMOTES } from '../../../../../util/Constants';
 import { BaseModel } from '../../../base/BaseModel';
 import { Database } from '../../../Database';
-import { IGuildEconomySettings, ITaxSettings, IUserBankAccount } from '../../../util/economy';
+import { IGuildEconomySettings, ITaxSettings, IUserBankAccount } from '../../../../../util/typings/economy';
 const useCache = true;
 export class GuildEconomyModel extends BaseModel<IGuildEconomySettings>  {
 
