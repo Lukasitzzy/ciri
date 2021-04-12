@@ -22,7 +22,9 @@ export const EMOTES = {
         server_verified: '\\♋',
         settings_disabled: '🟢',
         settings_enabled: '🔴',
-        success: '✅'
+        success: '✅',
+        server_member: '👥',
+        server_owner: '👑'
     },
     CUSTOM: {
         // i do NOT own any of the following emotes 
@@ -53,6 +55,8 @@ export const EMOTES = {
         settings_disabled: '<:disabled:828615476183302165>',
         settings_enabled: '<:enabled:828615984687349761>',
         success: '<:success:828614918688604191>',
+        server_member: '<:server_member:831186631993065473>',
+        server_owner: '<:server_owner:831186977855373362>',
     }
 } as const;
 
