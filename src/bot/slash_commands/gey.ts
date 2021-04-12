@@ -14,7 +14,7 @@ export default class HelpSlashCommand extends SlashCommand {
         }
         if (!user) {
             return this.interaction.reply({
-                content: `${this.interaction.user} is 200% gey`,
+                content: `you're 200% gey`,
              });
         }
         else {
