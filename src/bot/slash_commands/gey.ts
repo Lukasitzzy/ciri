@@ -6,7 +6,7 @@ export default class HelpSlashCommand extends SlashCommand {
         if (!this.interaction.data) return;
 
         const users = Object.keys(this.interaction.data?.data.resolved?.users || {});
-        let user: { id: string } | undefined;
+        let user: { id: string; } | undefined;
         for (const _user of users) {
             if (Object.prototype.hasOwnProperty.call(this.interaction.data.data.resolved?.users, _user)) {
                 user = this.interaction.data.data.resolved?.users?.[_user];
@@ -14,8 +14,8 @@ export default class HelpSlashCommand extends SlashCommand {
         }
         if (!user) {
             return this.interaction.reply({
-                content: `you're 200% gey`,
-             });
+                content: 'you\'re 200% gey',
+            });
         }
         else {
             const level = (parseFloat(user.id.split('').reverse().join('')) / (10 ** user.id.length) * 100).toFixed(2);

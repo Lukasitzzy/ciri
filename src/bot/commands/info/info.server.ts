@@ -20,7 +20,7 @@ export default class ServerInfoCommand extends CustomCommand {
     async run(ctx: CommandContext<Record<string, undefined>, TextChannel>): Promise<void> {
 
         if (!ctx.guild){
-            console.log('server gors brrrrrrrr');
+            console.log('server goes brrrrrrrr');
             
              return;
         }
@@ -32,7 +32,11 @@ export default class ServerInfoCommand extends CustomCommand {
             return;
         }
         let owner: GuildMember;
-        if (!ctx.guild.owner) {}
+        if (!ctx.guild.owner) {
+		owner = await ctx.guild.members.fetch(ctx.guild.ownerID);
+	} else {
+		owner = ctx.guild.owner;
+	}
 
         const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size});
 
@@ -43,7 +47,7 @@ export default class ServerInfoCommand extends CustomCommand {
             `server information for ${guild.name}`,
             `${ctx.emote('server_member')} ${ctx.guild.memberCount} member${ctx.guild.memberCount == 1 ? '': 's'} | ${ctx.emote('member_online')} online ${online} `,
             `server region: ${guild.region.toLowerCase().replace(/-/g, ' ').replace(/_/g, ' ')}`,
-            `${ctx.emote('server_owner')} owner: ${ctx.guild.owner} `,
+            `${ctx.emote('server_owner')} owner: ${owner.user.tag}`,
             'more info',
             `${
                 guild.channels.cache.size
