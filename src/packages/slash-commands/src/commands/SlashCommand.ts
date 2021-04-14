@@ -4,20 +4,18 @@ import { InterActionCommand } from './InteractionCommand';
 
 export abstract class SlashCommand {
 
-    private readonly _interaction!: InterActionCommand;
-
-    public get client(): InteractionBase['client'] {
-        return this._interaction.client;
+    public name: string;
+    constructor(name: string) {
+        this.name = name;
     }
 
-    public get interaction(): InterActionCommand {
-        return this._interaction;
-    }
+    public client!: InteractionBase['client'];
 
-    public userPermissions?(): boolean | Promise<boolean>;
 
-    public clientPermissions?(): boolean | Promise<boolean>;
-    public abstract run(): void | Promise<void>;
+    public userPermissions?(interaction: InterActionCommand): boolean | Promise<boolean>;
+
+    public clientPermissions?(interaction: InterActionCommand): boolean | Promise<boolean>;
+    public abstract run(interaction: InterActionCommand): void | Promise<void>;
 
 
 }

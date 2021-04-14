@@ -1,15 +1,25 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
 import { SnowflakeUtil, MessageEmbed } from 'discord.js';
+import { InterActionCommand } from '../../packages/slash-commands/src/commands/InteractionCommand';
 
 export default class SnowFlakeSlashCommand extends SlashCommand {
 
-    public async run(): Promise<void> {
-        const name = this.interaction.data?.data.options?.[0].name;
 
-        const snowflake = this.interaction.data?.data.options?.[0].value;
+    /**
+     *
+     */
+    constructor() {
+        super('snowflake');
+        
+    }
+
+    public async run(interaction: InterActionCommand): Promise<void> {
+        const name = interaction.data?.data.options?.[0].name;
+
+        const snowflake = interaction.data?.data.options?.[0].value;
         if (typeof snowflake !== 'string') {
             this.client.logger.debug('no snowflake send by discord.', this.constructor.name);
-            return this.interaction.fail({
+            return interaction.fail({
                 content: `invalid value for ${name || 'snow_flake'} wanted string got ${typeof snowflake}`,
                 ephemeral: true
             });
@@ -18,7 +28,7 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
             if (!/\d+/g.test(snowflake)) {
                 this.client.logger.debug('Invalid snowflake send by discord.', this.constructor.name);
 
-                return this.interaction.fail({
+                return interaction.fail({
                     content: 'invalid snowflake id',
                     ephemeral: true
                 });
@@ -39,7 +49,7 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
                     '[reference](https://discord.com/developers/docs/reference#snowflakes)'
                 ].join('\n');
 
-                return this.interaction.success({
+                return interaction.success({
                     content: `successfully parsed the snowflake \`${snowflake}\` `,
                     // ephemeral: true,
                     options: {
@@ -51,12 +61,12 @@ export default class SnowFlakeSlashCommand extends SlashCommand {
                                     `Slash commands powered by ${this.client.user?.username} `,
                                     this.client.user?.displayAvatarURL({ dynamic: true, size: 512 })
                                 )
-                                .setFooter(`requested by ${this.interaction.user?.username}`)
+                                .setFooter(`requested by ${interaction.user?.username}`)
                         ]
                     }
                 });
             } else {
-                return this.interaction.panik({
+                return interaction.panik({
                     error: new Error('invalid date object')
                 });
             }

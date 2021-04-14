@@ -20,6 +20,21 @@ export function applyOptions(options: { id: string; description: any; options: C
     };
 }
 
+export function enumerable(val: boolean) {
+    return (cls: unknown, prop: string): void => {
+        Object.defineProperty(cls, prop, {
+            enumerable: val,
+            set(this: unknown, value: unknown) {
+                Object.defineProperty(this, prop, {
+                    configurable: true,
+                    enumerable: val,    
+                    value: value,
+                    writable: true
+                });
+            }
+        });
+    };
+}
 
 export function getGitCommit(): Promise<string> {
     return new Promise<string>((res, rej) => {

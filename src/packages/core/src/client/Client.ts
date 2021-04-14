@@ -66,7 +66,7 @@ export class DiscordBot extends AkairoClient {
             directory: join(root, 'events')
         });
 
-        this.interaction = new InteractionClient(this);
+        this.interaction = new InteractionClient(this, join(root, 'slash_commands'));
 
 
         const SHARDS: number[] = [];
@@ -101,6 +101,7 @@ export class DiscordBot extends AkairoClient {
         try {
             this._prepare();
             await this.db.connect();
+            await this.interaction.loadCommands();
             await this.login();
         } catch (error) {
             this.logger.error(error);

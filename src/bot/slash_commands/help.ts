@@ -1,31 +1,41 @@
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
 import { TextChannel } from 'discord.js';
 import { IApplicationCommand } from '../../packages/util/typings/InteractionTypes';
+import { InterActionCommand } from '../../packages/slash-commands/src/commands/InteractionCommand';
 export default class HelpSlashCommand extends SlashCommand {
 
-    public async run(): Promise<void> {
+    /**
+     *
+     */
+    constructor() {
+        super('help');
+        
+    }
+
+
+    public async run(interaction: InterActionCommand): Promise<void> {
 
         const commands = await this.client.interaction.commands.fetch();
         const serverCommands: IApplicationCommand[] = [];
-        if (this.interaction.guild) {
-            const _commands = await this.client.interaction.commands.fetch(this.interaction.guild.id);
+        if (interaction.guild) {
+            const _commands = await this.client.interaction.commands.fetch(interaction.guild.id);
             serverCommands.push(..._commands);
         }
-        const command = this.interaction.options?.[0];
+        const command = interaction.options?.[0];
 
         if (command) {
             if (typeof command.value === 'string') {
                 const content: string[] = [];
-                content.push(`help for ${this.interaction.name}\n${this.interaction.data?.data.description}`);
+                content.push(`help for ${interaction.name}\n${interaction.data?.data.description}`);
                 const _command = await this.client.interaction.commands.fetchCommand(command.value).catch(() => null);
                 if (_command) {
                     content.push(this._parseCommand(_command));
-                    return this.interaction.reply({
+                    return interaction.reply({
                         content: content.join('\n'),
                         ephemeral: true
                     });
                 } else {
-                    return this.interaction.reply({
+                    return interaction.reply({
                         content: 'command not found',
                         ephemeral: true
                     });
@@ -43,7 +53,7 @@ export default class HelpSlashCommand extends SlashCommand {
                     : ''
             ].filter(c => c !== '').join('\n');
 
-            return this.interaction.reply({
+            return interaction.reply({
                 content: content,
                 ephemeral: true
             });
@@ -70,11 +80,11 @@ export default class HelpSlashCommand extends SlashCommand {
         ].filter(v => v !== '').join('\r\n');
     }
 
-    async userPermissions(): Promise<boolean> {
+    async userPermissions(interaction: InterActionCommand): Promise<boolean> {
 
-        return (this.interaction.member && this.interaction.channel?.isText() &&
-            (this.interaction.channel as TextChannel)
-                .permissionsFor(this.interaction.member)
+        return (interaction.member && interaction.channel?.isText() &&
+            (interaction.channel as TextChannel)
+                .permissionsFor(interaction.member)
                 .has('SEND_MESSAGES')) || false;
     }
 }
