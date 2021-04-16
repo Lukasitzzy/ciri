@@ -80,7 +80,7 @@ export default class EvalCommand extends CustomCommand {
             const start = Date.now();
             const str = await this.parseRes(evaled);
             if (str.length >= 1700) {
-                console.log(str);
+                console.log(Util.cleanContent(str, ctx.msg));
                 await ctx.send([
                     `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                     'message was to long to be send.',
@@ -91,7 +91,7 @@ export default class EvalCommand extends CustomCommand {
             await ctx.send([
                 `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                 '```js',
-                str,
+                Util.cleanContent(str,ctx.msg),
                 '```',
 
                 `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${typeof evaled}`
@@ -104,7 +104,7 @@ export default class EvalCommand extends CustomCommand {
             await ctx.send([
                 `${ctx.emote('error')} failed to run the command`,
                 '```',
-                e,
+                Util.cleanContent(e,ctx.msg),
                 '```',
                 `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${error?.name || 'Error'}`
             ].join('\n'));

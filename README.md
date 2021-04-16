@@ -21,4 +21,10 @@
 
 ## planned features
 
-> moved [here](./docs/TO-DO.md)
+- more commands
+
+- better `/bonk` command
+
+- more background tasks
+
+- other stuff from bigger bot in my own version
