@@ -1,15 +1,5 @@
 import { DiscordBot } from '../../../packages/core/src/client/Client';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
-declare module 'discord.js' {
-    interface PresenceData {
-        activities: {
-            type: ActivityType,
-            name: string,
-            url?: string;
-        }[];
-    }
-}
-
 export default class ClientReadyEvent extends CustomEvent {
     client!: DiscordBot;
     constructor() {
