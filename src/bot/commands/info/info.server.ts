@@ -31,12 +31,7 @@ export default class ServerInfoCommand extends CustomCommand {
             await ctx.send(`${ctx.emote('error')} failed to fetch information.`);
             return;
         }
-        let owner: GuildMember;
-        if (!ctx.guild.owner) {
-		owner = await ctx.guild.members.fetch(ctx.guild.ownerID);
-	} else {
-		owner = ctx.guild.owner;
-	}
+        const owner: GuildMember = await ctx.guild.fetchOwner();
 
         const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size});
 
@@ -64,7 +59,7 @@ export default class ServerInfoCommand extends CustomCommand {
         console.log('stuff');
         const icon = guild.iconURL() || undefined;
         const embed = new MessageEmbed()
-        .setColor(guild.owner?.displayHexColor || 0x00f00f)
+        .setColor(owner.displayHexColor || 0x00f00f)
         .setFooter(`requested by ${ctx.author.tag}`)
         .setTimestamp(Date.now() + 64000)
         .setDescription(str);
