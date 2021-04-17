@@ -4,7 +4,8 @@ import { TextChannel, GuildFeatures } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { ChristinaGuild } from '../../../packages/extentions/Guild';
-import { applyOptions } from '../../../packages/util/Functions';
+import { applyOptions } from '../../../packages/util/decorators';
+
 
 @applyOptions({
     id: 'info.server',

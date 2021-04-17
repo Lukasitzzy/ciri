@@ -3,10 +3,12 @@ import { CommandContext, TextbasedChannel } from '../../../packages/core/src/com
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
-import { applyOptions, getApi } from '../../../packages/util/Functions';
+import { applyOptions } from '../../../packages/util/decorators';
+
 import { Util } from 'discord.js';
 import { EMOTES } from '../../../packages/util/Constants';
 import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
+import { getApi } from '../../../packages/util/Functions';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({

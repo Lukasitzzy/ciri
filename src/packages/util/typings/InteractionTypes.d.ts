@@ -5,6 +5,7 @@ export interface IWSResponse {
     id: string;
     guild_id?: string;
     data: iWsResponseData;
+    user?: IPartialInteractionUser;
     member?: IPartialInteractionMember;
     token: string;
     type: number;

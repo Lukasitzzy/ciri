@@ -1,6 +1,7 @@
+import { TextChannel } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
-import { applyOptions } from '../../../packages/util/Functions';
+import { applyOptions } from '../../../packages/util/decorators';
 
 interface ClientStatusOptions {
     online: number;
@@ -24,7 +25,8 @@ export default class MembersCommand extends CustomCommand {
 
 
     public async run(ctx: CommandContext<Record<string, unknown>, TextbasedChannel>): Promise<any> {
-
+    
+        
         if (!ctx.guild) return;
         await ctx.guild.members.fetch({ force: true });
         const members = ctx.guild.members.cache;

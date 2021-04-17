@@ -8,7 +8,7 @@ import { IWSResponse } from '../../../util/typings/InteractionTypes';
 import { InteractionType } from '../util/Constants';
 import { SlashCommand } from '../commands/SlashCommand';
 import { Cache } from '../../../util/Cache';
-import { enumerable } from '../../../util/Functions';
+import { enumerable } from '../../../util/decorators';
 import { promises, statSync } from 'fs';
 export class InteractionClient extends EventEmitter {
     private readonly _client: DiscordBot;

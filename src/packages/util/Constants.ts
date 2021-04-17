@@ -2,6 +2,7 @@ export const VERSION = '0.69.420';
 export const EMOTES = {
     DEFAULT: {
         default_member_boost: '❇',
+        discord_js: '❣',
         error: '❌',
         info: 'ℹ',
         loading:'⌛',
@@ -12,6 +13,7 @@ export const EMOTES = {
         mobile_idle: '🟡',
         mobile_online: '🟢',
         member_offline: '🔘',
+        node_js: '\\🖥',
         paused: '⏸',
         server_boost_level_0: '🌠',
         server_boost_level_1: '⭐',
@@ -34,6 +36,7 @@ export const EMOTES = {
         // since i did create it myself on a stechy website
         // please don't sue me discord thanks
         default_member_boost: '<:member_boost:828616412166619196>',
+        discord_js: '<:discordjs:832845723967684631>',
         error: '<:error:828614605352730685>',
         info: '<:info:828615222586507325>',
         loading: '<a:loading:828615360139493426>',
@@ -44,6 +47,7 @@ export const EMOTES = {
         mobile_dnd: '<:member_mobile_dnd:828616901809799180>',
         mobile_idle: '<:member_mobile_idle:828616743122763826>',
         mobile_online: '<:member_mobile_online:828616647710474261>',
+        node_js: '<:nodejs:832845692484845568>',
         paused: '<:settings_pused:828617832065269781>',
         server_boost_level_0: '<:boost_level0:828615920049717328>',
         server_boost_level_1: '<:boost_level1:828615802084261958>',

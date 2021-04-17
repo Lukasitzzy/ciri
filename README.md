@@ -12,9 +12,9 @@
 
 - rename the `.env_example` to .env and fill it out with the correct values
 
-- run `yarn install`
+- run `yarn` (or npm install)
 
-- run `yarn run start`
+- run `yarn run start` (or npm run start)
 
 ## key features
 
