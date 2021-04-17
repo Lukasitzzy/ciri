@@ -1,5 +1,5 @@
 import { Database } from '../../Database';
-import { IGuildSettings } from '../../../../util/typings/settings';
+import { GuildSettingsDocument as IGuildSettings } from '../../../../util/typings/settings';
 import * as mongo from 'mongodb';
 import { EMOTES } from '../../../../util/Constants';
 import { BaseModel } from '../../base/BaseModel';
@@ -11,7 +11,7 @@ export class GuildSettingsModel extends BaseModel<IGuildSettings> {
     private readonly _automod: GuildSettingsAutomodModel;
 
     constructor(db: Database, collection: mongo.Collection<IGuildSettings>) {
-        super(db, 'guild_id', collection);
+        super(db, 'guildID', collection);
 
         this._automod =  new GuildSettingsAutomodModel(this);
     }
@@ -23,7 +23,7 @@ export class GuildSettingsModel extends BaseModel<IGuildSettings> {
         for (const data of all) {
 
             if (useCache) {
-                this.cache.set(data.guild_id, data);
+                this.cache.set(data.guildID, data);
             }
         }
 

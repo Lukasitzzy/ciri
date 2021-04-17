@@ -1,11 +1,11 @@
 import { Database } from '../../Database';
-import { ISlashCommandGuildPermissions } from '../../../../util/typings/settings';
+// import { ISlashCommandGuildPermissions } from '../../../../util/typings/settings';
 import * as mongo from 'mongodb';
 import { BaseModel } from '../../base/BaseModel';
-export class SlashCommandPermissionGuildModel extends BaseModel<ISlashCommandGuildPermissions> {
+export class SlashCommandPermissionGuildModel extends BaseModel<any> {
 
-    constructor(db: Database, collection: mongo.Collection<ISlashCommandGuildPermissions>) {
-        super(db, 'guild_id', collection);
+    constructor(db: Database, collection: mongo.Collection<any>) {
+        super(db, 'guildID', collection);
     }
 
     async init(): Promise<void> {
@@ -14,7 +14,7 @@ export class SlashCommandPermissionGuildModel extends BaseModel<ISlashCommandGui
         for (const entry of entries) {
             const ID = entry[key];
             if (typeof ID !== 'string') {
-                this.db.logger.debug(`Collection ${this.collection.collectionName} does not have a valid "entry id" ${key} `, this.name);
+                this.db.logger.debug(`Collection ${this.collection.collectionName} does not have a valid "entry id" ${String(key)} `, this.name);
                 continue;
             }
             this.cache.set(`${ID}:${entry.slash_command}`, entry);

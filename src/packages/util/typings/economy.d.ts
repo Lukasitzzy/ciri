@@ -1,45 +1,18 @@
-import { IBaseSettings } from './settings';
+import { Snowflake } from 'discord.js';
+import { BaseDocument } from './settings';
 
-export interface IGuildEconomySettings extends IBaseSettings {
-    guild_id: string;
-    bank: IBank;
-    prefix: string;
+export interface GuildEconomyDocument extends BaseDocument {
+    guildID: Snowflake;
     enabled: boolean;
+    bank: any;
+    prefix: string;
+    
 }
 
-
-export interface IBank {
-    accounts: IUserBankAccount[];
+export interface Bank {
     vault: number;
-    owner_id: string;
-    taxes: ITaxSettings;
+    taxes: {
+        
+    }
 }
-
-
-export interface IBaseAccount {
-    id: string;
-    locked: boolean;
-
-}
-// bank.accounts[i]
-export interface IUserBankAccount extends IBaseAccount {
-    owner_id: string;
-    vault: number;
-    ismain: boolean;
-    taxes: ITaxSettings;
-
-}
-// user.account
-export interface IGuildBankAccount extends IBaseAccount {
-    is_primary: boolean;
-}
-
-
-interface ITaxSettings {
-    sending: number;
-    receiving: number;
-    // account.vault++
-    account_holding: number;
-}
-
 

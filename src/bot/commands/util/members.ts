@@ -1,4 +1,3 @@
-import { TextChannel } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { applyOptions } from '../../../packages/util/decorators';

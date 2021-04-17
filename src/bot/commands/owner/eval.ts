@@ -114,7 +114,6 @@ export default class EvalCommand extends CustomCommand {
     }
 
     private async parseRes(thing: any): Promise<string> {
-
         if (!thing) {
             return 'undefined';
         }

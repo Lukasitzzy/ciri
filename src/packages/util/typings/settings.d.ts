@@ -1,74 +1,52 @@
 import { Snowflake } from 'discord.js';
+import { ObjectID } from 'mongodb';
 
-interface IBaseSettings {
-    _id?: undefined;
-    __v?: undefined;
-}
-
-export interface IGuildSettings extends IBaseSettings {
-    /**
-     * @required
-     */
-    guild_id: string;
-    /**
-     * @default_value true
-     */
-    allow_slash_commands: boolean;
-    automod: IGuildSettingsAutomod;
+export interface BaseDocument {
+    documentID: ObjectID;
     version: number;
+    security: GuildModerationDocument; 
+}
+
+
+
+export interface GuildSettingsDocument extends BaseDocument{
+    guildID: Snowflake;
+    allowSlashCommands: boolean;
     prefix: string;
+
 }
 
-export interface IGuildSettingsAutomod {
+export interface GuildModerationDocument {
     enabled: boolean;
-    filters: IGuildSettingsAutomodFilter;
+    automod: GuildAutomod;
 }
 
-export interface IGuildSettingsAutomodFilter {
-    messages: IGuildSettingsAutomodFilterMessages;
-    names: IGuildSettingsAutomodFilterNames
-}
 
-export interface IGuildSettingsAutomodFilterMessages {
+export interface GuildAutomod {
     enabled: boolean;
-    invites: IGuildSettingsAutomodFilterMessagesInvite;
-    links: IGuildSettingsAutomodFilterMessagesLinks;
-    messages: IGuildSettingsAutomodFilterMessagesMessages;
-
+    filters: GuildFilter;
 }
 
-export interface IGuildSettingsAutomodFilterMessagesInvite {
+export interface GuildFilter {
     enabled: boolean;
-    messages: string[];
-    allowed_invites: string[];
-
+    messages: GuildFilterMessage;
 }
-export interface IGuildSettingsAutomodFilterMessagesLinks {
-    allowed_domains: string[];
+
+export interface GuildFilterMessage {
     enabled: boolean;
-    messages: string[];
+    invites: boolean;
+    
 }
-export interface IGuildSettingsAutomodFilterMessagesMessages {
+
+export interface GuildFilterName {
     enabled: boolean;
-    messages: string[];
-    regexps: string[];
+    names: readonly string[];
+    actions: ('BAN' | 'KICK')[];
+
 }
 
-
-export interface IGuildSettingsAutomodFilterNames {
-    enabled: boolean;
-    regexps: string[];
-    action: 'KICK' |'BAN';
-}
+export type GuildModerationActionsHard = 'BAN' | 'KICK';
 
 
-export interface ISlashCommandGuildPermissions extends IBaseSettings {
-    guild_id: string;
-    slash_command:string;
-    roles: Snowflake[];
-    members: Snowflake[];
-    channels: Snowflake[];
-    enable: boolean;
-    //always false for now
-    use_language_model: boolean;
-}
+
+

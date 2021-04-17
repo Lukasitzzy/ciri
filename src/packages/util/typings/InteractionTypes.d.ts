@@ -4,6 +4,7 @@ export interface IWSResponse {
     channel_id: string;
     id: string;
     guild_id?: string;
+    application_id: string;
     data: iWsResponseData;
     user?: IPartialInteractionUser;
     member?: IPartialInteractionMember;

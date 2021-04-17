@@ -104,39 +104,25 @@ export class Database {
                         if (!exists) {
                             this.logger.debug(`found guild ${guild_id} not in db`, 'guild.settings');
                             await this.settings.collection.insertOne({
-                                _id: new mongo.ObjectID(),
-                                allow_slash_commands: true,
-                                version: 1,
-                                automod: {
-                                    enabled: false,
-                                    filters: {
-                                        messages: {
+                                documentID: new mongo.ObjectID(),
+                                allowSlashCommands: true,
+                                guildID: guild_id,
+                                prefix: '+',
+                                security: {
+                                    automod: {
+                                        enabled: false,
+                                        filters: {
                                             enabled: false,
-                                            invites: {
-                                                allowed_invites: [],
-                                                enabled: false,
-                                                messages: []
-                                            },
-                                            links: {
-                                                allowed_domains: [],
-                                                enabled: false,
-                                                messages: []
-                                            },
                                             messages: {
                                                 enabled: false,
-                                                messages: [],
-                                                regexps: []
+                                                invites: false
                                             }
-                                        },
-                                        names: {
-                                            action: 'KICK',
-                                            enabled: false,
-                                            regexps: []
                                         }
-                                    }
+                                    },
+                                    enabled: false
+
                                 },
-                                guild_id,
-                                prefix: '$'
+                                version: 1.01,
                             });
                         }
                     }

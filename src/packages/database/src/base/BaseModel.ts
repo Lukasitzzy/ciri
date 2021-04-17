@@ -1,8 +1,8 @@
 import { Database } from '../Database';
 import * as mongo from 'mongodb';
-import { IBaseSettings } from '../../../util/typings/settings';
+// import { IBaseSettings } from '../../../util/typings/settings';
 import { Cache } from '../../../util/Cache';
-export abstract class BaseModel<T extends IBaseSettings> {
+export abstract class BaseModel<T> {
 
     private readonly _cache: Cache<string, T>;
     private readonly _db: Database;

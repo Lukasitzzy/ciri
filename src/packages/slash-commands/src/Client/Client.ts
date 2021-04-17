@@ -15,7 +15,6 @@ export class InteractionClient extends EventEmitter {
     private readonly _commandManager: InteractionCommandManager;
     @enumerable
     private readonly _dir: string;
-
     public readonly modules: Cache<string, SlashCommand>;
     public constructor(client: DiscordBot, dir: string) {
         super({ captureRejections: true });
