@@ -24,7 +24,6 @@ export interface IBaseAccount {
 // bank.accounts[i]
 export interface IUserBankAccount extends IBaseAccount {
     owner_id: string;
-    password?: string;
     vault: number;
     ismain: boolean;
     taxes: ITaxSettings;

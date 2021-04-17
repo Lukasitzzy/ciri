@@ -16,41 +16,35 @@ import { applyOptions } from '../../../packages/util/Functions';
 })
 export default class ServerInfoCommand extends CustomCommand {
 
-
     async run(ctx: CommandContext<Record<string, undefined>, TextChannel>): Promise<void> {
 
-        if (!ctx.guild){
+        if (!ctx.guild) {
             console.log('server goes brrrrrrrr');
-            
-             return;
+
+            return;
         }
         const guild = await ctx.guild.fetch();
-        console.log('brrrr');
-        
+
         if (!guild) {
             await ctx.send(`${ctx.emote('error')} failed to fetch information.`);
             return;
         }
         const owner: GuildMember = await guild.fetchOwner();
-        const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size});
+        const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size });
 
         const features = this._parseFeatures(ctx, ctx.guild as ChristinaGuild, guild.features);
         const online = members.filter(member => member.presence.status === 'online').size;
 
         const str = [
             `server information for ${guild.name}`,
-            `${ctx.emote('server_member')} ${ctx.guild.memberCount} member${ctx.guild.memberCount == 1 ? '': 's'} | ${ctx.emote('member_online')} online ${online} `,
+            `${ctx.emote('server_member')} ${ctx.guild.memberCount} member${ctx.guild.memberCount == 1 ? '' : 's'} | ${ctx.emote('member_online')} online ${online} `,
             `server region: ${guild.region.toLowerCase().replace(/-/g, ' ').replace(/_/g, ' ')}`,
             `${ctx.emote('server_owner')} owner: ${owner.user.tag}`,
             'more info',
-            `${
-                guild.channels.cache.size
-            } channel${
-                guild.channels.cache.size=== 1 ? '' : 's'
-            } | ${guild.roles.cache.size} ${
-                guild.roles.cache.size === 1 ? '' : 's'
-            } | ${guild.emojis.cache.size} ${
-                guild.emojis.cache.size === 1 ? '' : 's'
+            `${guild.channels.cache.size
+            } channel${guild.channels.cache.size === 1 ? '' : 's'
+            } | ${guild.roles.cache.size} ${guild.roles.cache.size === 1 ? '' : 's'
+            } | ${guild.emojis.cache.size} ${guild.emojis.cache.size === 1 ? '' : 's'
             }`,
             `ID: ${guild.id}`,
             features.length ? `server features:\n${features.join(', ')}` : '',
@@ -58,17 +52,17 @@ export default class ServerInfoCommand extends CustomCommand {
         console.log('stuff');
         const icon = guild.iconURL() || undefined;
         const embed = new MessageEmbed()
-        .setColor(owner.displayHexColor || 0x00f00f)
-        .setFooter(`requested by ${ctx.author.tag}`)
-        .setTimestamp(Date.now() + 64000)
-        .setDescription(str);
+            .setColor(owner.displayHexColor || 0x00f00f)
+            .setFooter(`requested by ${ctx.author.tag}`)
+            .setTimestamp(Date.now() + 64000)
+            .setDescription(str);
 
         if (icon) {
             embed.setThumbnail(icon);
         }
         console.log('stuff2');
         console.log(!!ctx.msg.util);
-        
+
         await ctx.msg.util?.send(embed);
         console.log('stuff3');
         return;

@@ -1,7 +1,8 @@
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
-import { applyOptions } from '../../../packages/util/Functions';
-
+import { applyOptions, hasCustomPermissions, requireDefaultPermissions } from '../../../packages/util/Functions';
+@hasCustomPermissions()
+@requireDefaultPermissions(['SEND_MESSAGES'])
 @applyOptions({
     id: 'ping',
     description: {
@@ -10,7 +11,7 @@ import { applyOptions } from '../../../packages/util/Functions';
 
     options: {
         category: 'util',
-        aliases: ['ping']
+        aliases: ['ping'],
     }
 })
 export default class PingCommand extends CustomCommand {

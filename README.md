@@ -6,7 +6,6 @@
 
 > this project works has been tested on node v15.9.0
 
-
 - make sure you have nodejs installed
 
 - a mongodb running locally or running on mongodb atlas

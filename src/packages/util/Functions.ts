@@ -3,6 +3,9 @@ import { DiscordBot } from '../core/src/client/Client';
 import { CustomCommand } from '../core/src/commands/CustomCommand';
 import { Api } from './typings/Discord.js.Api';
 import { exec } from 'child_process';
+import { PermissionString } from 'discord.js';
+import { Message } from 'discord.js';
+import { CommandContext } from '../core/src/commands/CommandContext';
 
 export function getApi(client: DiscordBot): Api {
     return Reflect.get(client, 'api');
@@ -20,7 +23,7 @@ export function applyOptions(options: { id: string; description: any; options: C
     };
 }
 
-export function enumerable(val: boolean) {
+function _enumerable(val: boolean) {
     return (cls: unknown, prop: string): void => {
         Object.defineProperty(cls, prop, {
             enumerable: val,
@@ -33,6 +36,29 @@ export function enumerable(val: boolean) {
                 });
             }
         });
+    };
+}
+
+export const enumerable = _enumerable(false);
+
+export function hasCustomPermissions() {
+    return (cls: ExtendableCls<CustomCommand>): any => {
+        abstract class Extended extends cls {
+            public readonly requireCustomPermissions = true;
+        }
+
+        return Extended;
+    };
+}
+
+export function requireDefaultPermissions(perms: PermissionString[]) {
+    return (cls: ExtendableCls<CustomCommand>): any => {
+        abstract class Extended extends cls {
+            public userPermissions = perms;
+
+        }
+
+        return Extended;
     };
 }
 

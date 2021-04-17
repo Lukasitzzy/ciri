@@ -13,7 +13,7 @@ import { promises, statSync } from 'fs';
 export class InteractionClient extends EventEmitter {
     private readonly _client: DiscordBot;
     private readonly _commandManager: InteractionCommandManager;
-    @enumerable(false)
+    @enumerable
     private readonly _dir: string;
 
     public readonly modules: Cache<string, SlashCommand>;
