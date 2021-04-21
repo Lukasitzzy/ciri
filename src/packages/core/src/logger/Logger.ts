@@ -70,7 +70,8 @@ export class Logger {
 
 
     public debug(message: string, issuer?: string): void {
-        return this._write({
+        if (process.env.DEBUG_MODE !== 'true') return;
+	return this._write({
             message,
             type: 'DEBUG',
             issuer

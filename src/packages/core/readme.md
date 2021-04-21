@@ -1,1 +1,1 @@
-# @christina/core
+# @aither/core

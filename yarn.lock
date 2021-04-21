@@ -32,9 +32,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ciri-bot/bot@workspace:.":
+"@aither-bot/bot@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@ciri-bot/bot@workspace:."
+  resolution: "@aither-bot/bot@workspace:."
   dependencies:
     "@types/color-name": ^1.1.1
     "@types/mongodb": ^3.6.12

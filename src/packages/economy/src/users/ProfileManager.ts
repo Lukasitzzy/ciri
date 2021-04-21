@@ -1,5 +1,5 @@
 import { DiscordBot } from '../../../core/src/client/Client';
-import { ChristinaUser } from '../../../extentions/User';
+import { AitherUser } from '../../../extentions/User';
 import { EconomyManager } from '../EconomyManager';
 
 
@@ -15,7 +15,7 @@ export class ProfileManager {
         return this._economy.client;
     }
 
-    createProfile(user: ChristinaUser): void {
+    createProfile(user: AitherUser): void {
         if (!user) return;
 
     }

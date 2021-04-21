@@ -17,7 +17,7 @@ export default class ClientReadyEvent extends CustomEvent {
             : [0, 1];
 
         if (!process.env.DISABLE_DB) {
-            await this.client.db.checkGuilds(this.client);
+            await this.client.db.checkGuilds();
         } else {
             this.client.logger.debug('database is disabled. the bot may not work without it!');
         }
@@ -57,11 +57,6 @@ export default class ClientReadyEvent extends CustomEvent {
 
         const str = [
             `${this.client.user?.username} is now ready`,
-            'here are some stats',
-            `Servers: ${this.client.guilds.cache.size}`,
-            `channels: ${this.client.channels.cache.size}`,
-            `emojis: ${this.client.emojis.cache.size}`,
-            `users: ${this.client.users.cache.size}`,
             this.client.guilds.cache.size < 1 ? `invite the bot using ${invite}` : ''
         ].join('\n');
 

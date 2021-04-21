@@ -2,9 +2,11 @@ import { Snowflake } from 'discord.js';
 import { ObjectID } from 'mongodb';
 
 export interface BaseDocument {
-    documentID: ObjectID;
+    documentID: string;
     version: number;
     security: GuildModerationDocument; 
+    createAt: number;
+    updatedAt: number;
 }
 
 

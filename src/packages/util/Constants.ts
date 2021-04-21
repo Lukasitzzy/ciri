@@ -69,7 +69,7 @@ export const DefaultDatabaseConfig = {
     dbname: 'discord_bot',
     host: 'localhost',
     port: 27017,
-    appname: 'christina discord bot',
+    appname: 'aither discord bot',
 
 } as const;
 

@@ -8,13 +8,15 @@ import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/src/Database';
 import { getApi } from '../../../util/Functions';
 import { ClientApplication } from 'discord.js';
-import { EconomyManager } from '../../../economy/src/EconomyManager';
+// import { EconomyManager } from '../../../economy/src/EconomyManager';
 import { guildFunction } from '../../../extentions/Guild';
 import { userFunction } from '../../../extentions/User';
+import messageFunction, { AitherMessage } from '../../../extentions/Message';
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 
 guildFunction();
 userFunction();
+messageFunction();
 
 export class DiscordBot extends AkairoClient {
 
@@ -22,7 +24,7 @@ export class DiscordBot extends AkairoClient {
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
     public readonly interaction: InteractionClient;
-    public readonly economy: EconomyManager;
+    // public readonly economy: EconomyManager;
     public readonly logger: Logger;
     public readonly db: Database;
     /**
@@ -41,13 +43,15 @@ export class DiscordBot extends AkairoClient {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
-            prefix: async (msg): Promise<string> => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore -- ts you suck with your strict 'don\'t extend types kthx' 
+            prefix: async (msg: AitherMessage): Promise<string> => {
                 if (msg.guild) {
                     if (!process.env.DISABLE_DB) {
-                    const settings = this.db.settings.cache.get(msg.guild?.id) || await this.db.settings
-                        .collection.findOne({ guild_id: msg.guild.id });
-                    if (!settings) return defaultPrefix;
-                    return settings.prefix;
+                    await msg.guild.settings.sync();
+                    const prefix = msg.guild.settings.get<string>('prefix')  ;
+                    if (!prefix) return defaultPrefix;
+                    return prefix;
                     } else {
                         return defaultPrefix;
                     }
@@ -77,8 +81,8 @@ export class DiscordBot extends AkairoClient {
 
 
         this.logger = new Logger();
-        this.db = new Database({
-            appname: process.env.DATABASE_APP_NAME || 'christina',
+        this.db = new Database(this, {
+            appname: process.env.DATABASE_APP_NAME || 'aither',
             dbname: process.env.DATABASE_NAME || 'discord_bot',
             host: 'localhost',
             shards: SHARDS,
@@ -93,14 +97,15 @@ export class DiscordBot extends AkairoClient {
                 })() : undefined
         });
 
-        this.economy = new EconomyManager(this, this.db.economy);
+        // this.economy = new EconomyManager(this, this.db.economy);
 
     }
 
     async start(): Promise<void> {
         try {
             this._prepare();
-            await this.db.connect();
+            
+            await this.db.init();
             await this.interaction.loadCommands();
             await this.login();
         } catch (error) {

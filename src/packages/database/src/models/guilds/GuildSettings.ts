@@ -1,93 +1,145 @@
-import { Database } from '../../Database';
-import { GuildSettingsDocument as IGuildSettings } from '../../../../util/typings/settings';
-import * as mongo from 'mongodb';
+import { Collection, ObjectID } from 'mongodb';
+import { Cache } from '../../../../util/Cache';
 import { EMOTES } from '../../../../util/Constants';
-import { BaseModel } from '../../base/BaseModel';
-import { GuildSettingsAutomodModel } from './automod/Automod';
-const useCache = true;
-export class GuildSettingsModel extends BaseModel<IGuildSettings> {
+import { enumerable } from '../../../../util/decorators';
+import { GuildSettingsDocument } from '../../../../util/typings/settings';
+import { valueOf } from '../../../../util/typings/util';
+import { Database } from '../../Database';
 
 
-    private readonly _automod: GuildSettingsAutomodModel;
 
-    constructor(db: Database, collection: mongo.Collection<IGuildSettings>) {
-        super(db, 'guildID', collection);
+export class GuildSettings {
 
-        this._automod =  new GuildSettingsAutomodModel(this);
+    @enumerable
+    public db: Database;
+
+    @enumerable
+    public collection: Collection<GuildSettingsDocument>;
+
+    public cache: Cache<string, GuildSettingsDocument>;
+
+
+    constructor(db: Database, collection: Collection<GuildSettingsDocument>) {
+
+        this.db = db;
+
+        this.collection = collection;
+        this.cache = new Cache<string, GuildSettingsDocument>();
     }
-    /**
-     * initialized the Database
-     */
-    async init(): Promise<void> {
-        const all = await this.fetchAll();
-        for (const data of all) {
 
-            if (useCache) {
-                this.cache.set(data.guildID, data);
-            }
+    async init(): Promise<void> {
+
+        const entries = await this.collection.find().toArray();
+
+        for (const entry of entries) {
+            this.cache.set(entry.guildID, entry);
         }
 
-        await this._automod.init();
-
-        this.db.logger.log(`${EMOTES.DEFAULT.success} successfully inited all guild settings.`, `${this.name}`);
+        this.db.client.logger.log(`${EMOTES.DEFAULT.success} successfully started the GuildSettings. (cached ${this.cache.size} entries)`, 'database.init');
 
     }
-    /**
-     * fetches ALL settings out of the Datbase
-     * @returns a Array of all settings
-     */
-    async fetchAll(): Promise<IGuildSettings[]> {
-        return this.collection.find().toArray();
-    }
-    /**
-     * fetches a single document out of the database
-     * @param guild_id the guild you want to search for
-     * @returns the settings if any
-     */
-    async fetch(guild_id: string): Promise<IGuildSettings | null> {
-        return this.collection.findOne({ guild_id });
-    }
-    /**
-     * get's the current cached guild settings 
-     * @param guild_id the guild id you want to get the cache of
-     * @returns the Settings if any
-     */
-    get(guild_id: string): IGuildSettings | undefined {
-        return this.cache.get(guild_id);
+
+    async fetch(guildID: string): Promise<GuildSettingsDocument | null> {
+        return this.collection.findOne({ guildID });
+
     }
 
-    /**
-     * 
-     * @param options.guild_id the guild id you want to search for
-     * @returns the prefix if any
-     */
-    async getPrefix({ guild_id }: { guild_id: string; }): Promise<string | undefined | null> {
-        return this.cache.get(guild_id)?.prefix || this.collection.findOne({ guild_id }).then(res => res?.prefix);
-    }
-    async resetPrefix(guild_id: string): Promise<IGuildSettings | undefined> {
-        return this.updatePrefix(guild_id, process.env.DEFAULT_PREFIX || '$');
-    }
-    async updatePrefix(guildID: string, prefix: string): Promise<IGuildSettings | undefined> {
-        const oldSettings = this.get(guildID) || await this.fetch(guildID);
-
-        if (!oldSettings) return undefined;
-
-        oldSettings.prefix = prefix;
-
-        return this.collection.updateOne({
-            guild_id: guildID
-        }, {
-            $set: oldSettings
-        }, { upsert: true }).then(res => {
-            if (res.modifiedCount === 1) {
-                this.cache.set(guildID, oldSettings);
-                return oldSettings;
-            }
-        });
+    get(guildID: string): GuildSettingsDocument | undefined {
+        return this.cache.get(guildID);
     }
 
 
-    get automod(): GuildSettingsAutomodModel {
-        return this._automod;
+    async sync(): Promise<void> {
+        this.cache.clear();
+        const entries = await this.collection.find().toArray();
+
+        for (const entry of entries) this.cache.set(entry.guildID, entry);
     }
+
+    async update<K extends keyof GuildSettingsDocument>({
+        guildID,    
+        key,
+        data
+    }: {
+        guildID: string;
+        key: K;
+        data: GuildSettingsDocument[K]
+    }): Promise<any> {
+        const existing = this.get(guildID) || await this.fetch(guildID);
+
+        if (!existing) {
+            return null;
+        }
+        if (Object.prototype.hasOwnProperty.call(existing, key)) {
+            existing[key] = data;
+            const res = await this.collection.updateOne({  guildID, }, {
+                $set: existing
+            });
+            return res.modifiedCount === 1;
+        }
+
+
+    }
+
+    async insert(guildID: string): Promise<GuildSettingsDocument | null> {
+        const existing = this.cache.get(guildID) || await this.fetch(guildID);
+
+        if (existing) return existing;
+
+        const data = this._createDefaultEntry(guildID);
+
+        const res = await this.collection.insertOne(data);
+
+        if (res.ops[0]?.guildID === guildID && res.insertedCount === 1) {
+            this.cache.set(guildID, data);
+            return {...data};
+        } else {
+            return null;
+        }
+    }
+
+    async delete(guildID: string): Promise<boolean> {
+
+        const existing = this.cache.get(guildID) || await this.fetch(guildID);
+
+        if (!existing) return true;
+
+        const res = await this.collection.deleteOne({ guildID });
+
+        if (res.deletedCount === 1) {
+            return true;
+        }   
+        if (res.deletedCount === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public _createDefaultEntry(guildID: string): GuildSettingsDocument {
+        return {
+            allowSlashCommands: true,
+            createAt: Date.now(),
+            updatedAt: Date.now(),
+            documentID: new ObjectID().toHexString(),
+            guildID,
+            prefix: '$',
+            security: {
+                automod: {
+                    enabled: false,
+                    filters: {
+                        enabled: false,
+                        messages: {
+                            enabled: false,
+                            invites: false
+                        }
+                    }
+                },
+                enabled: false
+            },
+            version: 1
+        };
+    }
+
+
 }
