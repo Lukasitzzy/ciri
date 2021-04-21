@@ -48,10 +48,10 @@ export class DiscordBot extends AkairoClient {
             prefix: async (msg: AitherMessage): Promise<string> => {
                 if (msg.guild) {
                     if (!process.env.DISABLE_DB) {
-                    await msg.guild.settings.sync();
-                    const prefix = msg.guild.settings.get<string>('prefix')  ;
-                    if (!prefix) return defaultPrefix;
-                    return prefix;
+                        await msg.guild.settings.sync();
+                        const prefix = msg.guild.settings.get<string>('prefix');
+                        if (!prefix) return defaultPrefix;
+                        return prefix;
                     } else {
                         return defaultPrefix;
                     }
@@ -83,19 +83,22 @@ export class DiscordBot extends AkairoClient {
         this.logger = new Logger();
         this.db = new Database(this, {
             appname: process.env.DATABASE_APP_NAME || 'aither',
-            dbname: process.env.DATABASE_NAME || 'discord_bot',
-            host: 'localhost',
-            shards: SHARDS,
-            port: 27017,
             auth: process.env.DATABASE_AUTH ?
                 (() => {
-                    const [user, pass] = process.env.DATABASE_AUTH.split(':<:>:');
+                    const [user, password] = process.env.DATABASE_AUTH.split(':<:>:');
                     return {
                         user,
-                        password: pass
+                        password
                     };
-                })() : undefined
+                })() : undefined,
+            dbname: process.env.DATABASE_NAME || 'discord_bot',
+            host: 'localhost',
+            port: 27017,
+            shards: SHARDS,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
         });
+
 
         // this.economy = new EconomyManager(this, this.db.economy);
 
@@ -104,7 +107,7 @@ export class DiscordBot extends AkairoClient {
     async start(): Promise<void> {
         try {
             this._prepare();
-            
+
             await this.db.init();
             await this.interaction.loadCommands();
             await this.login();
@@ -115,12 +118,12 @@ export class DiscordBot extends AkairoClient {
     }
 
     async fetchApplication(): Promise<ClientApplication> {
-            const data = await getApi(this)
-                .oauth2
-                .applications('@me')
-                .get();
-            return new ClientApplication(this, data);
-        
+        const data = await getApi(this)
+            .oauth2
+            .applications('@me')
+            .get();
+        return new ClientApplication(this, data);
+
     }
 
     private _prepare(): void {

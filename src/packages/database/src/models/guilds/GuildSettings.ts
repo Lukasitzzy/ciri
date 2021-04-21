@@ -3,7 +3,6 @@ import { Cache } from '../../../../util/Cache';
 import { EMOTES } from '../../../../util/Constants';
 import { enumerable } from '../../../../util/decorators';
 import { GuildSettingsDocument } from '../../../../util/typings/settings';
-import { valueOf } from '../../../../util/typings/util';
 import { Database } from '../../Database';
 
 

@@ -2,6 +2,7 @@ import { Db, MongoClient } from 'mongodb';
 import { DiscordBot } from '../../core/src/client/Client';
 import { AllowedCollectionNames } from '../../util/Constants';
 import { enumerable } from '../../util/decorators';
+import { DatabaseOptions } from '../../util/typings/util';
 import { GuildSettings } from './models/Guilds/GuildSettings';
 
 
@@ -21,12 +22,16 @@ export class Database {
 
     @enumerable
     public economy: any;
+
+    public options: DatabaseOptions;
     /**
      *
      */
-    constructor(client: DiscordBot, options: any) {
+    constructor(client: DiscordBot, options: DatabaseOptions) {
         
         this.client = client;
+
+        this.options = options;
 
     }
 

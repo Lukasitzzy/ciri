@@ -10,4 +10,4 @@ export class AitherMessage extends Message {
     author!: AitherUser;
 }
 
-export default () => Structures.extend('Message', () => AitherMessage);
+export default (): typeof AitherMessage => Structures.extend('Message', () => AitherMessage);

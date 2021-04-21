@@ -1,5 +1,4 @@
 import { Snowflake } from 'discord.js';
-import { ObjectID } from 'mongodb';
 
 export interface BaseDocument {
     documentID: string;
