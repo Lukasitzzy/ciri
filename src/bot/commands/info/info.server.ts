@@ -93,4 +93,12 @@ export default class ServerInfoCommand extends CustomCommand {
 
     }
 
+
+    public help(prefix: string): MessageEmbed {
+
+        const embed = new MessageEmbed();
+        embed.setDescription(`usage: ${prefix}serverinfo`);
+        return embed;
+    }
+
 }

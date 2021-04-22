@@ -33,7 +33,7 @@ export class GuildSettingsHelper {
     }: {
         key: K;
         data: GuildSettingsDocument[K]
-    }): Promise<any> {
+    }): Promise<null | boolean> {
         const existing = this.data || await this._guild.client.db.settings.fetch(this._guild.id);
 
         if (!existing) {
@@ -48,12 +48,13 @@ export class GuildSettingsHelper {
                 guildID: this._guild.id
              });
              if (res) {
-                 return existing;
+                 return true;
              
              }     else {
                  return false;
              }
         }
+        return false;
 
 
 

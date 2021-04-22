@@ -81,6 +81,6 @@ export const AllowedCollectionNames = {
     GuildSlashCommands: 'guild.slash_commands',
     GuildTags: 'guild.tags',
     UserSettings: 'user.settings',
-    UserTags: 'user.tags'
-    
+    UserTags: 'user.tags',
+    ModerationCases: 'guild.moderation.cases'
 } as const;

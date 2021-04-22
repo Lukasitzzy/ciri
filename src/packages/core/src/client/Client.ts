@@ -43,6 +43,8 @@ export class DiscordBot extends AkairoClient {
             directory: join(root, 'commands'),
             handleEdits: true,
             commandUtil: true,
+            automateCategories: true,
+
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore -- ts you suck with your strict 'don\'t extend types kthx' 
             prefix: async (msg: AitherMessage): Promise<string> => {
@@ -63,7 +65,8 @@ export class DiscordBot extends AkairoClient {
 
 
         this.inhibitorHandler = new InhibitorHandler(this, {
-            directory: join(root, 'inhibitors')
+            directory: join(root, 'inhibitors'),
+            automateCategories: true
         });
 
         this.listenerHandler = new ListenerHandler(this, {

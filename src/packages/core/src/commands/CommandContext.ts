@@ -1,19 +1,24 @@
 import { CommandUtil } from 'discord-akairo';
 import { User } from 'discord.js';
 import {
-    DMChannel, NewsChannel, TextChannel,
-    Message, Guild, GuildMember, MessageOptions
+    DMChannel,
+    GuildMember,
+    MessageOptions,
+    NewsChannel,
+    TextChannel,
 } from 'discord.js';
+import { AitherGuild } from '../../../extentions/Guild';
+import { AitherMessage } from '../../../extentions/Message';
 import { EMOTES } from '../../../util/Constants';
 import { CustomCommand } from './CustomCommand';
-export type TextbasedChannel = Message['channel'];
+export type TextbasedChannel = AitherMessage['channel'];
 export class CommandContext<Iargs extends Record<string, unknown>, IChannel extends TextChannel | DMChannel | NewsChannel> {
 
-    private readonly _msg: Message;
+    private readonly _msg: AitherMessage;
     private readonly _command: CustomCommand;
     private readonly _args: Partial<Iargs>;
     public constructor(
-        msg: Message,
+        msg: AitherMessage,
         command: CustomCommand,
         args: Iargs,
     ) {
@@ -23,23 +28,23 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
         this._args = args;
     }
 
-    async send(content: string, options?: MessageOptions): Promise<Message> {
+    async send(content: string, options?: MessageOptions): Promise<AitherMessage> {
         return (
             this.util ||
             this.channel
 
-        ).send(content, options || {}) as unknown as Message;
+        ).send(content, options || {}) as unknown as AitherMessage;
     }
 
-    public async loading(content: string): Promise<Message> {
+    public async loading(content: string): Promise<AitherMessage> {
         return (
-            this.util || 
+            this.util ||
             this.channel
-        ).send(`${this.emote('loading')} ${content}`) as unknown as Message;
+        ).send(`${this.emote('loading')} ${content}`) as unknown as AitherMessage;
     }
 
-    async sendNew(content: string): Promise<Message> {
-        return this.channel.send(content);
+    async sendNew(content: string): Promise<AitherMessage> {
+        return this.channel.send(content) as Promise<AitherMessage>;
     }
 
     public emote(emote: keyof typeof EMOTES.CUSTOM): string {
@@ -65,7 +70,7 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
     /**
      * the msg object that was send by the user
      */
-    public get msg(): Message {
+    public get msg(): AitherMessage {
         return this._msg;
     }
     /**
@@ -85,7 +90,7 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
     /**
      * the Guild of the Channel the message was send to
      */
-    public get guild(): Guild | null {
+    public get guild(): AitherGuild | null {
         return this.msg.guild;
     }
     /**
@@ -103,5 +108,16 @@ export class CommandContext<Iargs extends Record<string, unknown>, IChannel exte
 
     public get author(): User {
         return this.msg.author;
+    }
+}
+
+
+export class GuildCommandContext<IArgs extends Record<string, unknown>> extends CommandContext<IArgs, TextChannel> {
+    get guild(): AitherGuild {
+        return this.msg.guild as AitherGuild;
+    }
+
+    get member(): GuildMember {
+        return this.msg.member as GuildMember;
     }
 }

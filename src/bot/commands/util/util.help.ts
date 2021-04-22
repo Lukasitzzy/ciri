@@ -1,4 +1,5 @@
 import { Argument } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { applyOptions, hasCustomPermissions } from '../../../packages/util/decorators';
@@ -28,6 +29,11 @@ export default class HelpCommand extends CustomCommand {
             return;
         }
 
+    }
+
+    public help(prefix: string): MessageEmbed {
+        const embed = new MessageEmbed();
+        return embed;
     }
 
 }

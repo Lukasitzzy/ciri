@@ -1,10 +1,14 @@
 import { Command, CommandOptions } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import { AitherMessage } from '../../../extentions/Message';
+import { CommandDescription } from '../../../util/typings/util';
 import { DiscordBot } from '../client/Client';
 import { CommandContext } from './CommandContext';
 
-export class CustomCommand extends Command {
+export abstract class CustomCommand extends Command {
     client!: DiscordBot;
+    public description!: CommandDescription;
+    public subcommand: boolean;
 
     /**
          *
@@ -12,23 +16,32 @@ export class CustomCommand extends Command {
     constructor({
         id,
         options,
+        subCommand,
         description,
 
     }: {
         id: string;
+        subCommand: boolean;
         options: CommandOptions;
         //TODO: add description typing
-        description: any;
+        description: CommandDescription;
     }) {
         super(id, options);
         this.description = description;
+
+        this.subcommand = typeof subCommand === 'undefined' ? false : !!subCommand;
     }
 
 
-    run?(ctx: CommandContext<Record<string, unknown>, Message['channel']>): any;
+    run?(ctx: CommandContext<Record<string, unknown>, AitherMessage['channel']>): any;
 
 
-    public async exec(msg: Message, args: Record<string, unknown>): Promise<void> {
+
+    abstract help(prefix: string): MessageEmbed;
+
+
+
+    public async exec(msg: AitherMessage, args: Record<string, unknown>): Promise<void> {
 
         try {
             const ctx = new CommandContext(

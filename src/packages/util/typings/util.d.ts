@@ -16,3 +16,12 @@ export interface DatabaseOptions {
     dbname: string;
     shards: number[];
 }
+
+
+export interface CommandDescription {
+
+    text: string;
+    aliases: string[];
+    examples: string[];
+    usage: string[]
+}

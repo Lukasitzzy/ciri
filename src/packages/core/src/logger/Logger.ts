@@ -1,4 +1,5 @@
 import * as chalk from 'chalk';
+import { DiscordAPIError } from 'discord.js';
 import { Message } from 'discord.js';
 import { appendFileSync, existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
@@ -26,7 +27,7 @@ export class Logger {
     }
     public commandRun(command: CustomCommand, msg: Message, args: Record<string, unknown>): void {
         if (
-            process.env.EXTENDED_COMMAND_LOGGING && 
+            process.env.EXTENDED_COMMAND_LOGGING &&
             process.env.DEBUG_MODE === 'true' &&
             process.env.NODE_ENV !== 'production'
         ) {
@@ -52,13 +53,25 @@ export class Logger {
     }
 
     public error(error: Error, issuer?: string): void {
-
+        console.log(error.constructor.name);
+        
         let message = '';
         if (error instanceof CustomError) {
             message = error.toString();
         }
         else {
-            message = `${error.name}: ${error.message}\n${error.stack ? error.stack.split('\n').slice(1).join('\n') : ''}`;
+
+            if (error instanceof DiscordAPIError) {
+                message = [
+                    `${error.name} [${error.code}] fetching ${error.path.replace(/\+/, ':id')}`,
+                    `returned a status of "${error.httpStatus}" with the method "${error.method}"`,
+                    `status message is ${error.message}\n`,
+                    this._parseStack(error.stack)
+                ].filter(m => m !== '').join(' ');
+            } else {
+
+                message = `${error.name}: ${error.message}\n${error.stack ? error.stack.split('\n').slice(1).join('\n') : ''}`;
+            }
         }
 
         return this._write({
@@ -71,7 +84,7 @@ export class Logger {
 
     public debug(message: string, issuer?: string): void {
         if (process.env.DEBUG_MODE !== 'true') return;
-	return this._write({
+        return this._write({
             message,
             type: 'DEBUG',
             issuer
@@ -189,4 +202,12 @@ export class Logger {
         return n < 10 ? `0${n}` : n.toString();
     }
 
+
+    private _parseStack(stack?: string) {
+        if (stack) {
+            const rest = stack.split('\n').slice(1);
+            return chalk.red([...rest].join('\n'));
+        }
+        return '';
+    }
 }
