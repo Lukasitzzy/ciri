@@ -1,190 +1,104 @@
-/* eslint-disable no-case-declarations */
-import * as mongo from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 import { DiscordBot } from '../../core/src/client/Client';
-import { Logger } from '../../core/src/logger/Logger';
-import {
-    DefaultDatabaseConfig,
-    AllowedCollectionNames,
-    EMOTES
-} from '../../util/Constants';
-import { GuildEconomyModel } from './models/guilds/economy/GuildEconomy';
-import { GuildSettingsModel } from './models/guilds/GuildSettings';
+import { AllowedCollectionNames } from '../../util/Constants';
+import { enumerable } from '../../util/decorators';
+import { DatabaseOptions } from '../../util/typings/util';
+import { GuildSettings } from './models/Guilds/GuildSettings';
+
+
 export class Database {
 
-    private _db!: mongo.Db;
-    public readonly logger: Logger;
-    private readonly _collections: mongo.Collection<Record<string, unknown>>[];
-    private _settings!: GuildSettingsModel;
-    private _economy!: GuildEconomyModel;
-    private readonly _shards: number[];
+    @enumerable
+    public client: DiscordBot;
 
-    private readonly _options: {
-        appname: string;
-        dbname: string;
-        host: string,
-        port: number;
-        auth?: {
-            user: string;
-            password: string;
-        };
-    };
+    @enumerable
+    public settings!: GuildSettings;
+
+    @enumerable
+    protected allowedDatabases = [...Object.values(AllowedCollectionNames)];
+
+    @enumerable
+    protected db!: Db;
+
+    @enumerable
+    public economy: any;
+
+    public options: DatabaseOptions;
     /**
      *
      */
-    constructor(options?: {
-        appname: string;
-        shards: number[];
-        auth?: { user: string; password: string; };
-        dbname: string;
-        host: string;
-        port: number;
-    }) {
-        this._options = options ? {
-            appname: options.appname,
-            auth: options.auth,
-            dbname: options.dbname,
-            host: options.host,
-            port: options.port
-        } : DefaultDatabaseConfig;
+    constructor(client: DiscordBot, options: DatabaseOptions) {
 
-        this.logger = new Logger(options?.shards);
-        this._collections = [];
-        this._shards = options?.shards || [0, 1];
+        this.client = client;
+
+        this.options = options;
 
     }
 
-    async connect(): Promise<void> {
+    async init(): Promise<void> {
         if (process.env.DISABLE_DB === 'true') return;
-        const client = await mongo.connect(
-            `mongodb://${this._options.host}:${this._options.port}`,
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                appname: this._options.appname,
-                auth: this._options.auth ? this._options.auth : undefined
-            }
-        );
-        this._db = client.db(this._options.dbname);
-        this._checkReady();
+        const URI = this._buildUri();
+        const client = await new MongoClient(`mongodb://${URI}`, {
+            useNewUrlParser: true,
+            auth: process.env.DATABASE_PASSWORD && process.env.DATABASE_USER ? (() => {
+                return {
+                    user: process.env.DATABASE_USER,
+                    password: process.env.DATABASE_PASSWORD
+                };
+            })() : undefined,
+            useUnifiedTopology: true
+        }).connect();
 
-        
-        const collections = await this._db.collections();
-        const allowedNames = Object.values(AllowedCollectionNames);
-        for (const coll of collections) {
-            if (!allowedNames.includes(coll.collectionName as 'global.blacklist')) {
-                this.logger.debug(`found unknown collecion ${coll.collectionName}`);
-                continue;
-            }
-            switch (coll.collectionName) {
+        const db = this.db = client.db(process.env.DATBASE_NAME || 'discord_bot');
+
+        const collections = await db.collections();
+
+        for (const collection of collections) {
+
+            switch (collection.collectionName) {
                 case AllowedCollectionNames.GuildSettings:
-                    this._settings = new GuildSettingsModel(this, coll);
-                    // await this._settings.init();
-                    break;
-                case AllowedCollectionNames.GlobalBlacklist:
-                    break;
-                case AllowedCollectionNames.GuildEconomy:
-                    this._economy = new GuildEconomyModel(this, coll);
+                    console.log('true');
+
+                    this.settings = new GuildSettings(this, collection);
+                    await this.settings.init();
                     break;
                 default:
                     break;
             }
-            this._collections.push(coll);
         }
-        this.logger.log(`${EMOTES.DEFAULT.success} successfully connected to the ${this._options.dbname} database.`, this.constructor.name);
+
     }
 
-    async checkGuilds(client: DiscordBot): Promise<void> {
-        try {
-            this._checkReady();
-            if (client.guilds.cache.size) {
-                for (const [guild_id, { ownerID }] of client.guilds.cache) {
 
-                    if (this._settings) {
-                        const exists = this.settings.cache.has(guild_id) || await this.settings.collection.findOne({ guild_id }).then(res => !!res);
-                        if (!exists) {
-                            this.logger.debug(`found guild ${guild_id} not in db`, 'guild.settings');
-                            await this.settings.collection.insertOne({
-                                _id: new mongo.ObjectID(),
-                                allow_slash_commands: true,
-                                version: 1,
-                                automod: {
-                                    enabled: false,
-                                    filters: {
-                                        messages: {
-                                            enabled: false,
-                                            invites: {
-                                                allowed_invites: [],
-                                                enabled: false,
-                                                messages: []
-                                            },
-                                            links: {
-                                                allowed_domains: [],
-                                                enabled: false,
-                                                messages: []
-                                            },
-                                            messages: {
-                                                enabled: false,
-                                                messages: [],
-                                                regexps: []
-                                            }
-                                        },
-                                        names: {
-                                            action: 'KICK',
-                                            enabled: false,
-                                            regexps: []
-                                        }
-                                    }
-                                },
-                                guild_id,
-                                prefix: '$'
-                            });
-                        }
-                    }
+    async dropCollection(collection: string): Promise<boolean> {
+        return this.db.dropCollection(collection);
+    }
 
-                    if (this._economy) {
-                        if (!(this.economy.cache.has(guild_id) || await this.economy.collection.findOne({ guild_id }))) {
-                            this.logger.debug(`found guild ${guild_id} not in db`, 'economy.settings');
-                            
-                            await this._economy.collection.insertOne({
-                                _id: new mongo.ObjectID(),
-                                enabled: true,
-                                prefix: '$',
-                                bank: {
-                                    accounts: [],
-                                    owner_id: ownerID,
-                                    taxes: {
-                                        account_holding: 0.1,
-                                        receiving: 0.1,
-                                        sending: 0.1
-                                    },
-                                    vault: 150_000
-                                },
-                                guild_id,
-                            });
-                        }
+
+    async checkGuilds(): Promise<void> {
+
+        if (this.client.readyTimestamp) {
+
+            for (const [guildID] of this.client.guilds.cache) {
+                if (this.settings) {
+                    if (this.settings.cache.has(guildID)) continue;
+                    this.client.logger.debug(`guild "${guildID}" not in db.. inserting..`, 'datbase.checkGuilds');
+                    const res = await this.settings.insert(guildID);
+                    if (!res) {
+                        this.client.logger.error(new Error(`failed to insert guild "${guildID}" into settings database`), 'database.insert_guild');
                     }
+                    continue;
                 }
-                await this.settings.init();
-            } else {
-                this.logger.debug(' no channels found yet..', this.constructor.name);
+
             }
-        } catch (error) {
-            this.logger.error(error, 'Datbase.checkGuilds');
         }
+
+
     }
 
-    private _checkReady() {
-        if (!this._db) throw new Error('not ready');
-    }
-    get name(): string {
-        return this.constructor.name;
-    }
+    private _buildUri() {
 
-    get settings(): GuildSettingsModel {
-        return this._settings;
+        return `${process.env.DATABASE_URI || 'localhost'}:${process.env.DATABASE_PORT || 27015}`;
     }
-    get economy(): GuildEconomyModel {
-        return this._economy;
-    }
-
 }
+

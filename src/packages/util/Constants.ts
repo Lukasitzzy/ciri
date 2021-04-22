@@ -69,7 +69,7 @@ export const DefaultDatabaseConfig = {
     dbname: 'discord_bot',
     host: 'localhost',
     port: 27017,
-    appname: 'christina discord bot',
+    appname: 'aither discord bot',
 
 } as const;
 
@@ -81,6 +81,6 @@ export const AllowedCollectionNames = {
     GuildSlashCommands: 'guild.slash_commands',
     GuildTags: 'guild.tags',
     UserSettings: 'user.settings',
-    UserTags: 'user.tags'
-    
+    UserTags: 'user.tags',
+    ModerationCases: 'guild.moderation.cases'
 } as const;

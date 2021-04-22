@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { CommandContext } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
+import { AitherMessage } from '../../../packages/extentions/Message';
 
 
 export default class MissingPermissionsEvent extends CustomEvent {
@@ -20,7 +20,7 @@ export default class MissingPermissionsEvent extends CustomEvent {
 
     }
 
-    async run(msg: Message,command: CustomCommand, type: 'client' | 'user'): Promise<Message | void> {
+    async run(msg: AitherMessage,command: CustomCommand, type: 'client' | 'user'): Promise<AitherMessage | void> {
 
         const ctx = new CommandContext<Record<string, any>, typeof msg['channel']>(msg, command, {});
 

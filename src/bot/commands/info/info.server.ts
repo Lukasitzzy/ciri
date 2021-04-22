@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { TextChannel, GuildFeatures } from 'discord.js';
 import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
-import { ChristinaGuild } from '../../../packages/extentions/Guild';
+import { AitherGuild } from '../../../packages/extentions/Guild';
 import { applyOptions } from '../../../packages/util/decorators';
 
 
@@ -33,7 +33,7 @@ export default class ServerInfoCommand extends CustomCommand {
         const owner: GuildMember = await guild.fetchOwner();
         const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size });
 
-        const features = this._parseFeatures(ctx, ctx.guild as ChristinaGuild, guild.features);
+        const features = this._parseFeatures(ctx, ctx.guild as AitherGuild, guild.features);
         const online = members.filter(member => member.presence.status === 'online').size;
 
         const str = [
@@ -71,7 +71,7 @@ export default class ServerInfoCommand extends CustomCommand {
 
     private _parseFeatures(
         ctx: CommandContext<Record<string, undefined>, TextbasedChannel>,
-        guild: ChristinaGuild,
+        guild: AitherGuild,
         features: GuildFeatures[],
     ) {
 
@@ -91,6 +91,14 @@ export default class ServerInfoCommand extends CustomCommand {
         if (guild.partnered && !features.includes('PARTNERED')) list.push(`${ctx.emote('server_partnered')} partnered`);
         return list;
 
+    }
+
+
+    public help(prefix: string): MessageEmbed {
+
+        const embed = new MessageEmbed();
+        embed.setDescription(`usage: ${prefix}serverinfo`);
+        return embed;
     }
 
 }

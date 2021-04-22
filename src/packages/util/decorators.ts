@@ -15,6 +15,18 @@ export function applyOptions(options: { id: string; description: any; options: C
     };
 }
 
+
+function _requireChannel(channel: 'dm' | 'guild') {
+    return (cls: ExtendableCls<CustomCommand>): any => {
+        abstract class Extended extends cls {
+            channel = channel;
+        }
+        return Extended;
+    };
+}
+
+export const requireGuild = _requireChannel('guild');
+export const requireDM = _requireChannel('dm');
 function _enumerable(val: boolean) {
     return (cls: unknown, prop: string): void => {
         Object.defineProperty(cls, prop, {

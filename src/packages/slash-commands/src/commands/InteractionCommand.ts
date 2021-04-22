@@ -1,6 +1,6 @@
 import {
     Collection, Role, NewsChannel,
-    GuildMember, User,
+    GuildMember, User, WebhookClient,
     WebhookMessageOptions, GuildChannel, TextChannel
 } from 'discord.js';
 import { CustomPermissions } from '../util/Permissions';
@@ -17,6 +17,7 @@ export class InterActionCommand extends InteractionBase {
     private _deferred: boolean;
     private _member?: GuildMember;
     private _user?: User;
+    public readonly webhook: WebhookClient;
 
     private readonly _commandid: string;
     private readonly _data: IWSResponse;
@@ -41,6 +42,7 @@ export class InterActionCommand extends InteractionBase {
         this._resolved = {};
         this._responded = false;
         this._deferred = false;
+        this.webhook = new WebhookClient(data.application_id, data.token);
     }
 
     public _parse(

@@ -1,11 +1,12 @@
 {
-  "name": "@ciri-bot/bot",
+  "name": "@aither-bot/bot",
   "version": "0.100.0",
   "description": "> this project works on node v15.9.0",
   "main": "dist/bot",
   "directories": {
     "doc": "docs"
   },
+  "private": true,
   "scripts": {
     "test": "exit 0",
     "lint": "eslint ./src --ext .ts",
@@ -15,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ItzzLucy/ciri.git"
+    "url": "git+https://github.com/ItzzLucy/aither.git"
   },
   "author": "ItzzLucy",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ItzzLucy/ciri/issues"
+    "url": "https://github.com/ItzzLucy/aither/issues"
   },
-  "homepage": "https://github.com/ItzzLucy/ciri#readme",
+  "homepage": "https://github.com/ItzzLucy/aither#readme",
   "dependencies": {
     "@types/color-name": "^1.1.1",
     "@types/mongodb": "^3.6.12",

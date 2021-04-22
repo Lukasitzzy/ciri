@@ -25,7 +25,7 @@ export abstract class InteractionBase extends Base {
 
         this._parse?.(data.data,
             data.member?.user.id,
-            data.member?.user.id,
+            data.user?.id || data.member?.user.id,
             data.guild_id,
             data.channel_id
         );

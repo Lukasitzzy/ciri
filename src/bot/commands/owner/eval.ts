@@ -5,10 +5,11 @@ import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
 import { applyOptions } from '../../../packages/util/decorators';
 
-import { Util } from 'discord.js';
+import { Message, Util } from 'discord.js';
 import { EMOTES } from '../../../packages/util/Constants';
 import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
 import { getApi } from '../../../packages/util/Functions';
+import { MessageEmbed } from 'discord.js';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({
@@ -114,7 +115,6 @@ export default class EvalCommand extends CustomCommand {
     }
 
     private async parseRes(thing: any): Promise<string> {
-
         if (!thing) {
             return 'undefined';
         }
@@ -143,4 +143,11 @@ export default class EvalCommand extends CustomCommand {
             await ctx.sendNew(` ${key.toUpperCase()} :: ${EMOTES.CUSTOM[key]}  ::  \\${EMOTES.CUSTOM[key]} :: ${EMOTES.DEFAULT[key]}  `);
         }
     }
+
+    public help(prefix: string): MessageEmbed {
+        const embed = new MessageEmbed();
+        return embed;
+    }
+
+
 }
