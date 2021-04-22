@@ -25,7 +25,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn
-    - run: yarn add  typescript
-    - run: yarn 
-    - run: yarn run lint --fix
+    - run: npm install typescript
+    - run: npm ci
+    - run: npm run lint
