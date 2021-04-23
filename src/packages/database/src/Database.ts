@@ -1,9 +1,12 @@
+import { Guild } from 'discord.js';
 import { Db, MongoClient, Collection } from 'mongodb';
 import { DiscordBot } from '../../core/src/client/Client';
 import { AllowedCollectionNames } from '../../util/Constants';
 import { enumerable } from '../../util/decorators';
 import { DatabaseOptions } from '../../util/typings/util';
 import { GuildSettings } from './models/Guilds/GuildSettings';
+import { GuildCases } from './models/Guilds/moderation/GuildCases';
+import { UserSettings } from './models/users/UserSettings';
 
 
 export class Database {
@@ -24,6 +27,7 @@ export class Database {
     public economy: any;
 
     public options: DatabaseOptions;
+    users!: UserSettings;
     /**
      *
      */
@@ -59,12 +63,23 @@ export class Database {
                 case AllowedCollectionNames.GuildSettings:
                     this.settings = new GuildSettings(this, collection);
                     await this.settings.init();
+                    // eslint-disable-next-line no-case-declarations
+                    const cases = collections.find(c => c.collectionName === AllowedCollectionNames.ModerationCases);
+
+                    if (cases) {
+                        this.settings.cases = new GuildCases(this.settings, cases);
+                        await this.settings.cases.init();
+                    }
+                    break;
+                case AllowedCollectionNames.UserSettings:
+                    this.users = new UserSettings(this, collection);
+                    await this.users.init();
                     break;
                 default:
                     break;
             }
         }
-    //nice
+        //nice
     }
 
     async dropCollection(collection: string): Promise<boolean> {

@@ -4,6 +4,7 @@ import { EMOTES } from '../../../../util/Constants';
 import { enumerable } from '../../../../util/decorators';
 import { GuildSettingsDocument } from '../../../../util/typings/settings';
 import { Database } from '../../Database';
+import { GuildCases } from './moderation/GuildCases';
 
 
 
@@ -16,6 +17,8 @@ export class GuildSettings {
     public collection: Collection<GuildSettingsDocument>;
 
     public cache: Cache<string, GuildSettingsDocument>;
+
+    public cases!: GuildCases;
 
 
     constructor(db: Database, collection: Collection<GuildSettingsDocument>) {

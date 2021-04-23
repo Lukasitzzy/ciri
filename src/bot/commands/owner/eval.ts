@@ -10,6 +10,7 @@ import { EMOTES } from '../../../packages/util/Constants';
 import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
 import { getApi } from '../../../packages/util/Functions';
 import { MessageEmbed } from 'discord.js';
+import { performance } from 'node:perf_hooks';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({
@@ -32,6 +33,7 @@ export default class EvalCommand extends CustomCommand {
 
     public async run(ctx: CommandContext<{ code: string; }, TextbasedChannel>): Promise<any> {
         await this.parseEval(ctx);
+        
     }
 
     public createCustomCommand(
@@ -83,7 +85,7 @@ export default class EvalCommand extends CustomCommand {
             const start = Date.now();
             const str = await this.parseRes(evaled);
             if (str.length >= 1700) {
-                console.log(Util.cleanContent(str, ctx.msg));
+                console.log(Util.cleanContent(str, ctx.msg.channel));
                 await ctx.send([
                     `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                     'message was to long to be send.',
@@ -94,7 +96,7 @@ export default class EvalCommand extends CustomCommand {
             await ctx.send([
                 `${ctx.emote('success')} sucessfully executed it in \`${Date.now() - start}ms\`.`,
                 '```js',
-                Util.cleanContent(str,ctx.msg),
+                Util.cleanContent(str,ctx.msg.channel),
                 '```',
 
                 `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${typeof evaled}`
@@ -107,7 +109,7 @@ export default class EvalCommand extends CustomCommand {
             await ctx.send([
                 `${ctx.emote('error')} failed to run the command`,
                 '```',
-                Util.cleanContent(e,ctx.msg),
+                Util.cleanContent(e,ctx.msg.channel),
                 '```',
                 `${this.client.user?.username} v${VERSION} | node ${process.version} | type ${error?.name || 'Error'}`
             ].join('\n'));
