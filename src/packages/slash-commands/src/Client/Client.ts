@@ -119,7 +119,6 @@ export class InteractionClient extends EventEmitter {
         try {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const cmd = this.modules.get(ctx.name);
-            console.log(cmd?.name);
             
             if (cmd) {
                 if (cmd.clientPermissions) {

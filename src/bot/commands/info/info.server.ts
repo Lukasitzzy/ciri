@@ -24,7 +24,6 @@ export default class ServerInfoCommand extends CustomCommand {
     async run(ctx: GuildCommandContext<Record<'test', boolean>>): Promise<void> {
 
         if (!ctx.guild) {
-            console.log('server goes brrrrrrrr');
 
             return;
         }
@@ -56,7 +55,6 @@ export default class ServerInfoCommand extends CustomCommand {
             `ID: ${guild.id}`,
             features.length ? `server features:\n${features.join(', ')}` : '',
         ].filter(item => !!item).join('\n');
-        console.log('stuff');
         const icon = guild.iconURL() || undefined;
         const embed = new MessageEmbed()
             .setColor(owner.displayHexColor || 0x00f00f)
@@ -67,11 +65,9 @@ export default class ServerInfoCommand extends CustomCommand {
         if (icon) {
             embed.setThumbnail(icon);
         }
-        console.log('stuff2');
-        console.log(!!ctx.msg.util);
+
 
         await ctx.msg.util?.send(embed);
-        console.log('stuff3');
         return;
     }
 

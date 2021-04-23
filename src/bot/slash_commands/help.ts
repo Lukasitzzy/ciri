@@ -72,9 +72,7 @@ export default class HelpSlashCommand extends SlashCommand {
             `name: ${_name}`,
             `description: ${_description}`,
             _options?.length ?
-                _options.map(option => {
-                    console.log((option as any).type);
-                    return option.name;
+                _options.map(option => {                    return option.name;
                 })
                 : ''
         ].filter(v => v !== '').join('\r\n');

@@ -57,8 +57,6 @@ export class Database {
 
             switch (collection.collectionName) {
                 case AllowedCollectionNames.GuildSettings:
-                    console.log('true');
-
                     this.settings = new GuildSettings(this, collection);
                     await this.settings.init();
                     break;
