@@ -36,7 +36,7 @@ export class DiscordBot extends AkairoClient {
             ownerID: process.env.OWNER_ID?.split('--'),
             intents: Intents.ALL,
             http: {
-                version: 8
+                version: 9
             }
         });
         this.commandHandler = new CustomCommandHandler(this, {
