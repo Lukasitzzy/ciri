@@ -110,3 +110,4 @@ out/
 src/bot/events/client/client.message.ts
 data/emotes*
 .yarn/*
+src/bot/commands/owner/test*
