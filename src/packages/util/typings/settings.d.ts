@@ -51,3 +51,13 @@ export type GuildModerationActionsHard = 'BAN' | 'KICK';
 
 
 
+
+//#region users
+
+
+export interface UserSettingsDbData {
+    userID: string;
+    bonkedCount: number;
+    voteBannedCount: number;
+    selfVotebannedCount: number;
+}
