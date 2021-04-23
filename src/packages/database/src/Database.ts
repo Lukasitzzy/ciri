@@ -1,4 +1,4 @@
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient, Collection } from 'mongodb';
 import { DiscordBot } from '../../core/src/client/Client';
 import { AllowedCollectionNames } from '../../util/Constants';
 import { enumerable } from '../../util/decorators';
@@ -66,12 +66,15 @@ export class Database {
                     break;
             }
         }
-
+    //nice
     }
-
 
     async dropCollection(collection: string): Promise<boolean> {
         return this.db.dropCollection(collection);
+    }
+
+    async createCollection(collection: string): Promise<Collection<any>> {
+        return this.db.createCollection(collection);
     }
 
 

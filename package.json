@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ItzzLucy/aither.git"
+    "url": "git+https://github.com/JastLucy/aither.git"
   },
-  "author": "ItzzLucy",
+  "author": "JastLucy",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ItzzLucy/aither/issues"
+    "url": "https://github.com/JastLucy/aither/issues"
   },
-  "homepage": "https://github.com/ItzzLucy/aither#readme",
+  "homepage": "https://github.com/JastLucy/aither#readme",
   "dependencies": {
     "@types/color-name": "^1.1.1",
     "@types/mongodb": "^3.6.12",

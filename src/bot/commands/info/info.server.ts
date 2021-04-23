@@ -1,30 +1,34 @@
 import { GuildMember } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import { TextChannel, GuildFeatures } from 'discord.js';
-import { CommandContext, TextbasedChannel } from '../../../packages/core/src/commands/CommandContext';
+import { GuildFeatures } from 'discord.js';
+import { GuildCommandContext } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
 import { AitherGuild } from '../../../packages/extentions/Guild';
-import { applyOptions } from '../../../packages/util/decorators';
+import { applyOptions, requireGuild } from '../../../packages/util/decorators';
 
-
+@requireGuild
 @applyOptions({
     id: 'info.server',
     description: {},
     options: {
         aliases: ['server-info', 'sinfo', 'serverinfo', 'guild'],
-        channel: 'guild'
+        channel: 'guild',
+        args: [{
+            id: 'test',
+            flag: ['--test']
+        }]
     }
 })
 export default class ServerInfoCommand extends CustomCommand {
 
-    async run(ctx: CommandContext<Record<string, undefined>, TextChannel>): Promise<void> {
+    async run(ctx: GuildCommandContext<Record<'test', boolean>>): Promise<void> {
 
         if (!ctx.guild) {
             console.log('server goes brrrrrrrr');
 
             return;
         }
-        const guild = await ctx.guild.fetch();
+        const guild = await ctx.guild.fetch() as AitherGuild;
 
         if (!guild) {
             await ctx.send(`${ctx.emote('error')} failed to fetch information.`);
@@ -35,7 +39,8 @@ export default class ServerInfoCommand extends CustomCommand {
 
         const features = this._parseFeatures(ctx, ctx.guild as AitherGuild, guild.features);
         const online = members.filter(member => member.presence.status === 'online').size;
-
+        const { level, ammount } = await this._fetchBoostingLevel(guild);
+        const BOOSTER_LEVEL_EMOTE = level ? ctx.emote(`server_boost_level_${level}` as 'server_boost_level_0') : '';
         const str = [
             `server information for ${guild.name}`,
             `${ctx.emote('server_member')} ${ctx.guild.memberCount} member${ctx.guild.memberCount == 1 ? '' : 's'} | ${ctx.emote('member_online')} online ${online} `,
@@ -47,9 +52,10 @@ export default class ServerInfoCommand extends CustomCommand {
             } | ${guild.roles.cache.size} ${guild.roles.cache.size === 1 ? '' : 's'
             } | ${guild.emojis.cache.size} ${guild.emojis.cache.size === 1 ? '' : 's'
             }`,
+            level ? `${BOOSTER_LEVEL_EMOTE} **Booster**: Level ${level} (${ammount} boosts)` : '',
             `ID: ${guild.id}`,
             features.length ? `server features:\n${features.join(', ')}` : '',
-        ].join('\n');
+        ].filter(item => !!item).join('\n');
         console.log('stuff');
         const icon = guild.iconURL() || undefined;
         const embed = new MessageEmbed()
@@ -69,8 +75,47 @@ export default class ServerInfoCommand extends CustomCommand {
         return;
     }
 
+    private async _fetchBoostingLevel(guild: AitherGuild): Promise<{
+        level: 0 | 1 | 2 | 3 | null;
+        ammount: number | null;
+    }> {
+
+        if (!guild) {
+            return {
+                level: 0,
+                ammount: 0
+            };
+        }
+
+        if (guild.premiumSubscriptionCount !== null && guild.premiumTier !== null) {
+            return {
+                level: guild.premiumTier,
+                ammount: guild.premiumSubscriptionCount
+            };
+        }
+
+        guild = await guild.fetch() as AitherGuild;
+
+
+        if (guild.premiumSubscriptionCount && guild.premiumTier) {
+            return {
+                level: guild.premiumTier,
+                ammount: guild.premiumSubscriptionCount
+            };
+        }
+        else {
+            return {
+                level: 0,
+                ammount: 0
+            };
+        }
+
+
+
+    }
+
     private _parseFeatures(
-        ctx: CommandContext<Record<string, undefined>, TextbasedChannel>,
+        ctx: GuildCommandContext<Record<string, unknown>>,
         guild: AitherGuild,
         features: GuildFeatures[],
     ) {
