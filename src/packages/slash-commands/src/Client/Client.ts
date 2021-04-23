@@ -80,9 +80,6 @@ export class InteractionClient extends EventEmitter {
                     this._client,
                     data,
                 );
-                if (command.name === 'test') {
-                    return command.reply({ ephemeral: true, content: 'yes even here <:items4Lurk:814620882663637084> <- twitch emote btw' });
-                }
 
                 this._client.setTimeout(async () => {
                     if (!command._responded) {

@@ -266,6 +266,7 @@ export class InterActionCommand extends InteractionBase {
                 await api.interactions(this.id, this.token).callback.post({ data });
                 this._responded = true;
             } catch (error) {
+                this._responded = true;
                 this.client.logger.error(error, 'interaction.reply');
             }
             return;
@@ -296,12 +297,14 @@ export class InterActionCommand extends InteractionBase {
             }
             try {
                 if ((Date.now() - this.createdTimestamp) < 2500) {
+                    this._responded = true;
                     await api.interactions(this.id, this.token).callback.post({ data });
                     return;
                 }
                 await api.webhooks(this.client.user.id, this.token).post(data);
                 this._responded =  true;
             } catch (error) {
+                this._responded = true;
                 this.client.logger.error(error, 'interaction.reply.webhook');
             }
         }
