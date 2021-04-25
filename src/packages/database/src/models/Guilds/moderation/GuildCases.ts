@@ -1,6 +1,6 @@
 import { GuildMember } from 'discord.js';
 import { Collection, ObjectId } from 'mongodb';
-import { DiscordBot } from '../../../../../core/src/client/Client';
+import { AitherBot } from '../../../../../core/src/client/Client';
 import { AitherGuild } from '../../../../../extentions/Guild';
 import { AitherUser } from '../../../../../extentions/User';
 import { Cache } from '../../../../../util/Cache';
@@ -75,7 +75,7 @@ class GuildCase implements GuildCasesDbData {
 export class GuildCases {
 
     @enumerable
-    public readonly client: DiscordBot;
+    public readonly client: AitherBot;
 
     public readonly db: Database;
     public readonly cache: Cache<string, GuildCasesDbData>;

@@ -1,7 +1,7 @@
 import chalk = require('chalk');
 import { DiscordAPIError } from 'discord.js';
 import { EventEmitter } from 'events';
-import { DiscordBot } from '../../../core/src/client/Client';
+import { AitherBot } from '../../../core/src/client/Client';
 import { getApi } from '../../../util/Functions';
 import { InteractionClient } from '../Client/Client';
 import { IApplicationCommandDataPost } from '../../../util/typings/Discord.js.Api';
@@ -10,8 +10,8 @@ import { IApplicationCommand, IApplicationCommandOption } from '../../../util/ty
 export class InteractionCommandManager extends EventEmitter {
 
     private readonly _client: InteractionClient;
-    private readonly _discordClient: DiscordBot;
-    public constructor(client: InteractionClient, bot: DiscordBot) {
+    private readonly _discordClient: AitherBot;
+    public constructor(client: InteractionClient, bot: AitherBot) {
         super({ captureRejections: true });
         this._client = client;
         this._discordClient = bot;

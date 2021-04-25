@@ -2,11 +2,11 @@ import { Command, CommandOptions } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { AitherMessage } from '../../../extentions/Message';
 import { CommandDescription } from '../../../util/typings/util';
-import { DiscordBot } from '../client/Client';
+import { AitherBot } from '../client/Client';
 import { CommandContext } from './CommandContext';
 
 export abstract class CustomCommand extends Command {
-    client!: DiscordBot;
+    client!: AitherBot;
     public description!: CommandDescription;
     public subcommand: boolean;
 

@@ -1,9 +1,9 @@
-import { DiscordBot } from '../../../packages/core/src/client/Client';
+import { AitherBot } from '../../../packages/core/src/client/Client';
 import { CustomEvent } from '../../../packages/core/src/events/CustomEvent';
 import { IWSResponse } from '../../../packages/util/typings/InteractionTypes';
 
 export default class INTERACTION_CREATE_EVENT extends CustomEvent {
-    client!: DiscordBot;
+    client!: AitherBot;
     /**
      *
      */

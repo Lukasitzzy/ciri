@@ -1,8 +1,8 @@
 import { Listener, ListenerOptions } from 'discord-akairo';
-import { DiscordBot } from '../client/Client';
+import { AitherBot } from '../client/Client';
 
 export abstract class CustomEvent extends Listener {
-    client!: DiscordBot;
+    client!: AitherBot;
 
     constructor({
         id,

@@ -1,7 +1,7 @@
-import { DiscordBot } from '../core/src/client/Client';
+import { AitherBot } from '../core/src/client/Client';
 import { Api } from './typings/Discord.js.Api';
 import { exec } from 'child_process';
-export function getApi(client: DiscordBot): Api {
+export function getApi(client: AitherBot): Api {
     return Reflect.get(client, 'api');
 }
 

@@ -1,8 +1,8 @@
 import { Structures, User} from 'discord.js';
-import { DiscordBot } from '../core/src/client/Client';
+import { AitherBot } from '../core/src/client/Client';
 
 export class AitherUser extends User {
-    client!: DiscordBot;
+    client!: AitherBot;
     async blacklist(reason: string): Promise<void> {
         console.log(reason);
         return;

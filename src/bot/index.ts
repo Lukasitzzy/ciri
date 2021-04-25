@@ -1,5 +1,5 @@
-import { DiscordBot } from '../packages/core/src/client/Client';
-const client = new DiscordBot(__dirname);
+import { AitherBot } from '../packages/core/src/client/Client';
+const client = new AitherBot(__dirname);
 client.start().catch(e => client.logger.error(e));
 
 process.on('unhandledRejection', (res) => {

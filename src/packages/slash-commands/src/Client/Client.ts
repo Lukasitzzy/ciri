@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { EventEmitter } from 'events';
 import { join } from 'path';
-import { DiscordBot } from '../../../core/src/client/Client';
+import { AitherBot } from '../../../core/src/client/Client';
 import { InterActionCommand } from '../commands/InteractionCommand';
 import { InteractionCommandManager } from '../commands/InteractionCommandManager';
 import { IWSResponse } from '../../../util/typings/InteractionTypes';
@@ -11,12 +11,12 @@ import { Cache } from '../../../util/Cache';
 import { enumerable } from '../../../util/decorators';
 import { promises, statSync } from 'fs';
 export class InteractionClient extends EventEmitter {
-    private readonly _client: DiscordBot;
+    private readonly _client: AitherBot;
     private readonly _commandManager: InteractionCommandManager;
     @enumerable
     private readonly _dir: string;
     public readonly modules: Cache<string, SlashCommand>;
-    public constructor(client: DiscordBot, dir: string) {
+    public constructor(client: AitherBot, dir: string) {
         super({ captureRejections: true });
         this._client = client;
         this._commandManager = new InteractionCommandManager(this, client);
@@ -105,7 +105,7 @@ export class InteractionClient extends EventEmitter {
         }
     }
 
-    get client(): DiscordBot {
+    get client(): AitherBot {
         return this._client;
     }
     private async _getID(): Promise<string | undefined> {

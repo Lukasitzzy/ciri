@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { Db, MongoClient, Collection } from 'mongodb';
-import { DiscordBot } from '../../core/src/client/Client';
+import { AitherBot } from '../../core/src/client/Client';
 import { AllowedCollectionNames } from '../../util/Constants';
 import { enumerable } from '../../util/decorators';
 import { DatabaseOptions } from '../../util/typings/util';
@@ -12,7 +12,7 @@ import { UserSettings } from './models/users/UserSettings';
 export class Database {
 
     @enumerable
-    public client: DiscordBot;
+    public client: AitherBot;
 
     @enumerable
     public settings!: GuildSettings;
@@ -31,7 +31,7 @@ export class Database {
     /**
      *
      */
-    constructor(client: DiscordBot, options: DatabaseOptions) {
+    constructor(client: AitherBot, options: DatabaseOptions) {
 
         this.client = client;
 

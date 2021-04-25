@@ -4,7 +4,7 @@ import {
     WebhookMessageOptions, GuildChannel, TextChannel
 } from 'discord.js';
 import { CustomPermissions } from '../util/Permissions';
-import { DiscordBot } from '../../../core/src/client/Client';
+import { AitherBot } from '../../../core/src/client/Client';
 import { EMOTES } from '../../../util/Constants';
 import { getApi } from '../../../util/Functions';
 import { InteractionBase } from '../util/Interaction';
@@ -31,7 +31,7 @@ export class InterActionCommand extends InteractionBase {
         roles?: Collection<string, Role>;
     };
 
-    public constructor(client: DiscordBot, data: IWSResponse) {
+    public constructor(client: AitherBot, data: IWSResponse) {
         super(client, data);
 
         this._commandid = data.data.id;

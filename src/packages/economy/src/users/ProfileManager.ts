@@ -1,4 +1,4 @@
-import { DiscordBot } from '../../../core/src/client/Client';
+import { AitherBot } from '../../../core/src/client/Client';
 import { AitherUser } from '../../../extentions/User';
 import { EconomyManager } from '../EconomyManager';
 
@@ -11,7 +11,7 @@ export class ProfileManager {
     }
 
 
-    get client(): DiscordBot {
+    get client(): AitherBot {
         return this._economy.client;
     }
 

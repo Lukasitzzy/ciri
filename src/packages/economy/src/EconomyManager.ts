@@ -1,12 +1,12 @@
-import { DiscordBot } from '../../core/src/client/Client';
+import { AitherBot } from '../../core/src/client/Client';
 import { Database } from '../../database/src/Database';
 import { ProfileManager } from './users/ProfileManager';
 
 export class EconomyManager {
-    private readonly _client: DiscordBot;
+    private readonly _client: AitherBot;
     private readonly _db: Database['economy'];
     private readonly _profiles: ProfileManager;
-    constructor(client: DiscordBot, db: Database['economy']) {
+    constructor(client: AitherBot, db: Database['economy']) {
         this._client = client;
         this._db = db;
         this._profiles = new ProfileManager(this);
@@ -20,7 +20,7 @@ export class EconomyManager {
         return this._profiles;
     }
 
-    get client(): DiscordBot {
+    get client(): AitherBot {
         return this._client;
     }
 }

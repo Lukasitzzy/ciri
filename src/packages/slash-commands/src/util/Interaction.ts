@@ -1,11 +1,11 @@
 import { Base, Guild } from 'discord.js';
-import { DiscordBot } from '../../../core/src/client/Client';
+import { AitherBot } from '../../../core/src/client/Client';
 import { TextbasedChannel } from '../../../core/src/commands/CommandContext';
 import { IWSResponse } from '../../../util/typings/InteractionTypes';
 import { invertedInteractionType } from './Constants';
 
 export abstract class InteractionBase extends Base {
-    public client!: DiscordBot;
+    public client!: AitherBot;
 
     private readonly _channel?: TextbasedChannel;
     private readonly _typestr: string;
@@ -13,7 +13,7 @@ export abstract class InteractionBase extends Base {
     private readonly _id: string;
     private readonly _token: string;
     private readonly _guild?: Guild;
-    public constructor(client: DiscordBot, data: IWSResponse) {
+    public constructor(client: AitherBot, data: IWSResponse) {
         super(client);
         this._id = data.id;
         this._typestr = invertedInteractionType[data.type as 1];

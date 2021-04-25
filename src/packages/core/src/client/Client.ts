@@ -18,7 +18,7 @@ guildFunction();
 userFunction();
 messageFunction();
 
-export class DiscordBot extends AkairoClient {
+export class AitherBot extends AkairoClient {
 
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
     public readonly listenerHandler: ListenerHandler;
