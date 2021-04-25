@@ -2,15 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import { AitherUser } from '../../packages/extentions/User';
 import { InterActionCommand } from '../../packages/slash-commands/src/commands/InteractionCommand';
 import { SlashCommand } from '../../packages/slash-commands/src/commands/SlashCommand';
-const messages = [
-    '',
-    'https://tenor.com/view/elmo-fire-ban-syntheticllama-gif-21044291',
-    'https://tenor.com/view/hyper-ban-dragonite-ban-gif-9811324',
-    'https://tenor.com/view/ban-hammer-super-mario-gif-17553259',
-    'https://tenor.com/view/ban-hammer-futurama-scruffy-gif-20750885',
-    'https://tenor.com/view/ban-banned-permaban-youre-banned-you-are-banned-gif-20922596',
-    ''
-];
+
 const EMOTES = {
     1: '1️⃣',
     2: '2️⃣',
@@ -32,6 +24,13 @@ export default class HelpSlashCommand extends SlashCommand {
 
     public async run(interaction: InterActionCommand): Promise<void> {
         if (!interaction.data) return;
+
+        if (!this.client.db.users || !this.client.db.users.collection) {
+                return interaction.fail({
+                    content: 'database not ready',
+                    ephemeral: true,
+                });
+        }
 
         const users = Object.keys(interaction.data?.data.resolved?.users || {});
         let user: AitherUser | undefined;
@@ -110,7 +109,7 @@ export default class HelpSlashCommand extends SlashCommand {
                 `**${user.username}** has been banned **${this._parseEmote(userData.voteBannedCount)} times**`,
                 `**${interaction.user?.username}** has banned others ${this._parseEmote(userData2.selfVotebannedCount)} times`,
                 '**Ban Message**:',
-                messages[Math.floor(Math.random() * messages.length)] || `${user.username} should not be here!`,
+              interaction.options?.[1].value || `${user.username} should not be here!`,
 
             ]).setAuthor(`${user.username} was banned by ${interaction.user?.username}`)
                 .setFooter('Idea based on: git.io/voteban | ',)
