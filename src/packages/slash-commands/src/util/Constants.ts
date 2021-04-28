@@ -9,6 +9,7 @@ export const InteractionCommandOptionType = {
     USER: 6,
     CHANNEL: 7,
     ROLE: 8,
+    MENTIONABLE: 9
 };
 
 export const InteractionType = {
