@@ -8,7 +8,12 @@ import { applyOptions, hasCustomPermissions, requireDefaultPermissions } from '.
 @requireDefaultPermissions(['ADMINISTRATOR'])
 @applyOptions({
     id: 'economy.guilds.bank.bank',
-    description: {},
+    description: {
+        text: 'changes the settings for the guild\'s bank',
+        aliases: ['bank'],
+        examples: ['{{prefix}}bank disable', '{{prefix}}bank currency'],
+        usage: ['{{prefix}}bank <sub_command> {...options]']
+    },
     options: {
         aliases: ['bank']
     }
@@ -16,10 +21,8 @@ import { applyOptions, hasCustomPermissions, requireDefaultPermissions } from '.
 export default class BankCommand extends CustomCommand {
 
     async run(ctx: CommandContext<any, TextbasedChannel>): Promise<unknown> {
-// 
+
         return ctx.send(`${ctx.emote('error')} command currently disabled`);
-
-
 
     }
 
