@@ -1,9 +1,10 @@
 import { CommandOptions } from 'discord-akairo';
 import { PermissionString } from 'discord.js';
 import { CustomCommand } from '../core/src/commands/CustomCommand';
+import { CommandDescription } from './typings/util';
 
 type ExtendableCls<K> = new (...args: any[]) => K;
-export function applyOptions(options: { id: string; description: any; options: CommandOptions; }) {
+export function applyOptions(options: { id: string; description: CommandDescription; options: CommandOptions; }) {
     return (cls: ExtendableCls<CustomCommand>): any => {
         abstract class Extended extends cls {
             constructor() {

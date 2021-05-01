@@ -12,7 +12,12 @@ const VALID_SUB_COMMANDS = [
 @requireDefaultPermissions(['MANAGE_GUILD'])
 @applyOptions({
     id: 'settings.guild.settings',
-    description: {},
+    description: {
+        aliases: ['settings'],
+        examples: ['{{prefix}}settings welcome'],
+        usage: ['{{prefix}}settings <option> [...value]'],
+        text: 'change or view current server settings'
+    },
     options: {
         aliases: ['settings'],
     }
@@ -40,7 +45,14 @@ export default class GuildSettingsCommand extends CustomCommand {
 
     public help(prefix: string): MessageEmbed {
         const embed = new MessageEmbed();
+        const {text, aliases, usage, examples} = this.description;
 
+        embed.setDescription([
+            `**description**\n${text}`,
+            `**aliases**: ${aliases.map(alias => `\`${alias}\``).join(' ')}`,
+            usage.length ? `**usage**: ${usage.map(us => `\`${us.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : '',
+            examples.length ? `**examples**: ${examples.map((example) => `\`${example.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : ''
+        ].filter(f => f !== '').join('\n'));
         return embed;
     }
 

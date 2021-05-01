@@ -8,6 +8,7 @@ import { CommandContext } from './CommandContext';
 export abstract class CustomCommand extends Command {
     client!: AitherBot;
     public description!: CommandDescription;
+
     public subcommand: boolean;
 
     /**
@@ -33,7 +34,7 @@ export abstract class CustomCommand extends Command {
     }
 
 
-    run?(ctx: CommandContext<Record<string, unknown>, AitherMessage['channel']>): any;
+    run?(ctx: CommandContext<Record<string, unknown>, AitherMessage['channel']>): Promise<unknown>;
 
 
 
