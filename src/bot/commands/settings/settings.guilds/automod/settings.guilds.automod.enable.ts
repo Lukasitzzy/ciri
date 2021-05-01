@@ -8,13 +8,15 @@ import { GuildModerationDocument } from '../../../../../packages/util/typings/se
 @applyOptions({
     id: 'settings.guilds.automod.enable',
     description: {
+        aliases: ['enable'],
+        examples: ['{{prefix}}automod enable'],
+        usage: ['{{prefix}}automod enable'],
+        text: 'enables the server\'s automod'
     },
 
     options: {}
 })
 export default class EnableGuildAutomodCommand extends CustomCommand {
-
-
 
     async run(ctx: GuildCommandContext<Record<string, unknown>>): Promise<unknown> {
         await ctx.guild.settings.sync();
@@ -42,7 +44,14 @@ export default class EnableGuildAutomodCommand extends CustomCommand {
 
     public help(prefix: string): MessageEmbed {
         const embed = new MessageEmbed();
+        const {text, aliases, usage, examples} = this.description;
 
+        embed.setDescription([
+            `**description**\n${text}`,
+            `**aliases**: ${aliases.map(alias => `\`${alias}\``).join(' ')}`,
+            usage.length ? `**usage**: ${usage.map(us => `\`${us.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : '',
+            examples.length ? `**examples**: ${examples.map((example) => `\`${example.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : ''
+        ].filter(f => f !== '').join('\n'));
         return embed;
     }
 }
