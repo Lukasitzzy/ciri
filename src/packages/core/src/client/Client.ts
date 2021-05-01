@@ -3,7 +3,7 @@ import { Intents } from 'discord.js';
 import { join } from 'path';
 import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
-import { InteractionClient } from '../../../slash-commands/src/Client/Client';
+import { InteractionClient } from '../../../old_slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/src/Database';
 import { getApi } from '../../../util/Functions';
@@ -17,6 +17,8 @@ const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 guildFunction();
 userFunction();
 messageFunction();
+
+
 
 export class AitherBot extends AkairoClient {
 

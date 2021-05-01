@@ -9,7 +9,12 @@ import { applyOptions, requireGuild } from '../../../packages/util/decorators';
 @requireGuild
 @applyOptions({
     id: 'info.server',
-    description: {},
+    description: {
+        examples: ['sinfo'],
+        text: 'get current information about the server',
+        aliases: ['server-info', 'sinfo', 'serverinfo', 'guild'],
+        usage: ['{{prefix}}{{command}}']
+    },
     options: {
         aliases: ['server-info', 'sinfo', 'serverinfo', 'guild'],
         channel: 'guild',
@@ -21,14 +26,13 @@ import { applyOptions, requireGuild } from '../../../packages/util/decorators';
 })
 export default class ServerInfoCommand extends CustomCommand {
 
-    async run(ctx: GuildCommandContext<Record<'test', boolean>>): Promise<void> {
+    async run(ctx: GuildCommandContext<Record<string, unknown>>): Promise<unknown> {
 
         if (!ctx.guild) {
 
             return;
         }
-        const guild = await ctx.guild.fetch() as AitherGuild;
-
+        const guild = await ctx.guild.fetch();
         if (!guild) {
             await ctx.send(`${ctx.emote('error')} failed to fetch information.`);
             return;
@@ -36,8 +40,8 @@ export default class ServerInfoCommand extends CustomCommand {
         const owner: GuildMember = await guild.fetchOwner();
         const members = await guild.members.fetch({ force: guild.memberCount !== guild.members.cache.size });
 
-        const features = this._parseFeatures(ctx, ctx.guild as AitherGuild, guild.features);
-        const online = members.filter(member => member.presence.status === 'online').size;
+        const features = this._parseFeatures(ctx, ctx.guild, guild.features);
+        const online = members.filter(member => !['offline', 'invisible'].includes(member.presence.status)).size;
         const { level, ammount } = await this._fetchBoostingLevel(guild);
         const BOOSTER_LEVEL_EMOTE = level ? ctx.emote(`server_boost_level_${level}` as 'server_boost_level_0') : '';
         const str = [
@@ -136,9 +140,15 @@ export default class ServerInfoCommand extends CustomCommand {
 
 
     public help(prefix: string): MessageEmbed {
-
         const embed = new MessageEmbed();
-        embed.setDescription(`usage: ${prefix}serverinfo`);
+        const {text, aliases, usage, examples} = this.description;
+
+        embed.setDescription([
+            `**description**\n${text}`,
+            `**aliases**: ${aliases.map(alias => `\`${alias}\``).join(' ')}`,
+            usage.length ? `**usage**: ${usage.map(us => `\`${us.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : '',
+            examples.length ? `**examples**: ${examples.map((example) => `\`${example.replace(/{{prefix}}/, prefix)}\``).join(' ')}` : ''
+        ].filter(f => f !== '').join('\n'));
         return embed;
     }
 

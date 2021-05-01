@@ -1,4 +1,5 @@
 import { Snowflake } from 'discord.js';
+import { UserEconomySettings } from './economy';
 
 export interface BaseDocument {
     documentID: string;
@@ -60,4 +61,5 @@ export interface UserSettingsDbData {
     bonkedCount: number;
     voteBannedCount: number;
     selfVotebannedCount: number;
+    economy: UserEconomySettings;
 }

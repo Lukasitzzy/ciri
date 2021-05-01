@@ -18,7 +18,14 @@ export class AitherGuild extends Guild {
         this.settings = new GuildSettingsHelper(this);
     }
 
-    async blacklist(): Promise<void> {
+    async fetch(): Promise<this> {
+        return super.fetch() as Promise<this>;
+    }
+    async isYeeted(): Promise<boolean> {
+
+	return false;
+   }
+    async yeet(): Promise<void> {
 
         return;
     } 

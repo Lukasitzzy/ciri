@@ -17,7 +17,6 @@ export interface DatabaseOptions {
     shards: number[];
 }
 
-
 export interface CommandDescription {
 
     text: string;

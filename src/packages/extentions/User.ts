@@ -3,7 +3,12 @@ import { AitherBot } from '../core/src/client/Client';
 
 export class AitherUser extends User {
     client!: AitherBot;
-    async blacklist(reason: string): Promise<void> {
+    async isYeeted(): Promise<boolean> {
+
+	return false;
+    }
+
+    async yeet(reason: string): Promise<void> {
         console.log(reason);
         return;
     } 

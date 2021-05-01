@@ -12,7 +12,7 @@ export class EconomyManager {
         this._profiles = new ProfileManager(this);
     }
 
-    get db(): Database['economy'] {
+    get db(): Database['users'] {
         return this._db;
     }
 
