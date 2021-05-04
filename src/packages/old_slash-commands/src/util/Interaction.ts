@@ -1,7 +1,7 @@
 import { Base, Guild } from 'discord.js';
 import { AitherBot } from '../../../core/src/client/Client';
 import { TextbasedChannel } from '../../../core/src/commands/CommandContext';
-import { AitherGuild } from '../../../extentions/Guild';
+import { AitherGuild } from '../../../extension/Guild';
 import { IWSResponse } from '../../../util/typings/InteractionTypes';
 import { invertedInteractionType } from './Constants';
 

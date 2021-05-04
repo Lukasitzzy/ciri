@@ -5,13 +5,13 @@ import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { InteractionClient } from '../../../old_slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
-import { Database } from '../../../database/src/Database';
-import { getApi } from '../../../util/Functions';
+import { Database } from '../../../database/Database';
+import { getApi, getGitCommit } from '../../../util/Functions';
 import { ClientApplication } from 'discord.js';
 // import { EconomyManager } from '../../../economy/src/EconomyManager';
-import { guildFunction } from '../../../extentions/Guild';
-import { userFunction } from '../../../extentions/User';
-import messageFunction, { AitherMessage } from '../../../extentions/Message';
+import { guildFunction } from '../../../extension/Guild';
+import { userFunction } from '../../../extension/User';
+import messageFunction, { AitherMessage } from '../../../extension/Message';
 const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 
 guildFunction();
@@ -114,8 +114,9 @@ export class AitherBot extends AkairoClient {
             this._prepare();
 
             await this.db.init();
-            await this.interaction.loadCommands();
+            // await this.interaction.loadCommands();
             await this.login();
+            
         } catch (error) {
             this.logger.error(error);
 

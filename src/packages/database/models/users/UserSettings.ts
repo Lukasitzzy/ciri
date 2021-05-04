@@ -1,26 +1,25 @@
 import { Collection, ObjectId } from 'mongodb';
 import { Database } from '../../Database';
-import { UserSettingsDbData } from '../../../../util/typings/settings';
-import { Cache } from '../../../../util/Cache';
-import { createHash } from '../../../../util/Functions';
+import { Cache } from '../../../util/Cache';
+import { createHash } from '../../../util/Functions';
 export class UserSettings {
 
     public db: Database;
-    public collection: Collection<UserSettingsDbData>;
-    public cache: Cache<string, UserSettingsDbData>;
+    public collection: Collection<any>;
+    public cache: Cache<string, any>;
 
     constructor(
         db: Database,
-        collection: Collection<UserSettingsDbData>
+        collection: Collection<any>
     ) {
 
         this.db = db;
         this.collection = collection;
 
-        this.cache = new Cache<string, UserSettingsDbData>();
+        this.cache = new Cache<string, any>();
     }
 
-    async fetch(userID: string): Promise<UserSettingsDbData> {
+    async fetch(userID: string): Promise<any> {
         return this.cache.get(userID) ||
             await this.collection.findOne({ userID }) ||
             await this.create(userID);
@@ -28,7 +27,7 @@ export class UserSettings {
 
 
 
-    async update<K extends keyof UserSettingsDbData>({
+    async update<K extends keyof any>({
         userID,
         guildID,
         key,
@@ -37,10 +36,10 @@ export class UserSettings {
         userID: string;
         key: K;
         guildID?: string;
-        data: UserSettingsDbData[K];
-    }): Promise<UserSettingsDbData | null> {
+        data: any[K];
+    }): Promise<any | null> {
 
-        let cached: UserSettingsDbData = this.cache.get(userID) || await this.collection.findOne({ userID }) as UserSettingsDbData;
+        let cached: any = this.cache.get(userID) || await this.collection.findOne({ userID }) as any;
 
         if (!cached) {
             cached = await this.create(userID, guildID);
@@ -64,7 +63,7 @@ export class UserSettings {
 
 
 
-    async create(userID: string, guildID = 'GLOBAL'): Promise<UserSettingsDbData> {
+    async create(userID: string, guildID = 'GLOBAL'): Promise<any> {
 
         const existing = this.cache.get(userID) || await this.collection.findOne({ userID });
 
@@ -72,15 +71,19 @@ export class UserSettings {
             return existing;
         }
 
-        const data: UserSettingsDbData = {
+        const data: any = {
             bonkedCount: 0,
             selfVotebannedCount: 0,
             userID,
             economy: {
+                profile: {
+                    details: '',
+                    userID
+                },
                 accounts: [],
                 cash: 0,
                 mainAccount: {
-                    accountID: `${guildID}:${new ObjectId().toHexString()}`,
+                    accountID: createHash(`${userID}:${guildID}`),
                     accountNumber: 0,
                     bankID: guildID,
                     idHash: createHash(`${userID}:${guildID}`),

@@ -1,9 +1,9 @@
 import { Guild } from 'discord.js';
 import { Db, MongoClient, Collection } from 'mongodb';
-import { AitherBot } from '../../core/src/client/Client';
-import { AllowedCollectionNames } from '../../util/Constants';
-import { enumerable } from '../../util/decorators';
-import { DatabaseOptions } from '../../util/typings/util';
+import { AitherBot } from '../core/src/client/Client';
+import { AllowedCollectionNames } from '../util/Constants';
+import { enumerable } from '../util/decorators';
+import { DatabaseOptions } from '../util/typings/util';
 import { GuildSettings } from './models/Guilds/GuildSettings';
 import { GuildCases } from './models/Guilds/moderation/GuildCases';
 import { UserSettings } from './models/users/UserSettings';

@@ -1,6 +1,6 @@
 import { Command, CommandOptions } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import { AitherMessage } from '../../../extentions/Message';
+import { AitherMessage } from '../../../extension/Message';
 import { CommandDescription } from '../../../util/typings/util';
 import { AitherBot } from '../client/Client';
 import { CommandContext } from './CommandContext';

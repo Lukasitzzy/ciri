@@ -1,8 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 import { GuildCommandContext } from '../../../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../../../packages/core/src/commands/CustomCommand';
+import { GuildModerationDocument } from '../../../../../packages/database/typings/settings/GuildSettings';
 import { applyOptions, requireDefaultPermissions } from '../../../../../packages/util/decorators';
-import { GuildModerationDocument } from '../../../../../packages/util/typings/settings';
+
 
 @requireDefaultPermissions(['MANAGE_GUILD'])
 @applyOptions({

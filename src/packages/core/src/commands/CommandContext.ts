@@ -7,8 +7,8 @@ import {
     NewsChannel,
     TextChannel,
 } from 'discord.js';
-import { AitherGuild } from '../../../extentions/Guild';
-import { AitherMessage } from '../../../extentions/Message';
+import { AitherGuild } from '../../../extension/Guild';
+import { AitherMessage } from '../../../extension/Message';
 import { EMOTES } from '../../../util/Constants';
 import { CustomCommand } from './CustomCommand';
 export type TextbasedChannel = AitherMessage['channel'];

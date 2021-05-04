@@ -1,5 +1,5 @@
 import { AitherBot } from '../../core/src/client/Client';
-import { Database } from '../../database/src/Database';
+import { Database } from '../../database/Database';
 import { ProfileManager } from './users/ProfileManager';
 
 export class EconomyManager {

@@ -11,8 +11,8 @@ import { InteractionBase } from '../util/Interaction';
 import { InteractionResponseType, PermissionStrings } from '../util/Constants';
 import { IWSResponse, iWsResponseData } from '../../../util/typings/InteractionTypes';
 import { SnowflakeUtil } from 'discord.js';
-import { AitherUser } from '../../../extentions/User';
-import { AitherGuild } from '../../../extentions/Guild';
+import { AitherUser } from '../../../extension/User';
+import { AitherGuild } from '../../../extension/Guild';
 import { DMChannel } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 

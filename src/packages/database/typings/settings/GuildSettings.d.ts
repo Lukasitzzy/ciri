@@ -1,5 +1,4 @@
 import { Snowflake } from 'discord.js';
-import { UserEconomySettings } from './economy';
 
 export interface BaseDocument {
     documentID: string;
@@ -9,20 +8,18 @@ export interface BaseDocument {
     updatedAt: number;
 }
 
-
-
 export interface GuildSettingsDocument extends BaseDocument{
     guildID: Snowflake;
     allowSlashCommands: boolean;
     prefix: string;
-
+    economy: any;
 }
 
 export interface GuildModerationDocument {
     enabled: boolean;
     automod: GuildAutomod;
+    
 }
-
 
 export interface GuildAutomod {
     enabled: boolean;
@@ -50,16 +47,3 @@ export interface GuildFilterName {
 export type GuildModerationActionsHard = 'BAN' | 'KICK';
 
 
-
-
-
-//#region users
-
-
-export interface UserSettingsDbData {
-    userID: string;
-    bonkedCount: number;
-    voteBannedCount: number;
-    selfVotebannedCount: number;
-    economy: UserEconomySettings;
-}

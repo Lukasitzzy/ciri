@@ -1,5 +1,5 @@
 import { AitherBot } from '../../../core/src/client/Client';
-import { AitherUser } from '../../../extentions/User';
+import { AitherUser } from '../../../extension/User';
 import { EconomyManager } from '../EconomyManager';
 
 

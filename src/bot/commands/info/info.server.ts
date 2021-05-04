@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { GuildFeatures } from 'discord.js';
 import { GuildCommandContext } from '../../../packages/core/src/commands/CommandContext';
 import { CustomCommand } from '../../../packages/core/src/commands/CustomCommand';
-import { AitherGuild } from '../../../packages/extentions/Guild';
+import { AitherGuild } from '../../../packages/extension/Guild';
 import { applyOptions, requireGuild } from '../../../packages/util/decorators';
 
 @requireGuild

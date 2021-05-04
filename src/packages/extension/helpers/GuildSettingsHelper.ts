@@ -1,5 +1,5 @@
+import { GuildSettingsDocument } from '../../database/typings/settings/GuildSettings';
 import { enumerable } from '../../util/decorators';
-import { GuildSettingsDocument } from '../../util/typings/settings';
 import { AitherGuild } from '../Guild';
 
 

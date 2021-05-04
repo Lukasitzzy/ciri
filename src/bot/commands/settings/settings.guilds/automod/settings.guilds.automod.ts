@@ -1,7 +1,7 @@
 import { Flag } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { CustomCommand } from '../../../../../packages/core/src/commands/CustomCommand';
-import { AitherMessage } from '../../../../../packages/extentions/Message';
+import { AitherMessage } from '../../../../../packages/extension/Message';
 import { applyOptions, requireDefaultPermissions, requireGuild } from '../../../../../packages/util/decorators';
 @requireDefaultPermissions(['ADMINISTRATOR'])
 @applyOptions({

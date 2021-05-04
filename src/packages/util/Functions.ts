@@ -9,7 +9,7 @@ export function getApi(client: AitherBot): Api {
 
 export function getGitCommit(): Promise<string> {
     return new Promise<string>((res, rej) => {
-        exec('git git rev-parse HEAD', (err, stdout, stderr) => {
+        exec('git rev-parse HEAD', (err, stdout, stderr) => {
             if (err) {
                 return rej(err);
             }

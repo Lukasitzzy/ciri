@@ -1,9 +1,9 @@
 import { Collection, ObjectID } from 'mongodb';
-import { Cache } from '../../../../util/Cache';
-import { EMOTES } from '../../../../util/Constants';
-import { enumerable } from '../../../../util/decorators';
-import { GuildSettingsDocument } from '../../../../util/typings/settings';
+import { Cache } from '../../../util/Cache';
+import { EMOTES } from '../../../util/Constants';
+import { enumerable } from '../../../util/decorators';
 import { Database } from '../../Database';
+import { GuildSettingsDocument } from '../../typings/settings/GuildSettings';
 import { GuildCases } from './moderation/GuildCases';
 
 
@@ -121,6 +121,7 @@ export class GuildSettings {
     public _createDefaultEntry(guildID: string): GuildSettingsDocument {
         return {
             allowSlashCommands: true,
+            economy: {},
             createAt: Date.now(),
             updatedAt: Date.now(),
             documentID: new ObjectID().toHexString(),
