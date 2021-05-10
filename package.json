@@ -37,7 +37,7 @@
     "discord-api-types": "^0.18.1",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^9.0.0",
-    "eslint": "^7.25.0",
+    "eslint": "^7.26.0",
     "mongodb": "^3.6.6",
     "typescript": "^4.2.3"
   }
