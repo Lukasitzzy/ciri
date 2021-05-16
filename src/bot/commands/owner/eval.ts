@@ -5,7 +5,7 @@ import * as NodeUtil from 'util';
 import { VERSION } from '../../../packages/util/Constants';
 import { applyOptions } from '../../../packages/util/decorators';
 
-import { Message, Util } from 'discord.js';
+import { Util } from 'discord.js';
 import { EMOTES } from '../../../packages/util/Constants';
 import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
 import { getApi } from '../../../packages/util/Functions';

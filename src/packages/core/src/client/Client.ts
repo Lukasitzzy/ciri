@@ -5,7 +5,7 @@ import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
 import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/Database';
-import { getApi, getGitCommit } from '../../../util/Functions';
+import { getApi } from '../../../util/Functions';
 import { ClientApplication } from 'discord.js';
 // import { EconomyManager } from '../../../economy/src/EconomyManager';
 import { guildFunction } from '../../../extension/Guild';
@@ -16,7 +16,6 @@ const defaultPrefix = process.env.DISCORD_COMMAND_PREFIX || '$';
 guildFunction();
 userFunction();
 messageFunction();
-
 
 
 export class AitherBot extends AkairoClient {
@@ -41,6 +40,7 @@ export class AitherBot extends AkairoClient {
                 version: 9
             }
         });
+
         this.commandHandler = new CustomCommandHandler(this, {
             directory: join(root, 'commands'),
             handleEdits: true,
@@ -64,8 +64,6 @@ export class AitherBot extends AkairoClient {
                 }
             }
         });
-
-
         this.inhibitorHandler = new InhibitorHandler(this, {
             directory: join(root, 'inhibitors'),
             automateCategories: true
