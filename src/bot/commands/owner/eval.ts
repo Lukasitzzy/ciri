@@ -10,7 +10,6 @@ import { EMOTES } from '../../../packages/util/Constants';
 import { IApplicationCommand, IApplicationCommandOption } from '../../../packages/util/typings/InteractionTypes';
 import { getApi } from '../../../packages/util/Functions';
 import { MessageEmbed } from 'discord.js';
-import { performance } from 'node:perf_hooks';
 const Nil = '!!NL!!';
 const reg = new RegExp(Nil, 'g');
 @applyOptions({

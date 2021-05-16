@@ -3,7 +3,6 @@ import { Intents } from 'discord.js';
 import { join } from 'path';
 import { CustomCommandHandler } from '../commands/CommandHandler';
 import { CustomCommand } from '../commands/CustomCommand';
-import { InteractionClient } from '../../../old_slash-commands/src/Client/Client';
 import { Logger } from '../logger/Logger';
 import { Database } from '../../../database/Database';
 import { getApi, getGitCommit } from '../../../util/Functions';
@@ -25,7 +24,6 @@ export class AitherBot extends AkairoClient {
     public readonly commandHandler: CustomCommandHandler<CustomCommand>;
     public readonly listenerHandler: ListenerHandler;
     public readonly inhibitorHandler: InhibitorHandler;
-    public readonly interaction: InteractionClient;
     // public readonly economy: EconomyManager;
     public readonly logger: Logger;
     public readonly db: Database;
@@ -36,6 +34,8 @@ export class AitherBot extends AkairoClient {
 
         super({
             ownerID: process.env.OWNER_ID?.split('--'),
+
+        }, {
             intents: Intents.ALL,
             http: {
                 version: 9
@@ -74,9 +74,6 @@ export class AitherBot extends AkairoClient {
         this.listenerHandler = new ListenerHandler(this, {
             directory: join(root, 'events')
         });
-
-        this.interaction = new InteractionClient(this, join(root, 'slash_commands'));
-
 
         const SHARDS: number[] = [];
 
