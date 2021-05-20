@@ -26,7 +26,7 @@
   "homepage": "https://github.com/JastLucy/aither#readme",
   "dependencies": {
     "@types/color-name": "^1.1.1",
-    "@types/mongodb": "^3.6.12",
+    "@types/mongodb": "^3.6.14",
     "@types/node": "^15.0.3",
     "@types/node-fetch": "^2.5.10",
     "@types/ws": "^7.4.4",
